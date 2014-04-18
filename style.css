@@ -4,7 +4,7 @@ div[id*='column'] {
 	font-size: 1cm;
 	font-family: monospace;
 	border-style:  double;
-	border-width: 0.1cm;
+	border-width: 10cm;
 }
 
 li {

@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"bord",
+				"border-style"
+			],
+			[
+				"bor",
+				"border-width"
+			],
+			[
+				"pa",
+				"padding-right"
+			],
+			[
+				"s",
+				"sans-serif"
+			],
+			[
+				"fon",
+				"font-family"
+			],
+			[
 				"font",
 				"font-size"
 			],
@@ -93,12 +113,24 @@
 			]
 		]
 	},
-	"build_system": "",
+	"build_system": "Packages/User/chromium.sublime-build",
 	"command_palette":
 	{
-		"height": 117.0,
+		"height": 222.0,
 		"selected_items":
 		[
+			[
+				"html",
+				"Snippet: html"
+			],
+			[
+				"htm",
+				"Set Syntax: HTML"
+			],
+			[
+				"snip",
+				"Snippet: html"
+			],
 			[
 				"install",
 				"Package Control: Install Package"
@@ -177,11 +209,11 @@
 	},
 	"file_history":
 	[
+		"/home/xpeiro/.config/sublime-text-3/Packages/User/chromium.sublime-build",
 		"/home/xpeiro/git/chat/build.xml",
 		"/home/xpeiro/git/chat/README",
 		"/home/xpeiro/.config/sublime-text-3/Packages/Terminal/Terminal.sublime-settings",
 		"/home/xpeiro/Desktop/prueba.css",
-		"/home/xpeiro/.config/sublime-text-3/Packages/User/chromium.sublime-build",
 		"/home/xpeiro/.config/sublime-text-3/Packages/View In Browser/View In Browser.sublime-settings",
 		"/home/xpeiro/.config/sublime-text-3/Packages/User/View In Browser.sublime-settings",
 		"/home/xpeiro/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
