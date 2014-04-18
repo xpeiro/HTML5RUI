@@ -116,9 +116,45 @@
 	"build_system": "Packages/User/chromium.sublime-build",
 	"command_palette":
 	{
-		"height": 222.0,
+		"height": 159.0,
 		"selected_items":
 		[
+			[
+				"git pu",
+				"Git: Push Current Branch"
+			],
+			[
+				"git sta",
+				"Git: Status"
+			],
+			[
+				"git",
+				"Git: Status"
+			],
+			[
+				"git push",
+				"Git: Push Current Branch"
+			],
+			[
+				"git comm",
+				"Git: Quick Commit"
+			],
+			[
+				"git add",
+				"Git: Add..."
+			],
+			[
+				"git com",
+				"Git: Commit"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"emme",
+				"Emmet: Toggle Comment"
+			],
 			[
 				"html",
 				"Snippet: html"
@@ -130,10 +166,6 @@
 			[
 				"snip",
 				"Snippet: html"
-			],
-			[
-				"install",
-				"Package Control: Install Package"
 			],
 			[
 				"termina",
@@ -209,7 +241,9 @@
 	},
 	"file_history":
 	[
+		"/home/xpeiro/Code/PFC/index.html",
 		"/home/xpeiro/.config/sublime-text-3/Packages/User/chromium.sublime-build",
+		"/home/xpeiro/.config/sublime-text-3/Packages/User/build.sublime-build",
 		"/home/xpeiro/git/chat/build.xml",
 		"/home/xpeiro/git/chat/README",
 		"/home/xpeiro/.config/sublime-text-3/Packages/Terminal/Terminal.sublime-settings",
@@ -226,7 +260,6 @@
 		"/home/xpeiro/Desktop/Instrucciones.txt",
 		"/home/xpeiro/Desktop/KheperaSimGui_src/demo.cpp",
 		"/home/xpeiro/Desktop/KheperaSimGui_src/control.cpp",
-		"/home/xpeiro/.config/sublime-text-3/Packages/User/build.sublime-build",
 		"/home/xpeiro/Preferences.sublime-settings",
 		"/etc/default/grub",
 		"/home/xpeiro/Qt/README.txt",
@@ -324,7 +357,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -356,6 +389,10 @@
 	"output.find_results":
 	{
 		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 100.0
 	},
 	"output.unsaved_changes":
 	{
@@ -397,7 +434,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 188.0,
+	"side_bar_width": 108.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
