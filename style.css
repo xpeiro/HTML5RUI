@@ -1,12 +1,24 @@
+* { 
+	font-size: 3cm;
+	
+}
 
 div[id*='column'] {
 	float: left;
 	font-size: 1cm;
 	font-family: monospace;
-	border-style:  double;
-	border-width: 10cm;
+	border-style: inset; 
+	border-width: 0.3cm;
 }
 
 li {
 	list-style-type:  none;
+	font-size: inherit;
+	
 }
+
+a {
+	font-size: inherit;
+}
+
+
