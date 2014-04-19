@@ -4,11 +4,11 @@ window.onload = function() {
 function cambialink() {
 	cosa = document.getElementById('enlace');
 	if (cosa.innerHTML == "marca") {
-		cosa.innerHTML = "as";
 		cosa.href = "http://www.marca.com";
-	} else {
-		cosa.innerHTML = "marca";
+		cosa.innerHTML = "as";		
+	} else {		
 		cosa.href = "http://www.as.com";
+		cosa.innerHTML = "marca";
 	};
 
 }
