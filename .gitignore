@@ -28,3 +28,5 @@ RCS
 RCSLOG
 SCCS
 _$*
+.directory
+.project
