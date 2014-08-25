@@ -1,15 +1,39 @@
-window.onload = function() {
-	document.getElementById('enlace').onclick = cambialink;
-};
-function cambialink() {
-	cosa = document.getElementById('enlace');
-	if (cosa.innerHTML == "marca") {
-		cosa.href = "http://www.marca.com";
-		cosa.innerHTML = "as";		
-	} else {		
-		cosa.href = "http://www.as.com";
-		cosa.innerHTML = "marca";
-	};
+window.onload = function  () {
+	
+	var boton = document.getElementById('boton');
+	var hola = document.getElementById('canvas');
+	var context = hola.getContext('2d');
 
+	boton.onclick = pulsado;
+
+	diagonal(context);
 }
+
+
+function pulsado () {
+	var hola = document.getElementById('canvas');
+	var context = hola.getContext('2d');
+	context.beginPath();
+	context.moveTo(500,0);
+	context.lineTo(0,250);
+	context.lineTo(500,500);
+	context.stroke();
+}
+
+
+function diagonal(context) {
+
+
+
+context.beginPath();
+context.moveTo(0,0);
+context.lineTo(500,250);
+context.lineTo(0,500);
+context.stroke();
+}
+
+
+
+
+
 
