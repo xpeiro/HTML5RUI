@@ -20,7 +20,6 @@ resetAll();
 joystick.addEventListener('touchstart', touch, false);
 joystick.addEventListener('touchend', resetAll, false);
 joystick.addEventListener('touchmove', touch, false);
-
 joystick.addEventListener('mousedown', function (evt) {
 	leftClick=1;
 	mouseMove(evt);
@@ -29,7 +28,6 @@ joystick.addEventListener('mouseup', function () {
 	leftClick=0;
 	resetAll();
 }, false);
-
 joystick.addEventListener('mousemove', mouseMove, false);
 
 
@@ -69,8 +67,7 @@ function resetJoystick () {
 	joystickctx.fillRect(0,0,500,500);
 	joystickctx.fillStyle = "black";
 	circle( joystickctx, 250, 250, 200);
-	x=250;
-	y=250;	
+	position.innerHTML="x:0"+" y:0"; //update position label.	
 }
 
 
@@ -112,22 +109,24 @@ function drawLineFromCenter (ctx, x, y) {
 
 function forceIntoCircle (point,radius) {
 	if (!checkCircle(point.x - 250, 250 - point.y, radius)) {
-		var x = point.x - 250;
-		var y = 250 - point.y;
-		var a = y/x;
-		if (x>0) {
-			x = radius/Math.sqrt(1+a*a) + 250;				
+		point.x = point.x - 250;
+		point.y = 250 - point.y;
+		var a = point.y/point.x;
+		if (point.x>0) {
+			point.x = radius/Math.sqrt(1+a*a) + 250;				
 		} else  {
-			x = -radius/Math.sqrt(1+a*a) + 250;
+			point.x = -radius/Math.sqrt(1+a*a) + 250;
 			
 		}
-		if (y>0) {
-			y = 250  - radius/Math.sqrt(1+1/(a*a));
+		if (point.y>0) {
+			point.y = 250  - radius/Math.sqrt(1+1/(a*a));
 		} else {
-			y = 250  + radius/Math.sqrt(1+1/(a*a));
+			point.y = 250  + radius/Math.sqrt(1+1/(a*a));
 		}
 
-		point.x = Math.floor(x);
-	    point.y = Math.floor(y);		
+		
 	};
+
+	point.x = Math.floor(point.x);
+    point.y = Math.floor(point.y);	
 }
