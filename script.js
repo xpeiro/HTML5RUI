@@ -1,4 +1,3 @@
-
 var resetbutton = document.getElementById('resetbutton');
 var joystick = document.getElementById('joystick');
 var joystickctx = joystick.getContext('2d');
@@ -13,9 +12,7 @@ var point = {
 var radius = 100;
 var leftClick=0;
 
-
 resetAll();
-
 
 joystick.addEventListener('touchstart', touch, false);
 joystick.addEventListener('touchend', resetAll, false);
@@ -30,13 +27,11 @@ joystick.addEventListener('mouseup', function () {
 }, false);
 joystick.addEventListener('mousemove', mouseMove, false);
 
-
 function touch (evt) {
 	evt.preventDefault();
 	leftClick=1;
 	mouseMove(evt);
 }
-
 
 function mouseMove (evt) {
 
@@ -69,8 +64,6 @@ function resetJoystick () {
 	circle( joystickctx, 250, 250, 200);
 	position.innerHTML="x:0"+" y:0"; //update position label.	
 }
-
-
 
 function resetVector () {
 	vectorctx.fillStyle = "white";
