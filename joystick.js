@@ -9,8 +9,10 @@ var point = {
 	y: 0
 };
 
-var radius = 100;
+var maxRadius = joystick.width/2*0.8;
+var radius = joystick.width*0.3;
 var leftClick=0;
+
 
 resetAll();
 
@@ -47,47 +49,49 @@ function mouseMove (evt) {
 			point.y = evt.pageY - 12;
 		};
 		
-		forceIntoCircle(point,200);
+		forceIntoCircle(point,maxRadius);
 
-		circle(joystickctx, point.x, point.y,radius, true);
+		
 		drawLineFromCenter(vectorctx, point.x, point.y);
-		position.innerHTML="x:"+ (point.x -250) +" y:"+ (250 - point.y); //update position label.
+		drawLineFromCenter(joystickctx, point.x, point.y);
+		circle(joystickctx, point.x, point.y,radius, true, "grey");
+		position.innerHTML="x:"+ (point.x -joystick.width) +" y:"+ (joystick.height - point.y); //update position label.
 		
 	};
 	
 }
 
 function resetJoystick () {
-	joystickctx.fillStyle = "white";
-	joystickctx.fillRect(0,0,500,500);
+	joystickctx.fillStyle = "#081628";
+	joystickctx.fillRect(0,0,joystick.width,joystick.height);
 	joystickctx.fillStyle = "black";
-	circle( joystickctx, 250, 250, 200);
+	circle( joystickctx, joystick.width/2, joystick.height/2, maxRadius, true, "#8e98a4");
 	position.innerHTML="x:0"+" y:0"; //update position label.	
 }
 
 function resetVector () {
 	vectorctx.fillStyle = "white";
-	vectorctx.fillRect(0,0,500,500);
+	vectorctx.fillRect(0,0,vector.width,vector.height);
 	vectorctx.fillStyle = "black";
-	vectorctx.fillRect(248,248,4,4);
-	circle(vectorctx, 250, 250, 200);
+	vectorctx.fillRect(vector.width/2-2,vector.height/2-2,4,4);
+	circle(vectorctx, vector.width/2, vector.height/2, maxRadius);
 }
 
 function resetAll () {
 	resetJoystick();
 	resetVector();
-	circle( joystickctx, 250, 250, 100, true);
+	circle( joystickctx, joystick.width/2, joystick.height/2, radius, true, "grey");
 }
 
 function checkCircle (x,y,radius) {
 	return ( (x*x + y*y) <= (radius*radius));
 }
 
-function circle (ctx, x, y, radius, greyFill) {
+function circle (ctx, x, y, radius, fill, fillColor) {
 	ctx.beginPath();
 	ctx.arc( x, y, radius, 0, 2 * Math.PI, false);
-	if (greyFill) { 
-		ctx.fillStyle = "grey";
+	if (fill) { 
+		ctx.fillStyle = fillColor;
 		ctx.fill();
 	};
 	ctx.stroke();
@@ -95,26 +99,26 @@ function circle (ctx, x, y, radius, greyFill) {
 
 function drawLineFromCenter (ctx, x, y) {
 	ctx.beginPath();
-	ctx.moveTo(250,250);
+	ctx.moveTo(vector.width/2,vector.height/2);
 	ctx.lineTo( x, y);
 	ctx.stroke();	
 }
 
 function forceIntoCircle (point,radius) {
-	if (!checkCircle(point.x - 250, 250 - point.y, radius)) {
-		point.x = point.x - 250;
-		point.y = 250 - point.y;
+	if (!checkCircle(point.x - joystick.width/2, joystick.height/2 - point.y, radius)) {
+		point.x = point.x - joystick.width/2;
+		point.y = joystick.height/2 - point.y;
 		var a = point.y/point.x;
 		if (point.x>0) {
-			point.x = radius/Math.sqrt(1+a*a) + 250;				
+			point.x = radius/Math.sqrt(1+a*a) + joystick.width/2;				
 		} else  {
-			point.x = -radius/Math.sqrt(1+a*a) + 250;
+			point.x = -radius/Math.sqrt(1+a*a) + joystick.width/2;
 			
 		}
 		if (point.y>0) {
-			point.y = 250  - radius/Math.sqrt(1+1/(a*a));
+			point.y = joystick.height/2  - radius/Math.sqrt(1+1/(a*a));
 		} else {
-			point.y = 250  + radius/Math.sqrt(1+1/(a*a));
+			point.y = joystick.height/2  + radius/Math.sqrt(1+1/(a*a));
 		}
 
 		
