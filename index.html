@@ -3,16 +3,28 @@
 
     <head>
         <title>Prueba</title>
-        <link rel="stylesheet" type="text/css" href="style.css">        
+        <meta name=viewport content="width=device-width, initial-scale=1">
     </head>
 
     <body>
-        <canvas width=200 height=200 id="joystick">Canvas not supported</canvas>
-        <canvas width=500 height=500 id="vector">Canvas not supported</canvas>
-               
-       <form><input type="checkbox" name="Lock" id="lockJoystick">Lock Joystick in Position</form>
-        <script src="joystick.js"></script>
+        <canvas width=100% height=100% id="joystick">
+            Canvas not supported
+        </canvas>
+        <canvas width=200% height=200% id="vector">
+            Canvas not supported
+        </canvas>
+
+        <form>
+            <input type="checkbox" name="Lock Joystick" id="lockJoystick">
+            Lock Joystick in Position
+            <br />
+            <input type="checkbox" name="Lock 8" id="lock8Directions">
+            Lock  Joystick to 8 Directions
+        </form>
+
     </body>
-     
+
+    <script src="joystick.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </html>
 
