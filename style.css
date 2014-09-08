@@ -1,5 +1,5 @@
 * { 
-	font-size: 1cm;
+	
 	
 }
 
@@ -21,8 +21,13 @@ li {
 
 canvas {
 	border: solid;
-		
+			
 }
+
+#joystick {
+	cursor: crosshair;
+}
+
 
 a {
 	font-size: inherit;
