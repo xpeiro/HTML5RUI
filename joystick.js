@@ -4,13 +4,14 @@ var joystickctx = joystick.getContext('2d');
 var vector = document.getElementById('vector');
 var vectorctx = vector.getContext('2d');
 var position = document.getElementById('position');
-var isLocked = false;
+var lockJoystick = document.getElementById('lockJoystick');
+
 var point = {
 	x : 0,
 	y : 0,
 };
 
-var maxRadius = joystick.width / 2 * 0.8;
+var maxRadius = joystick.width*0.4;
 var radius = joystick.width * 0.3;
 var leftClick = 0;
 
@@ -22,20 +23,16 @@ joystick.addEventListener('touchend', mouseUp, false);
 joystick.addEventListener('mousedown', mouseDown, false);
 joystick.addEventListener('mousemove', mouseMove, false);
 joystick.addEventListener('mouseup', mouseUp, false);
+lockJoystick.addEventListener('change',resetAll,false);
 
 function mouseDown(evt) {
-	if (isInsideSquare(evt.pageX - 12, evt.pageY- 12 - joystick.height*0.97, joystick.width*0.05)) {
-		isLocked = !isLocked;
-		resetAll();
-	} else {
-		leftClick=1;
-		mouseMove(evt);
-	}
+	leftClick=1;
+	mouseMove(evt);
 }
 
 function mouseUp() {
 	leftClick=0;
-	if (!isLocked) resetAll(); 	
+	if (!lockJoystick.checked) resetAll(); 	
 }
 
 function touch(evt) {
@@ -45,28 +42,28 @@ function touch(evt) {
 }
 
 function mouseMove(evt) {
-
+	
 	if (leftClick == 1) {//check if left mouse button down or touch
 		resetJoystick();
 		resetVector();
-
+		
 		if (evt.type == 'touchstart' || evt.type == 'touchmove') {
-			point.x = evt.touches[0].pageX;
-			point.y = evt.touches[0].pageY;
+			point.x = evt.touches[0].pageX - joystick.offsetLeft;
+			point.y = evt.touches[0].pageY - joystick.offsetTop;
 		} else {
-			point.x = evt.pageX - 12;
-			point.y = evt.pageY - 12;
+			point.x = evt.pageX - 12 - joystick.offsetLeft;
+			point.y = evt.pageY - 12 - joystick.offsetTop;
 		};
 
 		point = centerCoord(point,joystick);
 		point = forceIntoCircle(point.x, point.y, maxRadius);
 		point = canvasCoord(point,joystick);
 		
-		drawLineFromCenter(vectorctx, point.x, point.y);
 		drawLineFromCenter(joystickctx, point.x, point.y);
+		drawLineFromCenter(vectorctx, point.x *vector.width/joystick.width, point.y *vector.width/joystick.width);
 		drawCircle(joystickctx, point.x, point.y, radius, "grey");
 		point = centerCoord(point,joystick);
-		//vectorctx.font=joystick.height*0.05+"px Arial";
+		vectorctx.font=joystick.height*0.05+"px Arial";
 		vectorctx.fillText("x:" + point.x.toFixed(2) + " y:" + point.y.toFixed(2),vector.width*0.02,vector.height*0.1);//update position label.
 
 	};
@@ -78,7 +75,6 @@ function resetJoystick() {
 	joystickctx.fillRect(0, 0, joystick.width, joystick.height);
 	joystickctx.fillStyle = "black";
 	drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, maxRadius, "#8e98a4");
-	drawLock();
 }
 
 function resetVector() {
@@ -86,7 +82,7 @@ function resetVector() {
 	vectorctx.fillRect(0, 0, vector.width, vector.height);
 	vectorctx.fillStyle = "black";
 	vectorctx.fillRect(vector.width / 2 - 2, vector.height / 2 - 2, 4, 4);
-	drawCircle(vectorctx, vector.width / 2, vector.height / 2, maxRadius);
+	drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width*0.4);
 }
 
 function resetAll() {
@@ -117,7 +113,7 @@ function drawCircle(ctx, x, y, radius, fillColor) {
 
 function drawLineFromCenter(ctx, x, y) {
 	ctx.beginPath();
-	ctx.moveTo(vector.width / 2, vector.height / 2);
+	ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);
 	ctx.lineTo(x, y);
 	ctx.stroke();
 }
@@ -160,18 +156,5 @@ function canvasCoord(point, canvas) {
 	
 }
 
-function drawLock () {
-	if (isLocked) {
-		joystickctx.fillStyle = "red";
-		joystickctx.fillRect(0,joystick.height*0.93, joystick.width*0.05, joystick.width*0.05);
-		joystickctx.fillStyle = "grey";
-		joystickctx.fillText("Lock On", joystick.width*0.06,joystick.height*0.97);
-	  	
-	} else {
-		joystickctx.fillStyle = "green";
-		joystickctx.fillRect(0,joystick.height*0.93, joystick.width*0.05, joystick.width*0.05);
-		joystickctx.fillStyle = "grey";
-		joystickctx.fillText("Lock Off", joystick.width*0.06,joystick.height*0.97);
-	}
-}
+
 
