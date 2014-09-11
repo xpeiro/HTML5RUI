@@ -30,3 +30,4 @@ SCCS
 _$*
 .directory
 .project
+node_modules

@@ -1,3 +1,4 @@
+var socket = io.connect();
 var joystick = document.getElementById('joystick');
 var joystickctx = joystick.getContext('2d');
 var vector = document.getElementById('vector');
@@ -71,6 +72,7 @@ function mouseMove(evt) {
 			point = forceIntoCircle(point.x, point.y, maxRadius);
 			// force coordinates into maxRadius
 		}
+		socket.emit('hello', { x: point.x.toFixed(2), y: point.y.toFixed(2)});
 		point = canvasCoord(point, joystick);
 		//change coordinates back to absolute reference
 
