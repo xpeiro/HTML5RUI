@@ -60,10 +60,7 @@ io.on('connection', function(socket){
   socket.on('updatePosition', function(data) {
   	console.log('x:'+data.x+' y:'+data.y);
   	var collection = db.get('data');
-  	collection.update(
-    { item: "position" },
-    { $set: { x: data.x, y: data.y } }
-    )
+  	collection.update( { item: "position" },  { $set: { x: data.x, y: data.y }});
   });
 
 });
