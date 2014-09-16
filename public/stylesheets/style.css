@@ -1,16 +1,7 @@
-* { 
-	
-	
-}
-
-div[id*='column'] {
-	float: left;
-	font-size: 1cm;
-	font-family: monospace;
-	
-	margin: 4px;
-	
-	
+span {
+	position: fixed;
+	font-size: 100%;
+	font-family: monospace;	
 }
 
 li {

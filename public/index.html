@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-ng-app="HRUI" data-ng-controller="HRUIController">
     <head>
         <title>HRUI</title>
         <meta charset="UTF-8">
@@ -9,20 +9,29 @@
         <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
     </head>
     <body>
-        <canvas width=200 height=200 id="joystick">
+        <div><input type="checkbox" name="Joystick On" data-ng-model="joystickOn" data-ng-click="toggle(joystickOn)">
+        Joystick {{ joystickOn | OnOff}}
+    </div>
+    <div data-ng-controller="JoystickController" data-ng-if="joystickOn">
+        <canvas width=200 height=200 id="joystick" data-touch>
         Canvas not supported
         </canvas>
-        <canvas width=200 height=200 id="vector">
+        <canvas width=200 height=200 id="vector" data-ng-show="showVector">
         Canvas not supported
         </canvas>
+        <span>X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
         <form>
-            <input type="checkbox" name="Lock Joystick" id="lockJoystick">
+            <input type="checkbox" name="Lock Joystick" data-ng-model="lockJoystick" data-ng-click="toggle(lockJoystick)" data-ng-change="resetAll()">
             Lock Joystick in Position
-            <br />
-            <input type="checkbox" name="Lock 8" id="lock8Directions">
+            <input type="checkbox" name="Lock 8" data-ng-model="lock8Directions" data-ng-click="toggle(lock8Directions)">
             Lock  Joystick to 8 Directions
+            <input type="checkbox" name="Display Vector" data-ng-model="showVector" data-ng-click="toggle(showVector)">
+            Display Vector
         </form>
-        <script src="socket.io/socket.io.js"></script>
-        <script src="javascripts/joystick.js"></script>
-    </body>
+    </div>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="javascripts/angular.min.js"></script>
+    <script src="javascripts/angularApp.js"></script>
+    <script src="javascripts/joystick.js"></script>
+</body>
 </html>
