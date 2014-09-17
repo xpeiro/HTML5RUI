@@ -3,16 +3,20 @@ app.directive('touch', function() {
     return {
         link: function(scope, element, attrs) {
             element.on('touchmove', function(event) {
-                touchMove(event);
+                scope.touchMove(event);
+                scope.$apply();
             });
             element.on('touchdown mousedown', function(event) {
-                mouseDown(event);
+                scope.mouseDown(event);
+                scope.$apply();
             });
             element.on('mousemove', function(event) {
-                mouseMove(event);
+                scope.mouseMove(event);
+                scope.$apply();
             });
             element.on('mouseup touchend', function(event) {
-                mouseUp(event);
+                scope.mouseUp(event);
+                scope.$apply();
             });
         }
     }

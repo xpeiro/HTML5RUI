@@ -17,26 +17,26 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
         //draw canvas in initial state
         drawAll();
         //sets left click flag UP and calls mouseMove handler
-        mouseDown = function($event) {
+        $scope.mouseDown = function($event) {
             evt = $event;
             leftClick = 1;
-            mouseMove(evt);
+            $scope.mouseMove(evt);
         }
         //overrides touch event handler
-        touchMove = function(evt) {
+        $scope.touchMove = function(evt) {
             evt.preventDefault();
             leftClick = 1;
             mouseMove(evt);
         }
         //sets left click flag DOWN and resets both canvas to initial state (unless position lock is ON)
-        mouseUp = function() {
+        $scope.mouseUp = function() {
             leftClick = 0;
             if (!$scope.lockJoystick) {
                 $scope.resetAll();
             }
         }
         //handles mouse or touch movement on joystick
-        mouseMove = function(evt) {
+        $scope.mouseMove = function(evt) {
             if (leftClick == 1) { //check if left mouse button down or touch
                 //erases previous joystick position
                 resetJoystick();
@@ -116,6 +116,11 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             ctx.stroke();
         }
 
+        function writeInCanvas(ctx, font, text, x, y) {
+            ctx.font = font;
+            ctx.fillText(text, x, y);
+        }
+
         function isInsideCircle(x, y, radius) {
             return ((x * x + y * y) <= (radius * radius));
         }
@@ -176,14 +181,6 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
                 x: point.x.toFixed(2),
                 y: point.y.toFixed(2)
             });
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
-        }
-
-        function writeInCanvas(ctx, font, text, x, y) {
-            ctx.font = font;
-            ctx.fillText(text, x, y);
         }
     }
 ]);
