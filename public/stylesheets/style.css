@@ -1,29 +1,18 @@
 span {
-	position: fixed;
-	font-size: 100%;
-	font-family: monospace;	
+    position: fixed;
+    font-size: 100%;
+    font-family: monospace;
 }
-
 li {
-	list-style-type:  none;
-	font-size: inherit;
-	
+    list-style-type: none;
+    font-size: inherit;
 }
-
 canvas {
-	border: solid;
-	
-	
-			
+    border: solid;
 }
-
 #joystick {
-	cursor: crosshair;
+    cursor: crosshair;
 }
-
-
 a {
-	font-size: inherit;
+    font-size: inherit;
 }
-
-

@@ -25,13 +25,13 @@ app.service('GeneralSrv', function() {
         bool = !bool;
     }
 });
-app.controller('HRUIController', ['$scope', 'GeneralSrv',
-    function($scope) {
-        $scope.joystickOn = true;
-    }
-]);
 app.filter('OnOff', function() {
     return function(bool) {
         return bool ? 'On' : 'Off';
     }
 });
+app.controller('HRUIController', ['$scope', 'GeneralSrv',
+    function($scope) {
+        $scope.joystickOn = true;
+    }
+]);

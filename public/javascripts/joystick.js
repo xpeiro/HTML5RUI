@@ -7,7 +7,6 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             x: 0,
             y: 0,
         };
-        
         var joystick = document.getElementById('joystick');
         var joystickctx = joystick.getContext('2d');
         var vector = document.getElementById('vector');
