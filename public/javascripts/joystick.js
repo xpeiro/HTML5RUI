@@ -1,7 +1,7 @@
 app.controller('JoystickController', ['$scope', 'GeneralSrv',
     function($scope, GeneralSrv) {
         $scope.lockJoystick = false;
-        $scope.lock8Directions = false;
+        $scope.lock8Directions = true;
         $scope.showVector = true;
         $scope.point = {
             x: 0,
@@ -26,7 +26,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
         $scope.touchMove = function(evt) {
             evt.preventDefault();
             leftClick = 1;
-            mouseMove(evt);
+            $scope.mouseMove(evt);
         }
         //sets left click flag DOWN and resets both canvas to initial state (unless position lock is ON)
         $scope.mouseUp = function() {
@@ -67,7 +67,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
                 //set relative coordinates
                 $scope.point = centerCoord($scope.point, joystick);
                 //send coordinates back to server (websocket)
-                updatePosition($scope.point);
+                updateJoystick($scope.point);
             };
         }
         $scope.resetAll = function() {
@@ -75,7 +75,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             drawAll();
             $scope.point.x = 0;
             $scope.point.y = 0;
-            updatePosition($scope.point);
+            updateJoystick($scope.point);
         }
 
         function resetJoystick() {
@@ -176,11 +176,13 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             };
         }
 
-        function updatePosition(point) {
-            GeneralSrv.socket.emit('updatePosition', {
+        function updateJoystick(point) {
+            GeneralSrv.socket.emit('updateJoystick', {
                 x: point.x.toFixed(2),
                 y: point.y.toFixed(2)
             });
         }
+
+
     }
 ]);

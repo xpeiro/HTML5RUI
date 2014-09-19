@@ -10,6 +10,12 @@ li {
 canvas {
     border: solid;
 }
+
+.boxed {
+	border-style: solid;
+	padding-right: none;
+	float: left;
+}
 #joystick {
     cursor: crosshair;
 }

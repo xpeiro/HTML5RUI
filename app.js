@@ -12,10 +12,9 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var routes = require('./routes/index');
-
-
 // Mongodb setup
 var db = monk('localhost:27017/hrui');
+var collection = db.get('data');
 // WebSocket (socket.io) setup
 io.on('connection', function(socket) {
     // log user connect
@@ -24,12 +23,10 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         console.log('user disconnected');
     });
-    // update mongodb with position on updatePosition message
-    socket.on('updatePosition', function(data) {
-        //console.log('x:'+data.x+' y:'+data.y);
-        var collection = db.get('data');
+    // update mongodb with position on updateJoystick message
+    socket.on('updateJoystick', function(data) {
         collection.update({
-            item: "position"
+            item: "joystick"
         }, {
             $set: {
                 x: data.x,
@@ -37,6 +34,17 @@ io.on('connection', function(socket) {
             }
         });
     });
+    update = function(io) {
+        collection.findOne({
+            "item": "position"
+        }, function(err, rec) {
+            io.emit('update', rec);
+            setTimeout(function() {
+                update(io);
+            }, 10);
+        });
+    };
+    update(io);
 });
 // App Setup
 // compression setup (compress all requests)

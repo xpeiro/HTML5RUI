@@ -37,5 +37,6 @@ app.filter('OnOff', function() {
 app.controller('HRUIController', ['$scope', 'GeneralSrv',
     function($scope) {
         $scope.joystickOn = true;
+        $scope.dataMonitorOn = true;
     }
 ]);
