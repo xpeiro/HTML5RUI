@@ -14,8 +14,10 @@
             Joystick {{ joystickOn | OnOff}}
             <input type="checkbox" name="Data Monitor On" data-ng-model="dataMonitorOn" data-ng-click="toggle(dataMonitorOn)">
             Data Monitor {{ dataMonitorOn | OnOff}}
+            <input type="checkbox" name="Live Video On" data-ng-model="liveVideoOn" data-ng-click="toggle(liveVideoOn)">
+            Live Video {{ liveVideoOn | OnOff}}
         </div>
-        <div data-ng-controller="JoystickController" data-ng-if="joystickOn">
+        <div data-ng-controller="JoystickController" data-ng-if="joystickOn" id="joystickFrame">
             <canvas width=200 height=200 id="joystick" data-touch>
             Canvas not supported
             </canvas>
@@ -34,10 +36,19 @@
         </div>
         <div class="boxed" data-ng-controller="DataController" data-ng-if="dataMonitorOn">Robot Position <hr> x: {{position.x}} <br> y: {{position.y}} <br> z: {{position.z}}
         </div>
-        <script src="javascripts/socket.io.min.js"></script>
-        <script src="javascripts/angular.min.js"></script>
-        <script src="javascripts/angularApp.js"></script>
-        <script src="javascripts/joystick.js"></script>
-        <script src="javascripts/datamonitor.js"></script>
+        <div data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn">
+            <canvas id="videoCanvas" width="640" height="480"></canvas>
+        </div>
+
+
+
+        <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
+        <script type="text/javascript" src="javascripts/angular.min.js"></script>
+        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
+        <script type="text/javascript" src="javascripts/jsmpg.min.js"></script>
+        <script type="text/javascript" src="javascripts/angularapp.js"></script>
+        <script type="text/javascript" src="javascripts/joystick.js"></script>
+        <script type="text/javascript" src="javascripts/datamonitor.js"></script>
+        <script type="text/javascript" src="javascripts/livevideo.js"></script>
     </body>
 </html>

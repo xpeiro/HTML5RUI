@@ -1,16 +1,23 @@
+*{
+    background-color: #A7A7A7;
+    font-size: 100%;
+    font-family: monospace;
+    color: black;
+}
+
+checkbox {
+
+}
+
 span {
     position: fixed;
     font-size: 100%;
     font-family: monospace;
 }
-li {
-    list-style-type: none;
-    font-size: inherit;
-}
+
 canvas {
     border: solid;
 }
-
 .boxed {
 	border-style: solid;
 	padding-right: none;
@@ -18,7 +25,4 @@ canvas {
 }
 #joystick {
     cursor: crosshair;
-}
-a {
-    font-size: inherit;
 }

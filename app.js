@@ -1,4 +1,4 @@
-var port = 80;
+var PORT = 80;
 // get required modules
 var express = require('express');
 var app = express();
@@ -82,7 +82,67 @@ app.use(function(err, req, res, next) {
     });
 });
 // start server
-http.listen(port, function() {
-    console.log('listening on *:' + port);
+http.listen(PORT, function() {
+    console.log('listening on *:' + PORT);
 });
+
+var WSPORT = 3000;
+var FFMPEGPORT = 8000;
+var STREAM_MAGIC_BYTES = 'jsmp';
+var PASSWORD = "hrui1311"
+var width = 320,
+    height = 240;
+
+/*VIDEO STREAMING CODE by Dominic Szablewski - phoboslab.org, github.com/phoboslab:
+  http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/
+*/
+var socketServer = new(require('ws').Server)({
+    port: WSPORT
+});
+socketServer.on('connection', function(socket) {
+    var streamHeader = new Buffer(8);
+    streamHeader.write(STREAM_MAGIC_BYTES);
+    streamHeader.writeUInt16BE(width, 4);
+    streamHeader.writeUInt16BE(height, 6);
+    socket.send(streamHeader, {
+        binary: true
+    });
+    console.log('New WebSocket Connection (' + socketServer.clients.length + ' total)');
+    socket.on('close', function(code, message) {
+        console.log('Disconnected WebSocket (' + socketServer.clients.length + ' total)');
+    });
+});
+socketServer.broadcast = function(data, opts) {
+    for (var i in this.clients) {
+        if (this.clients[i].readyState == 1) {
+            this.clients[i].send(data, opts);
+        } else {
+            console.log('Error: Client (' + i + ') not connected.');
+        }
+    }
+};
+var streamServer = require('http').createServer(function(request, response) {
+    var params = request.url.substr(1).split('/');
+    width = (params[1] || 320) | 0;
+    height = (params[2] || 240) | 0;
+    if (params[0] == PASSWORD) {
+        console.log('Stream Connected: ' + request.socket.remoteAddress + ':' + request.socket.remotePort + ' size: ' + width + 'x' + height);
+        request.on('data', function(data) {
+            socketServer.broadcast(data, {
+                binary: true
+            });
+        });
+    } else {
+        console.log('Failed Stream Connection: ' + request.socket.remoteAddress + request.socket.remotePort + ' - wrong secret.');
+        response.end();
+    }
+}).listen(FFMPEGPORT);
+
+//END OF PHOBOSLAB CODE
+
+/* 
+FFMPEG Command:
+ffmpeg -s 320x240 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 http://localhost:8000/hrui1311/320/240/
+*/
+
 module.exports = app;
