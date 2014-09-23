@@ -1,28 +1,69 @@
-*{
-    background-color: #A7A7A7;
-    font-size: 100%;
-    font-family: monospace;
-    color: black;
-}
-
-checkbox {
-
-}
-
 span {
-    position: fixed;
-    font-size: 100%;
     font-family: monospace;
-}
+    margin-left: 5px;
+    white-space: nowrap;
+    display: inline;
 
-canvas {
-    border: solid;
 }
-.boxed {
-	border-style: solid;
-	padding-right: none;
-	float: left;
+div {
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #122960;
+    background: #8598C4;
+    color: #3D3242;
+    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
+}
+form {
+    white-space: nowrap;
+    display: inline;
+}
+#body {
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #122960;
+    background: #8598C4;
+    color: #122960;
+    display: inline-block;
+}
+#joystickFrame {
+    padding-right: 40px;
+    border-radius: 10px;
+    border: 2px solid #122960;
+    background: inherit;
+    clear: left;
+    color: inherit;
+    display: inline-block;
+    float: left;
+    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
+}
+#dataFrame {
+    border-style: solid;
+    color: inherit;
+    float: left;
+    clear: both;
 }
 #joystick {
     cursor: crosshair;
+    border-radius: 10px;
+    border: 3px solid #122960;
+    background: inherit;
+    float: left;
+    margin-left: auto;
+    margin-right: auto;
+    color: #3D3242;
+    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
+}
+
+#vector {
+    float: left;
+}
+
+#videoCanvas {
+    float: left;
+    clear: none;
+    border-radius: 10px;
+    border: 3px solid #122960;
+    background: inherit;
+    color: #3D3242;
+    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
 }

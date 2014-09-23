@@ -1,7 +1,7 @@
 app.controller('JoystickController', ['$scope', 'GeneralSrv',
     function($scope, GeneralSrv) {
         $scope.lockJoystick = false;
-        $scope.lock8Directions = true;
+        $scope.lock8Directions = false;
         $scope.showVector = true;
         $scope.point = {
             x: 0,
@@ -11,9 +11,12 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
         var joystickctx = joystick.getContext('2d');
         var vector = document.getElementById('vector');
         var vectorctx = vector.getContext('2d');
-        var radius = joystick.width * 0.3;
-        var maxRadius = joystick.width * 0.4;
+        var radius = joystick.width * 0.2;
+        var maxRadius = joystick.width * 0.35;
+        var backgroundColor = "#8598C4";
+        var maxRadiusBGColor = "#39538D";
         var leftClick = 0;
+
         //draw canvas in initial state
         drawAll();
         //sets left click flag UP and calls mouseMove handler
@@ -63,7 +66,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
                 drawLineFromCenter(joystickctx, $scope.point.x, $scope.point.y);
                 drawLineFromCenter(vectorctx, $scope.point.x * vector.width / joystick.width, $scope.point.y * vector.width / joystick.width);
                 //redraw joystick position
-                drawCircle(joystickctx, $scope.point.x, $scope.point.y, radius, "grey");
+                drawCircle(joystickctx, $scope.point.x, $scope.point.y, radius, maxRadiusBGColor);
                 //set relative coordinates
                 $scope.point = centerCoord($scope.point, joystick);
                 //send coordinates back to server (websocket)
@@ -79,24 +82,24 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
         }
 
         function resetJoystick() {
-            joystickctx.fillStyle = "#081628";
+            joystickctx.fillStyle = backgroundColor;
             joystickctx.fillRect(0, 0, joystick.width, joystick.height);
             joystickctx.fillStyle = "black";
-            drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, maxRadius, "#8e98a4");
+            drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, maxRadius, maxRadiusBGColor);
         }
 
         function resetVector() {
-            vectorctx.fillStyle = "white";
+            vectorctx.fillStyle = backgroundColor;
             vectorctx.fillRect(0, 0, vector.width, vector.height);
             vectorctx.fillStyle = "black";
             vectorctx.fillRect(vector.width / 2 - 2, vector.height / 2 - 2, 4, 4);
-            drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * 0.4);
+            drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * 0.35);
         }
 
         function drawAll() {
             resetJoystick();
             resetVector();
-            drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, radius, "grey");
+            drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, radius, maxRadiusBGColor);
         }
 
         function drawCircle(ctx, x, y, radius, fillColor) {

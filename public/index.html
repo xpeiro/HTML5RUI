@@ -9,7 +9,8 @@
         <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
     </head>
     <body>
-        <div>
+    <div id="body">
+        <div class="toolbar">
             <input type="checkbox" name="Joystick On" data-ng-model="joystickOn" data-ng-click="toggle(joystickOn)">
             Joystick {{ joystickOn | OnOff}}
             <input type="checkbox" name="Data Monitor On" data-ng-model="dataMonitorOn" data-ng-click="toggle(dataMonitorOn)">
@@ -21,34 +22,35 @@
             <canvas width=200 height=200 id="joystick" data-touch>
             Canvas not supported
             </canvas>
-            <canvas width=200 height=200 id="vector" data-ng-show="showVector">
+            <canvas width=100 height=100 id="vector" data-ng-show="showVector">
             Canvas not supported
             </canvas>
+            <br>
             <span>X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
+            <br>
             <form>
                 <input type="checkbox" name="Lock Joystick" data-ng-model="lockJoystick" data-ng-click="toggle(lockJoystick)" data-ng-change="resetAll()">
-                Lock Joystick in Position
+                Lock Joystick in Position <br>
                 <input type="checkbox" name="Lock 8" data-ng-model="lock8Directions" data-ng-click="toggle(lock8Directions)">
-                Lock  Joystick to 8 Directions
+                Lock  Joystick to 8 Directions <br>
                 <input type="checkbox" name="Display Vector" data-ng-model="showVector" data-ng-click="toggle(showVector)">
-                Display Vector
+                Display Vector <br>
             </form>
         </div>
-        <div class="boxed" data-ng-controller="DataController" data-ng-if="dataMonitorOn">Robot Position <hr> x: {{position.x}} <br> y: {{position.y}} <br> z: {{position.z}}
-        </div>
-        <div data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn">
-            <canvas id="videoCanvas" width="640" height="480"></canvas>
-        </div>
 
+        <canvas data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn" id="videoCanvas" width="320" height="240"></canvas>
 
+        <div id="dataFrame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">Robot Position <hr> x: {{position.x}} <br> y: {{position.y}} <br> z: {{position.z}}
+        </div>
+    </div>
 
         <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
         <script type="text/javascript" src="javascripts/angular.min.js"></script>
-        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
-        <script type="text/javascript" src="javascripts/jsmpg.min.js"></script>
         <script type="text/javascript" src="javascripts/angularapp.js"></script>
-        <script type="text/javascript" src="javascripts/joystick.js"></script>
-        <script type="text/javascript" src="javascripts/datamonitor.js"></script>
-        <script type="text/javascript" src="javascripts/livevideo.js"></script>
+        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
+        <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
+        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
+        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
+        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
     </body>
 </html>
