@@ -25,12 +25,14 @@ io.on('connection', function(socket) {
     });
     // update mongodb with position on updateJoystick message
     socket.on('updateJoystick', function(data) {
+        console.log(data);
         collection.update({
             item: "joystick"
         }, {
             $set: {
                 x: data.x,
-                y: data.y
+                y: data.y,
+                mode: data.mode,
             }
         });
     });

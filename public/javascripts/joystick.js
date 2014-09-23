@@ -1,7 +1,7 @@
 app.controller('JoystickController', ['$scope', 'GeneralSrv',
     function($scope, GeneralSrv) {
         $scope.lockJoystick = false;
-        $scope.lock8Directions = false;
+        $scope.lockMode = 'fullAnalog';
         $scope.showVector = true;
         $scope.point = {
             x: 0,
@@ -16,7 +16,6 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
         var backgroundColor = "#8598C4";
         var maxRadiusBGColor = "#39538D";
         var leftClick = 0;
-
         //draw canvas in initial state
         drawAll();
         //sets left click flag UP and calls mouseMove handler
@@ -55,8 +54,10 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
                 };
                 //make coordinates relative to canvas center
                 $scope.point = centerCoord($scope.point, joystick);
-                //if 8 Directional Lock is ON, enforce
-                if ($scope.lock8Directions) $scope.point = force8directions($scope.point.x, $scope.point.y);
+                //if Directional Lock is ON, enforce
+                if ($scope.lockMode != "fullAnalog") {
+                    $scope.point = forceDirectionLock($scope.point.x, $scope.point.y, $scope.lockMode);
+                }
                 // force coordinates into maxRadius
                 if (!isInsideCircle($scope.point.x, $scope.point.y, maxRadius)) {
                     $scope.point = forceIntoCircle($scope.point.x, $scope.point.y, maxRadius);
@@ -70,7 +71,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
                 //set relative coordinates
                 $scope.point = centerCoord($scope.point, joystick);
                 //send coordinates back to server (websocket)
-                updateJoystick($scope.point);
+                updateJoystick($scope.point, $scope.lockMode);
             };
         }
         $scope.resetAll = function() {
@@ -78,7 +79,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             drawAll();
             $scope.point.x = 0;
             $scope.point.y = 0;
-            updateJoystick($scope.point);
+            updateJoystick($scope.point, $scope.lockMode);
         }
 
         function resetJoystick() {
@@ -146,18 +147,32 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             };
         }
 
-        function force8directions(x, y) {
+        function forceDirectionLock(x, y, lockMode) {
             var angle = Math.atan2(Math.abs(y), Math.abs(x));
-            if (angle > 30 * Math.PI / 180 && angle < 60 * Math.PI / 180) {
-                if (x * y > 0) {
-                    y = x;
-                } else {
-                    y = -x;
-                }
-            } else if (angle < 30 * Math.PI / 180) {
-                y = 0;
-            } else if (angle > 60 * Math.PI / 180) {
-                x = 0;
+            switch (lockMode) {
+                case "lock8ways":
+                    if (angle > 30 * Math.PI / 180 && angle < 60 * Math.PI / 180) {
+                        if (x * y > 0) {
+                            y = x;
+                        } else {
+                            y = -x;
+                        }
+                    } else if (angle < 30 * Math.PI / 180) {
+                        y = 0;
+                    } else if (angle > 60 * Math.PI / 180) {
+                        x = 0;
+                    }
+                    break;
+                case "lock4ways":
+                    if (angle < 45 * Math.PI / 180) {
+                        y = 0;
+                    } else {
+                        x = 0;
+                    }
+                    break;
+                case "lock2ways":
+                    x = 0;
+                    break;
             }
             return {
                 x: x,
@@ -179,13 +194,12 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             };
         }
 
-        function updateJoystick(point) {
+        function updateJoystick(point, lockMode) {
             GeneralSrv.socket.emit('updateJoystick', {
                 x: point.x.toFixed(2),
-                y: point.y.toFixed(2)
+                y: point.y.toFixed(2),
+                mode: lockMode
             });
         }
-
-
     }
 ]);

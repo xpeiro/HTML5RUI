@@ -29,10 +29,26 @@
                 <span>X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
                 <br>
                 <form>
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="radio" name="Lock Mode" data-ng-model="lockMode" data-value="fullAnalog">Full Analog
+                            </td>
+                            <td>
+                                <input type="radio" name="Lock Mode" data-ng-model="lockMode" data-value="lock8ways">8-Way
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" name="Lock Mode" data-ng-model="lockMode" data-value="lock4ways">4-Way
+                            </td>
+                            <td>
+                                <input type="radio" name="Lock Mode" data-ng-model="lockMode" data-value="lock2ways">2-Way
+                            </td>
+                        </tr>
+                    </table>
                     <input type="checkbox" name="Lock Joystick" data-ng-model="lockJoystick" data-ng-click="toggle(lockJoystick)" data-ng-change="resetAll()">
                     Lock Joystick in Position <br>
-                    <input type="checkbox" name="Lock 8" data-ng-model="lock8Directions" data-ng-click="toggle(lock8Directions)">
-                    Lock  Joystick to 8 Directions <br>
                     <input type="checkbox" name="Display Vector" data-ng-model="showVector" data-ng-click="toggle(showVector)">
                     Display Vector <br>
                 </form>
