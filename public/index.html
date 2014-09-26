@@ -11,11 +11,11 @@
     <body>
         <div id="body">
             <div class="toolbar">
-                <input type="checkbox" name="Joystick On" data-ng-model="joystickOn" data-ng-click="toggle(joystickOn)">
+                <input type="checkbox" id="joystickCheckbox" data-ng-model="joystickOn" data-ng-click="updateControls($event)">
                 Joystick {{ joystickOn | OnOff}}
-                <input type="checkbox" name="Data Monitor On" data-ng-model="dataMonitorOn" data-ng-click="toggle(dataMonitorOn)">
+                <input type="checkbox" id="dataMonitorCheckbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event)">
                 Data Monitor {{ dataMonitorOn | OnOff}}
-                <input type="checkbox" name="Live Video On" data-ng-model="liveVideoOn" data-ng-click="toggle(liveVideoOn)">
+                <input type="checkbox" id="liveVideoCheckbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event)">
                 Live Video {{ liveVideoOn | OnOff}}
             </div>
             <div data-ng-controller="JoystickController" data-ng-if="joystickOn" id="joystickFrame">
@@ -47,9 +47,9 @@
                             </td>
                         </tr>
                     </table>
-                    <input type="checkbox" name="Lock Joystick" data-ng-model="lockJoystick" data-ng-click="toggle(lockJoystick)" data-ng-change="resetAll()">
+                    <input type="checkbox" name="Lock Joystick" data-ng-model="lockJoystick" data-ng-change="resetAll()">
                     Lock Joystick in Position <br>
-                    <input type="checkbox" name="Display Vector" data-ng-model="showVector" data-ng-click="toggle(showVector)">
+                    <input type="checkbox" name="Display Vector" data-ng-model="showVector">
                     Display Vector <br>
                 </form>
             </div>

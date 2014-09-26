@@ -24,10 +24,7 @@ app.directive('touch', function() {
 app.service('GeneralSrv', function() {
     //open WebSocket
     this.socket = io.connect();
-
-    function toggle(bool) {
-        bool = !bool;
-    }
+    this.wsocket;
 });
 app.filter('OnOff', function() {
     return function(bool) {
@@ -35,8 +32,20 @@ app.filter('OnOff', function() {
     }
 });
 app.controller('HRUIController', ['$scope', 'GeneralSrv',
-    function($scope) {
+    function($scope, GeneralSrv) {
         $scope.joystickOn = true;
         $scope.dataMonitorOn = true;
+        $scope.liveVideoOn = false;
+        $scope.updateControls = function(control) {            
+            var changedControl = control.target.attributes.id.value;
+            switch (changedControl) {
+                case "liveVideoCheckbox":                    
+                    GeneralSrv.socket.emit('updateControls', { changedControl: changedControl, newValue: !$scope.liveVideoOn});
+                    if ($scope.liveVideoOn) {
+                        GeneralSrv.wsocket.close();
+                    };
+                    break;
+            }
+        }
     }
 ]);

@@ -1,9 +1,18 @@
 var PORT = 80;
+var WSPORT = 3000;
+var FFMPEGPORT = 8000;
+var STREAM_MAGIC_BYTES = 'jsmp';
+var PASSWORD = "hrui1311"
+var VIDEOWIDTH = 320;
+var VIDEOHEIGHT = 240;
+var FFMPEGCMD = "ffmpeg -s 320x240 -f video4linux2 -i /dev/video1 -f mpeg1video -b 200k -r 30 http://localhost:" + FFMPEGPORT + "/hrui1311/320/240/";
+//var PYTHONVREPCNTRL = "python vrepController.py";
 // get required modules
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var process = require("child_process");
 var monk = require('monk');
 var compression = require('compression');
 var favicon = require('serve-favicon');
@@ -25,7 +34,6 @@ io.on('connection', function(socket) {
     });
     // update mongodb with position on updateJoystick message
     socket.on('updateJoystick', function(data) {
-        console.log(data);
         collection.update({
             item: "joystick"
         }, {
@@ -36,6 +44,20 @@ io.on('connection', function(socket) {
             }
         });
     });
+    socket.on('updateControls', function(data) {
+        switch (data.changedControl) {
+            case "liveVideoCheckbox":
+                if (data.newValue === true) {
+                    console.log(FFMPEGCMD);
+                    process.exec(FFMPEGCMD, function(error, stdout, stderr) {
+                        if ( !! error) {
+                            console.log("FFMPEG Error Starting Stream: Already Started or Device not Available");
+                        }
+                    });
+                }
+                break;
+        }
+    });
     update = function(io) {
         collection.findOne({
             "item": "position"
@@ -43,7 +65,7 @@ io.on('connection', function(socket) {
             io.emit('update', rec);
             setTimeout(function() {
                 update(io);
-            }, 10);
+            }, 1000);
         });
     };
     update(io);
@@ -88,13 +110,6 @@ http.listen(PORT, function() {
     console.log('listening on *:' + PORT);
 });
 
-var WSPORT = 3000;
-var FFMPEGPORT = 8000;
-var STREAM_MAGIC_BYTES = 'jsmp';
-var PASSWORD = "hrui1311"
-var width = 320,
-    height = 240;
-
 /*VIDEO STREAMING CODE by Dominic Szablewski - phoboslab.org, github.com/phoboslab:
   http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/
 */
@@ -104,8 +119,8 @@ var socketServer = new(require('ws').Server)({
 socketServer.on('connection', function(socket) {
     var streamHeader = new Buffer(8);
     streamHeader.write(STREAM_MAGIC_BYTES);
-    streamHeader.writeUInt16BE(width, 4);
-    streamHeader.writeUInt16BE(height, 6);
+    streamHeader.writeUInt16BE(VIDEOWIDTH, 4);
+    streamHeader.writeUInt16BE(VIDEOHEIGHT, 6);
     socket.send(streamHeader, {
         binary: true
     });
@@ -139,12 +154,19 @@ var streamServer = require('http').createServer(function(request, response) {
         response.end();
     }
 }).listen(FFMPEGPORT);
-
 //END OF PHOBOSLAB CODE
-
 /* 
-FFMPEG Command:
+FFMPEG Commands:
+ 
+From dev file:
+
 ffmpeg -s 320x240 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 http://localhost:8000/hrui1311/320/240/
+
+From x11grab (screen capture):
+
+ffmpeg -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://localhost:8000/hrui1311/320/240/
+
+
 */
 
 module.exports = app;

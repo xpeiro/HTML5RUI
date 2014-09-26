@@ -1,7 +1,7 @@
 app.controller('JoystickController', ['$scope', 'GeneralSrv',
     function($scope, GeneralSrv) {
         $scope.lockJoystick = false;
-        $scope.lockMode = 'fullAnalog';
+        $scope.lockMode = 'lock4ways';
         $scope.showVector = true;
         $scope.point = {
             x: 0,
