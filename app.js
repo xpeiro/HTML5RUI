@@ -1,3 +1,4 @@
+// Define CONSTANTS
 var PORT = 80;
 var WSPORT = 3000;
 var FFMPEGPORT = 8000;
@@ -5,8 +6,9 @@ var STREAM_MAGIC_BYTES = 'jsmp';
 var PASSWORD = "hrui1311"
 var VIDEOWIDTH = 320;
 var VIDEOHEIGHT = 240;
-var FFMPEGCMD = "ffmpeg -s 320x240 -f video4linux2 -i /dev/video1 -f mpeg1video -b 200k -r 30 http://localhost:" + FFMPEGPORT + "/hrui1311/320/240/";
-//var PYTHONVREPCNTRL = "python vrepController.py";
+var VIDEODEVICE = "/dev/video1"
+var FFMPEGCMD = "ffmpeg -s 320x240 -f video4linux2 -i " + VIDEODEVICE + " -f mpeg1video -b 200k -r 30 http://localhost:" + FFMPEGPORT + "/hrui1311/320/240/";
+//var FFMPEGCMD = "ffmpeg -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://localhost:"+FFMPEGPORT+"/hrui1311/320/240/"
 // get required modules
 var express = require('express');
 var app = express();
@@ -51,7 +53,14 @@ io.on('connection', function(socket) {
                     console.log(FFMPEGCMD);
                     process.exec(FFMPEGCMD, function(error, stdout, stderr) {
                         if ( !! error) {
-                            console.log("FFMPEG Error Starting Stream: Already Started or Device not Available");
+                            switch (error.code) {
+                                case 255:
+                                    console.log("FFMPEG: Killed Process");
+                                    break;
+                                case 1:
+                                    console.log("FFMPEG: Device Not Found or Already Streaming");
+                                    break;
+                            }
                         }
                     });
                 }
@@ -109,7 +118,6 @@ app.use(function(err, req, res, next) {
 http.listen(PORT, function() {
     console.log('listening on *:' + PORT);
 });
-
 /*VIDEO STREAMING CODE by Dominic Szablewski - phoboslab.org, github.com/phoboslab:
   http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/
 */
@@ -124,9 +132,16 @@ socketServer.on('connection', function(socket) {
     socket.send(streamHeader, {
         binary: true
     });
-    console.log('New WebSocket Connection (' + socketServer.clients.length + ' total)');
+    console.log('New LiveVideo WebSocket Connection (' + socketServer.clients.length + ' total)');
     socket.on('close', function(code, message) {
-        console.log('Disconnected WebSocket (' + socketServer.clients.length + ' total)');
+        console.log('Disconnected LiveVideo WebSocket (' + socketServer.clients.length + ' total)');
+        if (socketServer.clients.length == 0) {
+            process.exec("killall ffmpeg", function(error, stdout, stderr) {
+                if ( !! error) {
+                    console.log("killall FFMPEG Processes Failed");
+                }
+            });
+        }
     });
 });
 socketServer.broadcast = function(data, opts) {
@@ -168,5 +183,4 @@ ffmpeg -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://loca
 
 
 */
-
 module.exports = app;
