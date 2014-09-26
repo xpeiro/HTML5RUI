@@ -6,7 +6,7 @@ var STREAM_MAGIC_BYTES = 'jsmp';
 var PASSWORD = "hrui1311"
 var VIDEOWIDTH = 320;
 var VIDEOHEIGHT = 240;
-var VIDEODEVICE = "/dev/video1"
+var VIDEODEVICE = "/dev/video0"
 var FFMPEGCMD = "ffmpeg -s 320x240 -f video4linux2 -i " + VIDEODEVICE + " -f mpeg1video -b 200k -r 30 http://localhost:" + FFMPEGPORT + "/hrui1311/320/240/";
 //var FFMPEGCMD = "ffmpeg -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://localhost:"+FFMPEGPORT+"/hrui1311/320/240/"
 // get required modules
@@ -50,7 +50,6 @@ io.on('connection', function(socket) {
         switch (data.changedControl) {
             case "liveVideoCheckbox":
                 if (data.newValue === true) {
-                    console.log(FFMPEGCMD);
                     process.exec(FFMPEGCMD, function(error, stdout, stderr) {
                         if ( !! error) {
                             switch (error.code) {
