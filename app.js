@@ -1,21 +1,22 @@
 // Define CONSTANTS
 var PORT = 80;
-var WSPORT = 3000;
 var FFMPEGPORT = 8000;
-var STREAM_MAGIC_BYTES = 'jsmp';
-var PASSWORD = "hrui1311"
+var WSPORT = 3000;
 var VIDEOWIDTH = 320;
 var VIDEOHEIGHT = 240;
 var VIDEODEVICE = "/dev/video0"
-var FFMPEGCMD = "ffmpeg -s 320x240 -f video4linux2 -i " + VIDEODEVICE + " -f mpeg1video -b 200k -r 30 http://localhost:" + FFMPEGPORT + "/hrui1311/320/240/";
+var FFMPEGCMD = "ffmpeg -s 320x240 -f video4linux2 -i " + VIDEODEVICE + " -f mpeg1video -b 200k -r 30 http://localhost:" + 8000 + "/hrui1311/320/240/";
 //var FFMPEGCMD = "ffmpeg -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://localhost:"+FFMPEGPORT+"/hrui1311/320/240/"
 // get required modules
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var process = require("child_process");
+var liveVideoServer = new(require('ws').Server)({
+    port: WSPORT
+});
 var monk = require('monk');
+var process = require("child_process");
 var compression = require('compression');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -23,61 +24,13 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var routes = require('./routes/index');
-// Mongodb setup
+// MongoDB Connection Setup (through monk)
 var db = monk('localhost:27017/hrui');
-var collection = db.get('data');
-// WebSocket (socket.io) setup
-io.on('connection', function(socket) {
-    // log user connect
-    console.log('a user connected');
-    // log user disconnect
-    socket.on('disconnect', function() {
-        console.log('user disconnected');
-    });
-    // update mongodb with position on updateJoystick message
-    socket.on('updateJoystick', function(data) {
-        collection.update({
-            item: "joystick"
-        }, {
-            $set: {
-                x: data.x,
-                y: data.y,
-                mode: data.mode,
-            }
-        });
-    });
-    socket.on('updateControls', function(data) {
-        switch (data.changedControl) {
-            case "liveVideoCheckbox":
-                if (data.newValue === true) {
-                    process.exec(FFMPEGCMD, function(error, stdout, stderr) {
-                        if ( !! error) {
-                            switch (error.code) {
-                                case 255:
-                                    console.log("FFMPEG: Killed Process");
-                                    break;
-                                case 1:
-                                    console.log("FFMPEG: Device Not Found or Already Streaming");
-                                    break;
-                            }
-                        }
-                    });
-                }
-                break;
-        }
-    });
-    update = function(io) {
-        collection.findOne({
-            "item": "position"
-        }, function(err, rec) {
-            io.emit('update', rec);
-            setTimeout(function() {
-                update(io);
-            }, 1000);
-        });
-    };
-    update(io);
-});
+var hruiData = db.get('data');
+// Socket.io setup
+require('./websockets/io')(io, FFMPEGCMD, hruiData);
+// Live Video Server Setup
+require('./websockets/liveVideoServer')(liveVideoServer, FFMPEGPORT, VIDEOWIDTH, VIDEOHEIGHT);
 // App Setup
 // compression setup (compress all requests)
 app.use(compression());
@@ -117,69 +70,4 @@ app.use(function(err, req, res, next) {
 http.listen(PORT, function() {
     console.log('listening on *:' + PORT);
 });
-/*VIDEO STREAMING CODE by Dominic Szablewski - phoboslab.org, github.com/phoboslab:
-  http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/
-*/
-var socketServer = new(require('ws').Server)({
-    port: WSPORT
-});
-socketServer.on('connection', function(socket) {
-    var streamHeader = new Buffer(8);
-    streamHeader.write(STREAM_MAGIC_BYTES);
-    streamHeader.writeUInt16BE(VIDEOWIDTH, 4);
-    streamHeader.writeUInt16BE(VIDEOHEIGHT, 6);
-    socket.send(streamHeader, {
-        binary: true
-    });
-    console.log('New LiveVideo WebSocket Connection (' + socketServer.clients.length + ' total)');
-    socket.on('close', function(code, message) {
-        console.log('Disconnected LiveVideo WebSocket (' + socketServer.clients.length + ' total)');
-        if (socketServer.clients.length == 0) {
-            process.exec("killall ffmpeg", function(error, stdout, stderr) {
-                if ( !! error) {
-                    console.log("killall FFMPEG Processes Failed");
-                }
-            });
-        }
-    });
-});
-socketServer.broadcast = function(data, opts) {
-    for (var i in this.clients) {
-        if (this.clients[i].readyState == 1) {
-            this.clients[i].send(data, opts);
-        } else {
-            console.log('Error: Client (' + i + ') not connected.');
-        }
-    }
-};
-var streamServer = require('http').createServer(function(request, response) {
-    var params = request.url.substr(1).split('/');
-    width = (params[1] || 320) | 0;
-    height = (params[2] || 240) | 0;
-    if (params[0] == PASSWORD) {
-        console.log('Stream Connected: ' + request.socket.remoteAddress + ':' + request.socket.remotePort + ' size: ' + width + 'x' + height);
-        request.on('data', function(data) {
-            socketServer.broadcast(data, {
-                binary: true
-            });
-        });
-    } else {
-        console.log('Failed Stream Connection: ' + request.socket.remoteAddress + request.socket.remotePort + ' - wrong secret.');
-        response.end();
-    }
-}).listen(FFMPEGPORT);
-//END OF PHOBOSLAB CODE
-/* 
-FFMPEG Commands:
- 
-From dev file:
-
-ffmpeg -s 320x240 -f video4linux2 -i /dev/video0 -f mpeg1video -b 800k -r 30 http://localhost:8000/hrui1311/320/240/
-
-From x11grab (screen capture):
-
-ffmpeg -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://localhost:8000/hrui1311/320/240/
-
-
-*/
 module.exports = app;
