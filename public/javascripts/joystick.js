@@ -12,7 +12,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
         var vector = document.getElementById('vector');
         var vectorctx = vector.getContext('2d');
         var radius = joystick.width * 0.2;
-        var maxRadius = joystick.width * 0.35;
+        var maxRadius = joystick.width * 0.3;
         var backgroundColor = "#8598C4";
         var maxRadiusBGColor = "#39538D";
         var leftClick = 0;
@@ -94,7 +94,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             vectorctx.fillRect(0, 0, vector.width, vector.height);
             vectorctx.fillStyle = "black";
             vectorctx.fillRect(vector.width / 2 - 2, vector.height / 2 - 2, 4, 4);
-            drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * 0.35);
+            drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * maxRadius/joystick.width);
         }
 
         function drawAll() {

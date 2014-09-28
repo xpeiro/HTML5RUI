@@ -52,7 +52,7 @@ module.exports = function(io, FFMPEGCMD, hruiData) {
                 io.emit('update', rec);
                 setTimeout(function() {
                     update(io);
-                }, 1000);
+                }, 100);
             });
         };
         update(io);

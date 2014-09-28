@@ -3,9 +3,11 @@ span {
     margin-left: 5px;
     white-space: nowrap;
     display: inline;
-
 }
 div {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     padding: 12px;
     border-radius: 10px;
     border: 2px solid #122960;
@@ -53,11 +55,9 @@ form {
     color: #3D3242;
     /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
 }
-
 #vector {
     float: left;
 }
-
 #videoCanvas {
     float: left;
     clear: none;

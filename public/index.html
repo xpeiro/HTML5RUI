@@ -19,7 +19,7 @@
                 Live Video {{ liveVideoOn | OnOff}}
             </div>
             <div data-ng-controller="JoystickController" data-ng-if="joystickOn" id="joystickFrame">
-                <canvas width=200 height=200 id="joystick" data-touch>
+                <canvas width=300 height=300 id="joystick" data-touch>
                 Canvas not supported
                 </canvas>
                 <canvas width=100 height=100 id="vector" data-ng-show="showVector">
@@ -61,14 +61,14 @@
             <a href="http://www.w3.org/html/logo/">
             <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
             </a>
-            <h6>By Daniel Peiró <a href="http://github.com/xpeiro/HTML5RUI">Github Repo</a></h6>
+            <h6>By Daniel Peiró (except where credited in source)<a href="http://github.com/xpeiro/HTML5RUI">Github Repo</a></h6>
         </footer>
         <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
         <script type="text/javascript" src="javascripts/angular.min.js"></script>
         <script type="text/javascript" src="javascripts/angularapp.js"></script>
-        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
         <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
         <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
+        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
     </body>
