@@ -21,7 +21,7 @@ socketServer.on('connection', function(socket) {
     socket.on('close', function(code, message) {
         console.log('Disconnected LiveVideo WebSocket (' + socketServer.clients.length + ' total)');
         if (socketServer.clients.length == 0) {
-            process.exec("killall ffmpeg", function(error, stdout, stderr) {
+            process.exec("killall avconv", function(error, stdout, stderr) {
                 if ( !! error) {
                     console.log("killall FFMPEG Processes Failed");
                 }

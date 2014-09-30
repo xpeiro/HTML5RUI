@@ -1,1 +1,47 @@
 HTML5 Robot User Interface
+
+Installation (Debian/Ubuntu/Mint):
+
+1. Install nodejs, npm:
+	$ sudo apt-get install nodejs npm
+
+   NOTE: On older systems (i.e. 32-Bit, Debian), nodejs-legacy package may also be required.
+
+2. Install MongoDB (http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/):
+
+	$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+	$ echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+	$ sudo apt-get update
+	$ sudo apt-get install -y mongodb-org
+	$ sudo service mongod start
+
+   To check if mongodb was installed correctly, run mongo:
+	$ mongo
+
+   Configure MongoDB:
+     //In Construction.
+
+3. Open HTML5RUI-master directory.
+
+4. install app:
+	$ npm install
+
+5. run app:
+	$ npm start
+
+6. Install avconv (Optional, required for video streaming):
+	$ sudo apt-get install libav-tools
+
+Note on using port 80:
+	The app is setup to use port 80 by default.
+	Using standard HTTP Port 80 requires root privileges.
+	If user is not root, an EACCES error will be thrown on app start (using sudo will work, but is a security risk).
+	To use a different port (greater than 1024), Open app.js and modify line 2 to the desired Port (should not be the same as FFMPEGPORT or WSPORT),save changes and restart app if necessary.
+	The server can then be reached at:
+		http://localhost:XXXX/ 
+	where XXXX is the chose PORT. (i.e. for PORT=8100; http://localhost:8100)
+
+
+	There are several ways to use or redirect Port 80 without root privileges:
+		http://stackoverflow.com/questions/413807/is-there-a-way-for-non-root-processes-to-bind-to-privileged-ports-1024-on-l
+
