@@ -54,7 +54,29 @@
                 </form>
             </div>
             <canvas data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn" id="videoCanvas" width="320" height="240"></canvas>
-            <div id="dataFrame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">Robot Position <hr> x: {{position.x}} <br> y: {{position.y}} <br> z: {{position.z}}
+            <div id="dataFrame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
+                <table>
+                    <tr>
+                        <th>Position</th>
+                        <th>Orientation</th>
+                        <th>Speed</th>
+                    </tr>
+                    <tr>
+                        <td>x:{{position.x}}</td>
+                        <td>&alpha;:</td>
+                        <td>v<sub>x</sub>:</td>
+                    </tr>
+                    <tr>
+                        <td>y:{{position.y}}</td>
+                        <td>&beta;:</td>
+                        <td>v<sub>y</sub>:</td>
+                    </tr>
+                    <tr>
+                        <td>z:{{position.z}}</td>
+                        <td>&gamma;:</td>
+                        <td>v<sub>z</sub>:</td>
+                    </tr>
+                </table>
             </div>
         </div>
         <footer>
