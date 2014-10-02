@@ -23,7 +23,7 @@ socketServer.on('connection', function(socket) {
         if (socketServer.clients.length == 0) {
             process.exec("killall avconv", function(error, stdout, stderr) {
                 if ( !! error) {
-                    console.log("killall FFMPEG Processes Failed");
+                    console.log("killall AVCONV Processes Failed");
                 }
             });
         }

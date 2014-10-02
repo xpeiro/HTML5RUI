@@ -1,9 +1,3 @@
-span {
-    font-family: monospace;
-    margin-left: 5px;
-    white-space: nowrap;
-    display: inline;
-}
 div {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -13,62 +7,51 @@ div {
     border: 2px solid #122960;
     background: #8598C4;
     color: #3D3242;
-    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
 }
 form {
     white-space: nowrap;
     display: inline;
 }
-
-table, th, td {
-    border: 1px solid #122960;
-}
-
-#body {
-    padding: 12px;
+canvas {
+    float: left;
     border-radius: 10px;
-    border: 2px solid #122960;
-    background: #8598C4;
+    border: 3px solid #122960;
+    background: inherit;
+    color: #3D3242;
+    margin-left: auto;
+    margin-right: auto
+}
+span {
+    font-family: monospace;
+    margin-left: 5px;
+    white-space: nowrap;
+    display: inline;
+}
+.body {
     color: #122960;
     display: inline-block;
 }
-#joystickFrame {
-    padding-right: 40px;
-    border-radius: 10px;
-    border: 2px solid #122960;
-    background: inherit;
-    clear: left;
-    color: inherit;
-    display: inline-block;
-    float: left;
-    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
+.dataTable td, th {
+    border: 1px solid #122960;
+    white-space: nowrap;
+    margin-right: 1px;
 }
-#dataFrame {
-    border-style: solid;
+.dataFrame {
     color: inherit;
     float: left;
     clear: both;
 }
+#joystickFrame {
+    clear: left;
+    display: inline-block;
+    float: left;
+}
 #joystick {
     cursor: crosshair;
-    border-radius: 10px;
-    border: 3px solid #122960;
-    background: inherit;
-    float: left;
-    margin-left: auto;
-    margin-right: auto;
-    color: #3D3242;
-    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
 }
 #vector {
-    float: left;
+    border: none;
 }
 #videoCanvas {
-    float: left;
     clear: none;
-    border-radius: 10px;
-    border: 3px solid #122960;
-    background: inherit;
-    color: #3D3242;
-    /*box-shadow: #B3B3B3 5px 5px 5px inset;*/
 }

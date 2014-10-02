@@ -1,12 +1,12 @@
 // Define CONSTANTS
 var PORT = 80;
-var FFMPEGPORT = 8000;
+var AVCONVPORT = 8000;
 var WSPORT = 3000;
 var VIDEOWIDTH = 320;
 var VIDEOHEIGHT = 240;
 var VIDEODEVICE = "/dev/video0"
-var FFMPEGCMD = "avconv -s 320x240 -f video4linux2 -i " + VIDEODEVICE + " -f mpeg1video -b 200k -r 30 http://localhost:" + 8000 + "/hrui1311/320/240/";
-//var FFMPEGCMD = "avconv -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://localhost:"+FFMPEGPORT+"/hrui1311/320/240/"
+var AVCONVCMD = "avconv -s 320x240 -f video4linux2 -i " + VIDEODEVICE + " -f mpeg1video -b 200k -r 30 http://localhost:" + AVCONVPORT + "/hrui1311/320/240/";
+//var AVCONVCMD = "avconv -f x11grab -s 1366x768 -r 30 -i :0.0 -f mpeg1video -s 320x240 http://localhost:" + AVCONVPORT + "/hrui1311/320/240/"
 // get required modules
 var express = require('express');
 var app = express();
@@ -28,9 +28,9 @@ var routes = require('./routes/index');
 var db = monk('localhost:27017/hrui');
 var hruiData = db.get('data');
 // Socket.io setup
-require('./websockets/io')(io, FFMPEGCMD, hruiData);
+require('./websockets/io')(io, AVCONVCMD, hruiData);
 // Live Video Server Setup
-require('./websockets/liveVideoServer')(liveVideoServer, FFMPEGPORT, VIDEOWIDTH, VIDEOHEIGHT);
+require('./websockets/liveVideoServer')(liveVideoServer, AVCONVPORT, VIDEOWIDTH, VIDEOHEIGHT);
 // App Setup
 // compression setup (compress all requests)
 app.use(compression());

@@ -39,7 +39,7 @@ Note on using port 80:
 	To use a different port (greater than 1024), Open app.js and modify line 2 to the desired Port (should not be the same as FFMPEGPORT or WSPORT),save changes and restart app if necessary.
 	The server can then be reached at:
 		http://localhost:XXXX/ 
-	where XXXX is the chose PORT. (i.e. for PORT=8100; http://localhost:8100)
+	where XXXX is the chosen PORT. (i.e. for PORT=8100; http://localhost:8100)
 
 
 	There are several ways to use or redirect Port 80 without root privileges:
