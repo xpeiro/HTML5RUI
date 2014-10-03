@@ -1,0 +1,1 @@
+<service><id>hrui.exe</id><name>hrui</name><description>NodeJS Service</description><executable>C:\Program Files\nodejs\node.exe</executable><arguments>--harmony "C:\Users\Dani Peiró\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js" -f "C:\code\hrui\app.js" -l "hrui" -g 0.25 -w 1 -r 3 -a n</arguments><logmode>rotate</logmode></service>

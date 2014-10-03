@@ -45,3 +45,36 @@ Note on using port 80:
 	There are several ways to use or redirect Port 80 without root privileges:
 		http://stackoverflow.com/questions/413807/is-there-a-way-for-non-root-processes-to-bind-to-privileged-ports-1024-on-l
 
+Installation (Windows):
+
+The server is meant to be deployed on Linux. It can be installed on Windows, but it's not recommended as installation is cumbersome (not of the app itself, dependencies) and some features aren't available (Live Video for example, requires dev/videoN devices, not available on windows).
+
+1. Install NodeJS from http://nodejs.org/ . Make sure NPM package manager is installed (it is by default).
+
+2. Install MongoDB from http://www.mongodb.org/downloads
+
+3. Configure MongoDB: In construction.
+
+4. Install HTML5RUI:
+	Open cmd in HTML5RUI directory.
+		>npm install
+
+	(Optional) Install app as windows service (daemonize and keep running):
+		Install node-windows (globally):
+			>npm install -g node-windows
+		Open cmd in HTML5RUI/utils.
+			>node winsvc install name
+			(where "name" is the name the service will have/has)
+		Other actions:
+			>node winsvc uninstall name
+			>node winsvc start name
+			>node winsvc stop name
+
+5. Run app manually (if not installed as service):
+	Open cmd in HTML5RUI directory:
+		>npm start
+
+Possible issues with Windows installation:
+	npm error when trying to install (missing folder npm): Create folder manually (normally in AppData/Roaming/npm).
+	MongoDB error (missing data/db/): Create folder manually where the database will be stored (use of MongoDB installation folder recommended).
+	npm, node, mongod and mongo should be in your PATH if you don't want to specify it each time you use them.
