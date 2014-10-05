@@ -32,4 +32,5 @@ _$*
 .project
 *.sublime*
 node_modules
+daemon
 npm-debug.log
