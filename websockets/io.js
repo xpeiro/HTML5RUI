@@ -2,7 +2,7 @@
 // get updater module
 var updaters = require('../controllers/updaters');
 // hook events to updater handlers
-module.exports = function(io, AVCONVCMD, hruiData) {
+module.exports = function(io, AVCONVCMD, hruiDataDB) {
     io.clients = 0;
     io.on('connection', function(socket) {
         // log user connect
@@ -15,24 +15,24 @@ module.exports = function(io, AVCONVCMD, hruiData) {
         });
         // update mongodb with joystick position
         socket.on('updateJoystick', function(data) {
-            updaters.updateJoystick(data, hruiData);
+            updaters.updateJoystick(data, hruiDataDB);
         });
         //update currently selected HRUI Controls
         socket.on('updateControls', function(data) {
             updaters.updateControls(data, AVCONVCMD);
         });
         // function to send robot data to front end when called
-        updateDataCallback = function(data) {
+        sendData = function(data) {
             socket.emit('updateData', data);
         };
         // set off periodic data update
-        periodicUpdate(hruiData, updateDataCallback);
+        periodicUpdate(hruiDataDB, sendData);
     });
 };
-// calls updateData (with callback function) every 100 ms
-periodicUpdate = function(hruiData, updateDataCallback) {
-    updaters.updateData(hruiData, updateDataCallback);
+// calls updaters.updateData every 100 ms
+periodicUpdate = function(hruiDataDB, sendDataFunction) {
+    updaters.updateData(hruiDataDB, sendDataFunction);
     setTimeout(function() {
-        periodicUpdate(hruiData, updateDataCallback);
+        periodicUpdate(hruiDataDB, sendDataFunction);
     }, 100);
 };

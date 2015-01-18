@@ -26,9 +26,9 @@ var path = require('path');
 var routes = require('./routes/index');
 // MongoDB Connection Setup (through monk)
 var db = monk('localhost:27017/hrui');
-var hruiData = db.get('data');
+var hruiDataDB = db.get('data');
 // Socket.io setup
-require('./websockets/io')(io, AVCONVCMD, hruiData);
+require('./websockets/io')(io, AVCONVCMD, hruiDataDB);
 // Live Video Server Setup
 require('./websockets/liveVideoServer')(liveVideoServer, AVCONVPORT, VIDEOWIDTH, VIDEOHEIGHT);
 // App Setup

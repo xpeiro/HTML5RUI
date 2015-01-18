@@ -1,7 +1,8 @@
 var process = require("child_process");
 module.exports = {
-    updateJoystick: function(data, hruiData) {
-        hruiData.update({
+    //update MongoDB with joystick coordinates
+    updateJoystick: function(data, hruiDataDB) {
+        hruiDataDB.update({
             item: "joystick"
         }, {
             $set: {
@@ -11,6 +12,7 @@ module.exports = {
             }
         });
     },
+    // Run or kill avconv when live video is toggled
     updateControls: function(data, AVCONVCMD) {
         switch (data.changedControl) {
             case "liveVideoCheckbox":
@@ -31,11 +33,12 @@ module.exports = {
                 break;
         }
     },
-    updateData: function(hruiData, updateDataCallback) {
-        hruiData.findOne({
+    //get robot data from MongoDB and call data sending function
+    updateData: function(hruiDataDB, sendDataFunction) {
+        hruiDataDB.findOne({
             "item": "robotData"
         }, function(err, data) {
-            updateDataCallback(data);
+            sendDataFunction(data);
         });
     }
 }
