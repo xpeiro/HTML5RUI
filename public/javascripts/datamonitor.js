@@ -5,7 +5,7 @@ app.controller('DataController', ['$scope', 'GeneralSrv',
         var arrow = new Image();
         arrow.src = 'arrow.png';
         var backgroundColor = "#8598C4";
-
+        $scope.scale =60;
         function drawCircle(ctx, x, y, radius, fillColor) {
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
@@ -39,14 +39,11 @@ app.controller('DataController', ['$scope', 'GeneralSrv',
 
 
         GeneralSrv.socket.on('updateData', function(data) {
-            mapctx.save();
+            
             mapctx.fillStyle = backgroundColor;
             mapctx.fillRect(0, 0, joystick.width, joystick.height);
-            mapctx.translate(map.width/2, map.height/2);
-            mapctx.translate(10,6);
-            mapctx.rotate(3.14159*data.orientation.beta/180);
-            mapctx.drawImage(arrow,10*data.position.x,10*data.position.y,20,12);
-            mapctx.restore();
+            
+            drawCircle(mapctx,$scope.scale*data.position.x+map.width/2,-$scope.scale*data.position.y+map.height/2,5,"black");
             $scope.position = data.position;
             $scope.orientation = data.orientation;
             $scope.speed = data.speed;
@@ -55,3 +52,8 @@ app.controller('DataController', ['$scope', 'GeneralSrv',
         });
     }
 ]);
+// mapctx.save();
+// mapctx.translate(map.width/2, map.height/2);
+// mapctx.translate(10,6);
+// mapctx.rotate(3.14159*data.orientation.beta/180);
+// mapctx.restore();
