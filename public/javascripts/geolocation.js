@@ -1,20 +1,20 @@
-app.controller('GeolocationController', ['$scope', 'GeneralSrv',
-    function($scope, GeneralSrv) {
-        var mapball = {
-            url: 'mapball.svg',
+app.controller('GeolocationController', ['$scope', 'SocketSrv',
+    function($scope, SocketSrv) {
+        var geoMapball = {
+            url: 'geomapball.svg',
             size: new google.maps.Size(245, 248),
             scaledSize: new google.maps.Size(10, 10),
             anchor: new google.maps.Point(5, 5),            
         }
-        var mapOptions = {
+        var geoMapOptions = {
             center: new google.maps.LatLng(40.496534, -3.877457),
             zoom: 18,
             mapTypeId: google.maps.MapTypeId.HYBRID,
             streetViewControl: false,
         };
-        var map = new google.maps.Map(document.getElementById('geolocation'), mapOptions);
+        var geoMap = new google.maps.Map(document.getElementById('geolocation'), geoMapOptions);
         var marker = new google.maps.Marker({
-            icon: mapball,
+            icon: geoMapball,
             position: new google.maps.LatLng(40.496534, -3.877457),
         });
         var accuracyRadius = new google.maps.Circle({
@@ -27,14 +27,14 @@ app.controller('GeolocationController', ['$scope', 'GeneralSrv',
             fillOpacity: 0.4
         });
 
-        marker.setMap(map);
-        accuracyRadius.setMap(map);
+        marker.setMap(geoMap);
+        accuracyRadius.setMap(geoMap);
 
-        GeneralSrv.socket.on('updateGeolocation', function(data) {
+        SocketSrv.socket.on('updateGeolocation', function(data) {
             marker.setPosition(new google.maps.LatLng(data.latitude, data.longitude));
-            accuracyRadius.setCenter(marker.getPosition());
             accuracyRadius.setRadius(Number(data.accuracyRadiusInMeters));
-            map.panTo(marker.getPosition());
+            accuracyRadius.setCenter(marker.getPosition());
+            geoMap.panTo(marker.getPosition());
         });
     }
 ]);

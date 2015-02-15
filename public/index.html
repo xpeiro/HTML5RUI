@@ -19,6 +19,8 @@
                 Live Video {{ liveVideoOn | OnOff}}
                 <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event)">
                 Geolocation {{ geolocationOn | OnOff}}
+                <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event)">
+                Custom Data {{ customDataOn | OnOff}}
             </div>
             <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
                 <canvas id="joystick" class="canvas" data-touch width=300 height=300>
@@ -61,7 +63,6 @@
                 <form class="form">
                     Map Scale:<input type="number" data-ng-model="scale">
                 </form>
-
                 <table id="dataTable">
                     <tr>
                         <th>Position</th>
@@ -90,6 +91,11 @@
                 </table>
             </div>
             <div id="geolocation" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
+            <div id="customdata" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
+                <form id="customdataform" class="form">
+                    Item Name: <input type="text">
+                </form>
+            </div>
         </div>
         <footer>
             <a href="http://www.w3.org/html/logo/">
@@ -100,12 +106,14 @@
         <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
         <script type="text/javascript" src="javascripts/angular.min.js"></script>
         <script type="text/javascript" src="javascripts/angularapp.js"></script>
+        <script type="text/javascript" src="javascripts/angularservices.js"></script>
         <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
         <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
         <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
-        <script type="text/javascript" src="javascripts/googlemaps.js"></script>
-        <script type="text/javascript" src="javascripts/geolocation.js"></script>
+        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/googlemaps.min.js"></script>
+        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
+        <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
     </body>
 </html>

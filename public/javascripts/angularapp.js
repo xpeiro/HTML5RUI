@@ -1,4 +1,5 @@
 var app = angular.module('HRUI', []);
+//directive to override default touch controls on joystick and link touch events to handler functions
 app.directive('touch', function() {
     return {
         link: function(scope, element, attrs) {
@@ -21,32 +22,33 @@ app.directive('touch', function() {
         }
     }
 });
-app.service('GeneralSrv', function() {
-    //open WebSocket
-    this.socket = io.connect();
-    this.wsocket;
-});
-app.filter('OnOff', function() {
-    return function(bool) {
-        return bool ? 'On' : 'Off';
-    }
-});
-app.controller('HRUIController', ['$scope', 'GeneralSrv',
-    function($scope, GeneralSrv) {
+//main app controller. manages active modules and notifies back-end of change in controls when necessary.
+app.controller('HRUIController', ['$scope', 'SocketSrv',
+    function($scope, SocketSrv) {
         $scope.joystickOn = true;
         $scope.dataMonitorOn = true;
         $scope.liveVideoOn = false;
         $scope.geolocationOn = false;
-        $scope.updateControls = function(control) {            
+        $scope.customDataOn = false;
+        $scope.updateControls = function(control) {
             var changedControl = control.target.attributes.id.value;
             switch (changedControl) {
-                case "liveVideoCheckbox":                    
-                    GeneralSrv.socket.emit('updateControls', { changedControl: changedControl, newValue: !$scope.liveVideoOn});
+                case "liveVideoCheckbox":
+                    SocketSrv.socket.emit('updateControls', {
+                        changedControl: changedControl,
+                        newValue: !$scope.liveVideoOn
+                    });
                     if ($scope.liveVideoOn) {
-                        GeneralSrv.wsocket.close();
+                        SocketSrv.wsocket.close();
                     };
                     break;
             }
         }
     }
 ]);
+//string filter. Returns 'On' if given boolean is true, 'Off' otherwise.
+app.filter('OnOff', function() {
+    return function(bool) {
+        return bool ? 'On' : 'Off';
+    }
+});

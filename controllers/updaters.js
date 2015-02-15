@@ -1,26 +1,26 @@
 var process = require("child_process");
 
 // updates Data every 100 ms
-var UpdateData = function(hruiDataDB, sendData) {
+var updateData = function(hruiDataDB, sendData) {
         hruiDataDB.findOne({
             "item": "robotData"
         }, function(err, data) {
             sendData('updateData',data);
         });
         setTimeout(function() {
-            UpdateData(hruiDataDB, sendData);
+            updateData(hruiDataDB, sendData);
         }, 100);
     };
 // updates Geolocation every 5000 ms
-var UpdateGeolocation = function(hruiDataDB, sendData) {
+var updateGeolocation = function(hruiDataDB, sendData) {
         hruiDataDB.findOne({
             "item": "robotGeolocation"
         }, function(err, data) {
             sendData('updateGeolocation',data);
         });
         setTimeout(function() {
-            UpdateGeolocation(hruiDataDB, sendData);
-        }, 500);
+            updateGeolocation(hruiDataDB, sendData);
+        }, 2000);
     };
 
 module.exports = {
@@ -58,7 +58,7 @@ module.exports = {
         }
     },
 
-    UpdateData: UpdateData,
+    updateData: updateData,
 
-    UpdateGeolocation: UpdateGeolocation,
+    updateGeolocation: updateGeolocation,
 };

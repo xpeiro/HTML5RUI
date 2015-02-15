@@ -1,5 +1,5 @@
-app.controller('JoystickController', ['$scope', 'GeneralSrv',
-    function($scope, GeneralSrv) {
+app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'GeometrySrv',
+    function($scope, SocketSrv, DrawSrv, GeometrySrv) {
         $scope.lockJoystick = false;
         $scope.lockMode = 'lock4ways';
         $scope.showVector = true;
@@ -53,23 +53,23 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
                     $scope.point.y = evt.pageY - joystick.offsetTop - 3;
                 };
                 //make coordinates relative to canvas center
-                $scope.point = centerCoord($scope.point, joystick);
+                $scope.point = GeometrySrv.centerCoord($scope.point, joystick);
                 //if Directional Lock is ON, enforce
                 if ($scope.lockMode != "fullAnalog") {
-                    $scope.point = forceDirectionLock($scope.point.x, $scope.point.y, $scope.lockMode);
+                    $scope.point = GeometrySrv.forceDirectionLock($scope.point.x, $scope.point.y, $scope.lockMode);
                 }
                 // force coordinates into maxRadius
-                if (!isInsideCircle($scope.point.x, $scope.point.y, maxRadius)) {
-                    $scope.point = forceIntoCircle($scope.point.x, $scope.point.y, maxRadius);
+                if (!GeometrySrv.isInsideCircle($scope.point.x, $scope.point.y, maxRadius)) {
+                    $scope.point = GeometrySrv.forceIntoCircle($scope.point.x, $scope.point.y, maxRadius);
                 }
                 //change coordinates back to absolute reference
-                $scope.point = canvasCoord($scope.point, joystick);
-                drawLineFromCenter(joystickctx, $scope.point.x, $scope.point.y);
-                drawLineFromCenter(vectorctx, $scope.point.x * vector.width / joystick.width, $scope.point.y * vector.width / joystick.width);
+                $scope.point = GeometrySrv.canvasCoord($scope.point, joystick);
+                DrawSrv.drawLineFromCenter(joystickctx, $scope.point.x, $scope.point.y);
+                DrawSrv.drawLineFromCenter(vectorctx, $scope.point.x * vector.width / joystick.width, $scope.point.y * vector.width / joystick.width);
                 //redraw joystick position
-                drawCircle(joystickctx, $scope.point.x, $scope.point.y, radius, maxRadiusBGColor);
+                DrawSrv.drawCircle(joystickctx, $scope.point.x, $scope.point.y, radius, maxRadiusBGColor);
                 //set relative coordinates
-                $scope.point = centerCoord($scope.point, joystick);
+                $scope.point = GeometrySrv.centerCoord($scope.point, joystick);
                 //send coordinates back to server (websocket)
                 updateJoystick($scope.point, $scope.lockMode);
             };
@@ -86,7 +86,7 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             joystickctx.fillStyle = backgroundColor;
             joystickctx.fillRect(0, 0, joystick.width, joystick.height);
             joystickctx.fillStyle = "black";
-            drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, maxRadius, maxRadiusBGColor);
+            DrawSrv.drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, maxRadius, maxRadiusBGColor);
         }
 
         function resetVector() {
@@ -94,108 +94,17 @@ app.controller('JoystickController', ['$scope', 'GeneralSrv',
             vectorctx.fillRect(0, 0, vector.width, vector.height);
             vectorctx.fillStyle = "black";
             vectorctx.fillRect(vector.width / 2 - 2, vector.height / 2 - 2, 4, 4);
-            drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * maxRadius/joystick.width);
+            DrawSrv.drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * maxRadius/joystick.width);
         }
 
         function drawAll() {
             resetJoystick();
             resetVector();
-            drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, radius, maxRadiusBGColor);
-        }
-
-        function drawCircle(ctx, x, y, radius, fillColor) {
-            ctx.beginPath();
-            ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-            if ( !! fillColor) { //if fillColor arg given, fill in circle.
-                ctx.fillStyle = fillColor;
-                ctx.fill();
-            };
-            ctx.stroke();
-        }
-
-        function drawLineFromCenter(ctx, x, y) {
-            ctx.beginPath();
-            ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);
-            ctx.lineTo(x, y);
-            ctx.stroke();
-        }
-
-        function writeInCanvas(ctx, font, text, x, y) {
-            ctx.font = font;
-            ctx.fillText(text, x, y);
-        }
-
-        function isInsideCircle(x, y, radius) {
-            return ((x * x + y * y) <= (radius * radius));
-        }
-
-        function forceIntoCircle(x, y, radius) {
-            var a = y / x;
-            if (x > 0) {
-                x = radius / Math.sqrt(1 + a * a);
-            } else {
-                x = -radius / Math.sqrt(1 + a * a);
-            }
-            if (y > 0) {
-                y = radius / Math.sqrt(1 + 1 / (a * a));
-            } else {
-                y = -radius / Math.sqrt(1 + 1 / (a * a));
-            }
-            return {
-                x: x,
-                y: y
-            };
-        }
-
-        function forceDirectionLock(x, y, lockMode) {
-            var angle = Math.atan2(Math.abs(y), Math.abs(x));
-            switch (lockMode) {
-                case "lock8ways":
-                    if (angle > 30 * Math.PI / 180 && angle < 60 * Math.PI / 180) {
-                        if (x * y > 0) {
-                            y = x;
-                        } else {
-                            y = -x;
-                        }
-                    } else if (angle < 30 * Math.PI / 180) {
-                        y = 0;
-                    } else if (angle > 60 * Math.PI / 180) {
-                        x = 0;
-                    }
-                    break;
-                case "lock4ways":
-                    if (angle < 45 * Math.PI / 180) {
-                        y = 0;
-                    } else {
-                        x = 0;
-                    }
-                    break;
-                case "lock2ways":
-                    x = 0;
-                    break;
-            }
-            return {
-                x: x,
-                y: y
-            };
-        }
-
-        function centerCoord(point, canvas) {
-            return {
-                x: point.x - canvas.width / 2,
-                y: canvas.height / 2 - point.y,
-            };
-        }
-
-        function canvasCoord(point, canvas) {
-            return {
-                x: point.x + canvas.width / 2,
-                y: canvas.height / 2 - point.y,
-            };
+            DrawSrv.drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, radius, maxRadiusBGColor);
         }
 
         function updateJoystick(point, lockMode) {
-            GeneralSrv.socket.emit('updateJoystick', {
+            SocketSrv.socket.emit('updateJoystick', {
                 x: point.x.toFixed(2),
                 y: point.y.toFixed(2),
                 mode: lockMode
