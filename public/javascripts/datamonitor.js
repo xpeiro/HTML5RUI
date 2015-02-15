@@ -2,8 +2,6 @@ app.controller('DataController', ['$scope', 'GeneralSrv',
     function($scope, GeneralSrv) {
         var map = document.getElementById('mapcanvas');
         var mapctx = map.getContext('2d');
-        var arrow = new Image();
-        arrow.src = 'arrow.png';
         var backgroundColor = "#8598C4";
         $scope.scale =60;
         function drawCircle(ctx, x, y, radius, fillColor) {

@@ -1,4 +1,28 @@
 var process = require("child_process");
+
+// updates Data every 100 ms
+var UpdateData = function(hruiDataDB, sendData) {
+        hruiDataDB.findOne({
+            "item": "robotData"
+        }, function(err, data) {
+            sendData('updateData',data);
+        });
+        setTimeout(function() {
+            UpdateData(hruiDataDB, sendData);
+        }, 100);
+    };
+// updates Geolocation every 5000 ms
+var UpdateGeolocation = function(hruiDataDB, sendData) {
+        hruiDataDB.findOne({
+            "item": "robotGeolocation"
+        }, function(err, data) {
+            sendData('updateGeolocation',data);
+        });
+        setTimeout(function() {
+            UpdateGeolocation(hruiDataDB, sendData);
+        }, 500);
+    };
+
 module.exports = {
     //update MongoDB with joystick coordinates
     updateJoystick: function(data, hruiDataDB) {
@@ -33,12 +57,8 @@ module.exports = {
                 break;
         }
     },
-    //get robot data from MongoDB and call data sending function
-    updateData: function(hruiDataDB, sendDataFunction) {
-        hruiDataDB.findOne({
-            "item": "robotData"
-        }, function(err, data) {
-            sendDataFunction(data);
-        });
-    }
-}
+
+    UpdateData: UpdateData,
+
+    UpdateGeolocation: UpdateGeolocation,
+};

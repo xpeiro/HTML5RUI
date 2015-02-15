@@ -1,4 +1,27 @@
-div {
+.form {
+    white-space: nowrap;
+    display: inline;
+}
+.canvas {
+    float: left;
+    border-radius: 10px;
+    border: 3px solid #122960;
+    background: inherit;
+    color: #3D3242;
+    margin-left: auto;
+    margin-right: auto
+}
+.coord {
+    font-family: monospace;
+    margin-left: 5px;
+    white-space: nowrap;
+    display: inline;
+}
+input[type=number] {
+    width: 50px;
+    text-align: right;
+}
+.frame {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -8,35 +31,16 @@ div {
     background: #8598C4;
     color: #3D3242;
 }
-form {
-    white-space: nowrap;
-    display: inline;
-}
-canvas {
-    float: left;
-    border-radius: 10px;
-    border: 3px solid #122960;
-    background: inherit;
-    color: #3D3242;
-    margin-left: auto;
-    margin-right: auto
-}
-span {
-    font-family: monospace;
-    margin-left: 5px;
-    white-space: nowrap;
-    display: inline;
-}
-.body {
+#body {
     color: #122960;
     display: inline-block;
 }
-.dataTable td, th {
+#dataTable td, th {
     border: 1px solid #122960;
     white-space: nowrap;
     margin-right: 1px;
 }
-.dataFrame {
+#dataFrame {
     color: inherit;
     float: left;
     clear: both;
@@ -54,8 +58,10 @@ span {
 }
 #videoCanvas {
     clear: none;
+    width: 480px;
+    height: 360px;
 }
-input[type=number] {
-    width: 50px;
-    text-align: right;
+#geolocation {    
+    width: 450px;
+    height: 340px;
 }

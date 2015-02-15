@@ -36,6 +36,7 @@ app.controller('HRUIController', ['$scope', 'GeneralSrv',
         $scope.joystickOn = true;
         $scope.dataMonitorOn = true;
         $scope.liveVideoOn = false;
+        $scope.geolocationOn = false;
         $scope.updateControls = function(control) {            
             var changedControl = control.target.attributes.id.value;
             switch (changedControl) {

@@ -20,15 +20,12 @@ var process = require("child_process");
 var compression = require('compression');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
 var path = require('path');
-var routes = require('./routes/index');
 // MongoDB Connection Setup (through monk)
 var db = monk('localhost:27017/hrui');
 var hruiDataDB = db.get('data');
 // Socket.io setup
-require('./websockets/io')(io, AVCONVCMD, hruiDataDB);
+require('./websockets/io').setup(io, AVCONVCMD, hruiDataDB);
 // Live Video Server Setup
 require('./websockets/liveVideoServer')(liveVideoServer, AVCONVPORT, VIDEOWIDTH, VIDEOHEIGHT);
 // App Setup
@@ -38,17 +35,8 @@ app.use(compression());
 app.use(favicon(__dirname + '/public/favicon.ico'));
 // setup HTTP Request Logger (morgan) with dev style
 app.use(logger('dev'));
-// setup Request BODY parsers: json + urlencoded
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-// setup cookie parser
-app.use(cookieParser());
 // set static route directory
 app.use(express.static(path.join(__dirname, 'public')));
-//set root directory
-app.use('/', routes);
 // view engine setup (jade)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
