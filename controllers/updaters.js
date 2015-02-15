@@ -1,28 +1,25 @@
 var process = require("child_process");
-
-// updates Data every 100 ms
-var updateData = function(hruiDataDB, sendData) {
-        hruiDataDB.findOne({
-            "item": "robotData"
-        }, function(err, data) {
-            sendData('updateData',data);
-        });
-        setTimeout(function() {
-            updateData(hruiDataDB, sendData);
-        }, 100);
+//gets data from Database associated to given item and fires an event to front-end with the requested data.
+var update = function(hruiDataDB, sendData, item, eventname) {
+    hruiDataDB.findOne({
+        "item": item
+    }, function(err, data) {
+        sendData(eventname, data);
+    });
+}
+// fires updates for robot data periodically (in increments of 100ms, defined with multipliers)
+var periodicUpdate = function(hruiDataDB, sendData, geoMultiplier) {
+    //get robot data
+    update(hruiDataDB, sendData, "robotData", 'updateData');
+    if (geoMultiplier == 0) {
+        //get geolocation data (every 2000ms)
+        update(hruiDataDB, sendData, "robotGeolocation", 'updateGeolocation');
+        geoMultiplier = 20;
     };
-// updates Geolocation every 5000 ms
-var updateGeolocation = function(hruiDataDB, sendData) {
-        hruiDataDB.findOne({
-            "item": "robotGeolocation"
-        }, function(err, data) {
-            sendData('updateGeolocation',data);
-        });
-        setTimeout(function() {
-            updateGeolocation(hruiDataDB, sendData);
-        }, 2000);
-    };
-
+    setTimeout(function() {
+        periodicUpdate(hruiDataDB, sendData, geoMultiplier - 1);
+    }, 100);
+};
 module.exports = {
     //update MongoDB with joystick coordinates
     updateJoystick: function(data, hruiDataDB) {
@@ -57,8 +54,5 @@ module.exports = {
                 break;
         }
     },
-
-    updateData: updateData,
-
-    updateGeolocation: updateGeolocation,
+    periodicUpdate: periodicUpdate,
 };

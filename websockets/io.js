@@ -27,8 +27,8 @@ module.exports = {
                 socket.emit(event, data);
             };
             // set off periodic data update
-            updaters.updateData(hruiDataDB, sendData);
-            updaters.updateGeolocation(hruiDataDB, sendData);
+            updaters.periodicUpdate(hruiDataDB, sendData, 20);
+            
         });
     },
 };
