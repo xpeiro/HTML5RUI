@@ -61,7 +61,7 @@
             <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn" >
                 <canvas id="mapcanvas" class="canvas" width="300" height="300"></canvas>
                 <form class="form">
-                    Map Scale:<input type="number" data-ng-model="scale">
+                    Map Scale:<input id="mapscale" type="number" data-ng-model="scale">
                 </form>
                 <table id="dataTable">
                     <tr>
@@ -91,10 +91,13 @@
                 </table>
             </div>
             <div id="geolocation" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
-            <div id="customdata" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
-                <form id="customdataform" class="form">
-                    Item Name: <input type="text">
+            <div id="customdataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
+                <form id="customdataform" class="form" data-ng-if="!customdataFormSubmitted">
+                    Item Name: <input type="text" data-ng-model="customdata.item"> <br>
+                    Update interval: <input type="number" data-ng-model="customdata.updateInterval">ms (multiple of 100) <br>
+                    <input type="submit" value="Submit" data-ng-click="customdataFormSubmit()">
                 </form>
+                <p id="customdataTable" data-ng-bind-html="customdataTable" data-ng-if="customdataFormSubmitted"></p>
             </div>
         </div>
         <footer>
@@ -105,6 +108,7 @@
         </footer>
         <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
         <script type="text/javascript" src="javascripts/angular.min.js"></script>
+        <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
         <script type="text/javascript" src="javascripts/angularapp.js"></script>
         <script type="text/javascript" src="javascripts/angularservices.js"></script>
         <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>

@@ -22,12 +22,16 @@ module.exports = {
             socket.on('updateControls', function(data) {
                 updaters.updateControls(data, AVCONVCMD);
             });
+            //recieve custom data identifier and update interval
+            socket.on('customdataFormSubmitted', function(data) {
+                updaters.customdataSetup(data);
+            });
             // function to send an event with associated data to front end when called
             sendData = function(event, data) {
                 socket.emit(event, data);
             };
             // set off periodic data update
-            updaters.periodicUpdate(hruiDataDB, sendData, 20);
+            updaters.periodicUpdate(hruiDataDB, sendData);
             
         });
     },

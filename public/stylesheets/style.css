@@ -17,7 +17,7 @@
     white-space: nowrap;
     display: inline;
 }
-input[type=number] {
+#mapscale {
     width: 50px;
     text-align: right;
 }
@@ -64,4 +64,9 @@ input[type=number] {
 #geolocation {    
     width: 450px;
     height: 340px;
+}
+#customdataFrame {
+    color: inherit;
+    float: left;
+    clear: right;
 }

@@ -1,4 +1,4 @@
-var app = angular.module('HRUI', []);
+var app = angular.module('HRUI', ['ngSanitize']);
 //directive to override default touch controls on joystick and link touch events to handler functions
 app.directive('touch', function() {
     return {
@@ -36,9 +36,9 @@ app.controller('HRUIController', ['$scope', 'SocketSrv',
                 case "liveVideoCheckbox":
                     SocketSrv.socket.emit('updateControls', {
                         changedControl: changedControl,
-                        newValue: !$scope.liveVideoOn
+                        newValue: $scope.liveVideoOn
                     });
-                    if ($scope.liveVideoOn) {
+                    if (!$scope.liveVideoOn) {
                         SocketSrv.wsocket.close();
                     };
                     break;

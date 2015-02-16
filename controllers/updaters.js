@@ -1,4 +1,13 @@
 var process = require("child_process");
+const INTERVALINCREMENT = 100;
+const GEOMULTIPLIER = 20;
+var geoMultiplier = GEOMULTIPLIER;
+var customdata = {
+    item: "",
+    updateInterval: INTERVALINCREMENT,
+    MULTIPLIER: 1,
+    multiplier: 1,
+};
 //gets data from Database associated to given item and fires an event to front-end with the requested data.
 var update = function(hruiDataDB, sendData, item, eventname) {
     hruiDataDB.findOne({
@@ -7,21 +16,38 @@ var update = function(hruiDataDB, sendData, item, eventname) {
         sendData(eventname, data);
     });
 }
-// fires updates for robot data periodically (in increments of 100ms, defined with multipliers)
-var periodicUpdate = function(hruiDataDB, sendData, geoMultiplier) {
+// fires updates for robot data periodically (in increments of INTERVALINCREMENT ms, defined with multipliers)
+var periodicUpdate = function(hruiDataDB, sendData) {
     //get robot data
     update(hruiDataDB, sendData, "robotData", 'updateData');
+    console.log(customdata);
+    if (customdata.multiplier == 0) {
+        customdata.multiplier = customdata.MULTIPLIER + 1;
+    };
     if (geoMultiplier == 0) {
         //get geolocation data (every 2000ms)
         update(hruiDataDB, sendData, "robotGeolocation", 'updateGeolocation');
-        geoMultiplier = 20;
+        geoMultiplier = GEOMULTIPLIER + 1;
     };
     setTimeout(function() {
-        periodicUpdate(hruiDataDB, sendData, geoMultiplier - 1);
-    }, 100);
+        geoMultiplier--;
+        customdata.multiplier--;
+        periodicUpdate(hruiDataDB, sendData);
+    }, INTERVALINCREMENT);
+};
+var customdataSetup = function(recievedCustomdata) {
+    customdata.item = recievedCustomdata.item;
+    customdata.updateInterval = recievedCustomdata.updateInterval;
+    customdata.MULTIPLIER = Math.floor(customdata.updateInterval / INTERVALINCREMENT);
+    if (customdata.MULTIPLIER == 0) {
+        customdata.MULTIPLIER = 1;
+    } else if (customdata.updateInterval % INTERVALINCREMENT >= 50) {
+        customdata.MULTIPLIER++;
+    };
+    customdata.multiplier = customdata.MULTIPLIER;
 };
 module.exports = {
-    //update MongoDB with joystick coordinates
+    //update MongoDB with joystick coordinates    
     updateJoystick: function(data, hruiDataDB) {
         hruiDataDB.update({
             item: "joystick"
@@ -55,4 +81,5 @@ module.exports = {
         }
     },
     periodicUpdate: periodicUpdate,
+    customdataSetup: customdataSetup,
 };
