@@ -35,10 +35,14 @@
     color: #122960;
     display: inline-block;
 }
-#dataTable td, th {
+.table td, th {
     border: 1px solid #122960;
     white-space: nowrap;
     margin-right: 1px;
+}
+.footer {
+    clear: both;
+
 }
 #dataFrame {
     color: inherit;
@@ -65,7 +69,7 @@
     width: 450px;
     height: 340px;
 }
-#customdataFrame {
+#customDataFrame {
     color: inherit;
     float: left;
     clear: right;

@@ -2,13 +2,13 @@ var process = require("child_process");
 const INTERVALINCREMENT = 100;
 const GEOMULTIPLIER = 20;
 var geoMultiplier = GEOMULTIPLIER;
-var customdata = {
+var customData = {
     item: "",
     updateInterval: INTERVALINCREMENT,
-    MULTIPLIER: 1,
-    multiplier: 1,
+    MULTIPLIER: -1,
+    multiplier: -1,
 };
-//gets data from Database associated to given item and fires an event to front-end with the requested data.
+//gets data from Database associated to given item and calls io to fire an event to front-end with the requested data
 var update = function(hruiDataDB, sendData, item, eventname) {
     hruiDataDB.findOne({
         "item": item
@@ -20,31 +20,34 @@ var update = function(hruiDataDB, sendData, item, eventname) {
 var periodicUpdate = function(hruiDataDB, sendData) {
     //get robot data
     update(hruiDataDB, sendData, "robotData", 'updateData');
-    console.log(customdata);
-    if (customdata.multiplier == 0) {
-        customdata.multiplier = customdata.MULTIPLIER + 1;
+    //get custom data (if requested)
+    if (customData.multiplier == 0) {
+        update(hruiDataDB, sendData, customData.item, 'updateCustomdata');
+        customData.multiplier = customData.MULTIPLIER + 1;
     };
+    //get geolocation data (when requested)
     if (geoMultiplier == 0) {
-        //get geolocation data (every 2000ms)
         update(hruiDataDB, sendData, "robotGeolocation", 'updateGeolocation');
         geoMultiplier = GEOMULTIPLIER + 1;
     };
     setTimeout(function() {
+        if (customData.multiplier > 0) {
+            customData.multiplier--;
+        };
         geoMultiplier--;
-        customdata.multiplier--;
         periodicUpdate(hruiDataDB, sendData);
     }, INTERVALINCREMENT);
 };
-var customdataSetup = function(recievedCustomdata) {
-    customdata.item = recievedCustomdata.item;
-    customdata.updateInterval = recievedCustomdata.updateInterval;
-    customdata.MULTIPLIER = Math.floor(customdata.updateInterval / INTERVALINCREMENT);
-    if (customdata.MULTIPLIER == 0) {
-        customdata.MULTIPLIER = 1;
-    } else if (customdata.updateInterval % INTERVALINCREMENT >= 50) {
-        customdata.MULTIPLIER++;
+var customDataSetup = function(recievedCustomdata) {
+    customData.item = recievedCustomdata.item;
+    customData.updateInterval = recievedCustomdata.updateInterval;
+    customData.MULTIPLIER = Math.floor(customData.updateInterval / INTERVALINCREMENT);
+    if (customData.MULTIPLIER == 0) {
+        customData.MULTIPLIER = 1;
+    } else if (customData.updateInterval % INTERVALINCREMENT >= 50) {
+        customData.MULTIPLIER++;
     };
-    customdata.multiplier = customdata.MULTIPLIER;
+    customData.multiplier = customData.MULTIPLIER;
 };
 module.exports = {
     //update MongoDB with joystick coordinates    
@@ -59,11 +62,11 @@ module.exports = {
             }
         });
     },
-    // Run or kill avconv when live video is toggled
-    updateControls: function(data, AVCONVCMD) {
-        switch (data.changedControl) {
+    updateControls: function(changedControldata, AVCONVCMD) {
+        switch (changedControldata.changedControl) {
+            // Run AVCONV when live video is toggled on. Log when the processed is killed (liveVideoServer.js).
             case "liveVideoCheckbox":
-                if (data.newValue === true) {
+                if (changedControldata.newValue === true) {
                     process.exec(AVCONVCMD, function(error, stdout, stderr) {
                         if ( !! error) {
                             switch (error.code) {
@@ -78,8 +81,19 @@ module.exports = {
                     });
                 }
                 break;
+                //Deactivate custom data update (by resetting the multiplier to -1) when custom data is toggle off.
+            case "customDataCheckbox":
+                if (changedControldata.newValue === false) {
+                    customData = {
+                        item: "",
+                        updateInterval: INTERVALINCREMENT,
+                        MULTIPLIER: -1,
+                        multiplier: -1,
+                    };
+                };
+                break;
         }
     },
     periodicUpdate: periodicUpdate,
-    customdataSetup: customdataSetup,
+    customDataSetup: customDataSetup,
 };

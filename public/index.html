@@ -11,15 +11,15 @@
     <body>
         <div id="body" class="frame">
             <div id="toolbar" class="frame">
-                <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event)">
+                <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
                 Joystick {{ joystickOn | OnOff}}
-                <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event)">
+                <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
                 Data Monitor {{ dataMonitorOn | OnOff}}
-                <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event)">
+                <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
                 Live Video {{ liveVideoOn | OnOff}}
-                <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event)">
+                <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updadivteControls($event, geolocationOn)">
                 Geolocation {{ geolocationOn | OnOff}}
-                <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event)">
+                <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
                 Custom Data {{ customDataOn | OnOff}}
             </div>
             <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
@@ -63,7 +63,7 @@
                 <form class="form">
                     Map Scale:<input id="mapscale" type="number" data-ng-model="scale">
                 </form>
-                <table id="dataTable">
+                <table id="dataTable" class="table">
                     <tr>
                         <th>Position</th>
                         <th>Orientation</th>
@@ -91,33 +91,38 @@
                 </table>
             </div>
             <div id="geolocation" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
-            <div id="customdataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
-                <form id="customdataform" class="form" data-ng-if="!customdataFormSubmitted">
-                    Item Name: <input type="text" data-ng-model="customdata.item"> <br>
-                    Update interval: <input type="number" data-ng-model="customdata.updateInterval">ms (multiple of 100) <br>
-                    <input type="submit" value="Submit" data-ng-click="customdataFormSubmit()">
+            <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
+                <form id="customDataform" class="form" data-ng-if="!customDataFormSubmitted">
+                    Item Name: <input type="text" data-ng-model="customDataRequest.item"> <br>
+                    Update interval: <input type="number" data-ng-model="customDataRequest.updateInterval">ms (will be rounded to 100ms) <br>
+                    <input type="submit" value="Submit" data-ng-click="customDataFormSubmit()">
                 </form>
-                <p id="customdataTable" data-ng-bind-html="customdataTable" data-ng-if="customdataFormSubmitted"></p>
+                <p data-ng-if="customDataFormSubmitted">
+                Requested item: {{customDataRequest.item}} <br>
+                Requested interval: {{customDataRequest.updateInterval}}ms <br>
+                <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
+                </p>
             </div>
+            <footer class="footer">
+                <a href="http://www.w3.org/html/logo/">
+                <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
+                </a>
+                <h6>By Daniel Peiró (except where credited in source)<a href="http://github.com/xpeiro/HTML5RUI">Github Repo</a></h6>
+            </footer>
+            <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
+            <script type="text/javascript" src="javascripts/angular.min.js"></script>
+            <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
+            <script type="text/javascript" src="javascripts/angularapp.js"></script>
+            <script type="text/javascript" src="javascripts/angularservices.js"></script>
+            <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
+            <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
+            <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
+            <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
+            <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
+            <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js">
+            </script>
+            <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
+            <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
         </div>
-        <footer>
-            <a href="http://www.w3.org/html/logo/">
-            <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
-            </a>
-            <h6>By Daniel Peiró (except where credited in source)<a href="http://github.com/xpeiro/HTML5RUI">Github Repo</a></h6>
-        </footer>
-        <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
-        <script type="text/javascript" src="javascripts/angular.min.js"></script>
-        <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
-        <script type="text/javascript" src="javascripts/angularapp.js"></script>
-        <script type="text/javascript" src="javascripts/angularservices.js"></script>
-        <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
-        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
-        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
-        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
-        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
-        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/googlemaps.min.js"></script>
-        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
-        <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
     </body>
 </html>

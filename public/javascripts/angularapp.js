@@ -30,19 +30,15 @@ app.controller('HRUIController', ['$scope', 'SocketSrv',
         $scope.liveVideoOn = false;
         $scope.geolocationOn = false;
         $scope.customDataOn = false;
-        $scope.updateControls = function(control) {
+        $scope.updateControls = function(control, newValue) {
             var changedControl = control.target.attributes.id.value;
-            switch (changedControl) {
-                case "liveVideoCheckbox":
-                    SocketSrv.socket.emit('updateControls', {
-                        changedControl: changedControl,
-                        newValue: $scope.liveVideoOn
-                    });
-                    if (!$scope.liveVideoOn) {
-                        SocketSrv.wsocket.close();
-                    };
-                    break;
-            }
+            SocketSrv.socket.emit('updateControls', {
+                changedControl: changedControl,
+                newValue: newValue,
+            });
+            if (changedControl=="liveVideoCheckbox" && newValue==false) {
+                SocketSrv.wsocket.close();
+            };
         }
     }
 ]);

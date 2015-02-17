@@ -23,8 +23,8 @@ module.exports = {
                 updaters.updateControls(data, AVCONVCMD);
             });
             //recieve custom data identifier and update interval
-            socket.on('customdataFormSubmitted', function(data) {
-                updaters.customdataSetup(data);
+            socket.on('customDataFormSubmitted', function(data) {
+                updaters.customDataSetup(data);
             });
             // function to send an event with associated data to front end when called
             sendData = function(event, data) {
