@@ -1,6 +1,6 @@
 // Socket.IO Event Configuration
 // get updater module
-var updaters = require('../controllers/updaters');
+const updaters = require('../controllers/updaters');
 // hook events to updater handlers
 module.exports = {
     setup: function(io, AVCONVCMD, hruiDataDB) {
@@ -32,7 +32,7 @@ module.exports = {
             };
             // set off periodic data update
             updaters.periodicUpdate(hruiDataDB, sendData);
-            
+
         });
     },
 };

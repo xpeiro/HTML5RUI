@@ -20,24 +20,24 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         drawAll();
         //sets left click flag UP and calls mouseMove handler
         $scope.mouseDown = function($event) {
-            evt = $event;
-            leftClick = 1;
-            $scope.mouseMove(evt);
-        }
-        //overrides touch event handler
-        $scope.touchMove = function(evt) {
-            evt.preventDefault();
-            leftClick = 1;
-            $scope.mouseMove(evt);
-        }
-        //sets left click flag DOWN and resets both canvas to initial state (unless position lock is ON)
-        $scope.mouseUp = function() {
-            leftClick = 0;
-            if (!$scope.lockJoystick) {
-                $scope.resetAll();
+                evt = $event;
+                leftClick = 1;
+                $scope.mouseMove(evt);
             }
-        }
-        //handles mouse or touch movement on joystick
+            //overrides touch event handler
+        $scope.touchMove = function(evt) {
+                evt.preventDefault();
+                leftClick = 1;
+                $scope.mouseMove(evt);
+            }
+            //sets left click flag DOWN and resets both canvas to initial state (unless position lock is ON)
+        $scope.mouseUp = function() {
+                leftClick = 0;
+                if (!$scope.lockJoystick) {
+                    $scope.resetAll();
+                }
+            }
+            //handles mouse or touch movement on joystick
         $scope.mouseMove = function(evt) {
             if (leftClick == 1) { //check if left mouse button down or touch
                 //erases previous joystick position
@@ -94,7 +94,7 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
             vectorctx.fillRect(0, 0, vector.width, vector.height);
             vectorctx.fillStyle = "black";
             vectorctx.fillRect(vector.width / 2 - 2, vector.height / 2 - 2, 4, 4);
-            DrawSrv.drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * maxRadius/joystick.width);
+            DrawSrv.drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * maxRadius / joystick.width);
         }
 
         function drawAll() {

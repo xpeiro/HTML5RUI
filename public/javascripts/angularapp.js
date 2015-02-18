@@ -36,7 +36,7 @@ app.controller('HRUIController', ['$scope', 'SocketSrv',
                 changedControl: changedControl,
                 newValue: newValue,
             });
-            if (changedControl=="liveVideoCheckbox" && newValue==false) {
+            if (changedControl == "liveVideoCheckbox" && newValue == false) {
                 SocketSrv.wsocket.close();
             };
         }

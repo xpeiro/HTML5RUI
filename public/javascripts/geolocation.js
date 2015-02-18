@@ -4,7 +4,7 @@ app.controller('GeolocationController', ['$scope', 'SocketSrv',
             url: 'geomapball.svg',
             size: new google.maps.Size(245, 248),
             scaledSize: new google.maps.Size(10, 10),
-            anchor: new google.maps.Point(5, 5),            
+            anchor: new google.maps.Point(5, 5),
         }
         var geoMapOptions = {
             center: new google.maps.LatLng(40.496534, -3.877457),

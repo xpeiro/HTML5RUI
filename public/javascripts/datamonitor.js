@@ -3,11 +3,11 @@ app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv',
         var map = document.getElementById('mapcanvas');
         var mapctx = map.getContext('2d');
         var backgroundColor = "#8598C4";
-        $scope.scale =60;
+        $scope.scale = 60;
 
 
         $scope.position = {
-        	x: 0,
+            x: 0,
             y: 0,
             z: 0
         };
@@ -29,16 +29,16 @@ app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv',
 
 
         SocketSrv.socket.on('updateData', function(data) {
-            
+
             mapctx.fillStyle = backgroundColor;
             mapctx.fillRect(0, 0, map.width, map.height);
-            
-            DrawSrv.drawCircle(mapctx,$scope.scale*data.position.x+map.width/2,-$scope.scale*data.position.y+map.height/2,5,"black");
+
+            DrawSrv.drawCircle(mapctx, $scope.scale * data.position.x + map.width / 2, -$scope.scale * data.position.y + map.height / 2, 5, "black");
             $scope.position = data.position;
             $scope.orientation = data.orientation;
             $scope.speed = data.speed;
-            $scope.angularSpeed = data.angularSpeed;            
-            $scope.$apply();            
+            $scope.angularSpeed = data.angularSpeed;
+            $scope.$apply();
         });
     },
 ]);

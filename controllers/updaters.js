@@ -1,4 +1,4 @@
-var process = require("child_process");
+const process = require("child_process");
 const INTERVALINCREMENT = 100;
 const GEOMULTIPLIER = 20;
 var geoMultiplier = GEOMULTIPLIER;
@@ -10,13 +10,13 @@ var customData = {
 };
 //gets data from Database associated to given item and calls io to fire an event to front-end with the requested data
 var update = function(hruiDataDB, sendData, item, eventname) {
-    hruiDataDB.findOne({
-        "item": item
-    }, function(err, data) {
-        sendData(eventname, data);
-    });
-}
-// fires updates for robot data periodically (in increments of INTERVALINCREMENT ms, defined with multipliers)
+        hruiDataDB.findOne({
+            "item": item
+        }, function(err, data) {
+            sendData(eventname, data);
+        });
+    }
+    // fires updates for robot data periodically (in increments of INTERVALINCREMENT ms, defined with multipliers)
 var periodicUpdate = function(hruiDataDB, sendData) {
     //get robot data
     update(hruiDataDB, sendData, "robotData", 'updateData');
@@ -68,7 +68,7 @@ module.exports = {
             case "liveVideoCheckbox":
                 if (changedControldata.newValue === true) {
                     process.exec(AVCONVCMD, function(error, stdout, stderr) {
-                        if ( !! error) {
+                        if (!!error) {
                             switch (error.code) {
                                 case 255:
                                     console.log("AVCONV: Killed Process");

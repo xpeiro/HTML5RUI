@@ -27,7 +27,7 @@ app.controller('CustomDataController', ['$scope', '$sce', 'SocketSrv',
         });
         generateTable = function(data, customDataTable) {
             for (var key in data) {
-                
+
                 if (typeof data[key] === 'object') {
                     var keyTableCell = "<tr><td><b>" + key.toString() + "</b></td></tr>";
                     customDataTable = customDataTable.concat(keyTableCell);

@@ -8,7 +8,7 @@ app.service('DrawSrv', function() {
         drawCircle: function(ctx, x, y, radius, fillColor) {
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-            if ( !! fillColor) { //if fillColor arg given, fill in circle.
+            if (!!fillColor) { //if fillColor arg given, fill in circle.
                 ctx.fillStyle = fillColor;
                 ctx.fill();
             };
@@ -61,7 +61,7 @@ app.service('GeometrySrv', function() {
             };
         },
 
-        forceDirectionLock: function (x, y, lockMode) {
+        forceDirectionLock: function(x, y, lockMode) {
             var angle = Math.atan2(Math.abs(y), Math.abs(x));
             switch (lockMode) {
                 case "lock8ways":
