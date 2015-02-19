@@ -1,4 +1,4 @@
-var app = angular.module('HRUI', ['ngSanitize']);
+var app = angular.module('HRUI', []);
 //directive to override default touch controls on joystick and link touch events to handler functions
 app.directive('touch', function() {
     return {
