@@ -1,128 +1,131 @@
 <!DOCTYPE html>
 <html data-ng-app="HRUI" data-ng-controller="HRUIController">
-    <head>
-        <title>HRUI</title>
-        <meta charset="UTF-8">
-        <meta name="description" content="HTML5 Robot User Interface">
-        <meta name="author" content="Daniel Peiró">
-        <meta name=viewport content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-    </head>
-    <body>
-        <div id="body" class="frame">
-            <div id="toolbar" class="frame">
-                <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
-                Joystick {{ joystickOn | OnOff}}
-                <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
-                Data Monitor {{ dataMonitorOn | OnOff}}
-                <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
-                Live Video {{ liveVideoOn | OnOff}}
-                <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updadivteControls($event, geolocationOn)">
-                Geolocation {{ geolocationOn | OnOff}}
-                <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
-                Custom Data {{ customDataOn | OnOff}}
-            </div>
-            <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
-                <canvas id="joystick" class="canvas" data-touch width=300 height=300>
+
+<head>
+    <title>HRUI</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="HTML5 Robot User Interface">
+    <meta name="author" content="Daniel Peiró">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+</head>
+
+<body>
+    <div id="body" class="frame">
+        <div id="toolbar" class="frame">
+            <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)"> Joystick {{ joystickOn | OnOff}}
+            <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)"> Data Monitor {{ dataMonitorOn | OnOff}}
+            <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)"> Live Video {{ liveVideoOn | OnOff}}
+            <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updadivteControls($event, geolocationOn)"> Geolocation {{ geolocationOn | OnOff}}
+            <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)"> Custom Data {{ customDataOn | OnOff}}
+        </div>
+        <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
+        <div id="geolocation" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
+        <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
+            <canvas id="joystick" class="canvas" data-touch width=300 height=300>
                 Canvas not supported
-                </canvas>
-                <canvas id="vector" class="canvas" data-ng-show="showVector" width=100 height=100>
+            </canvas>
+            <canvas id="vector" class="canvas" data-ng-show="showVector" width=100 height=100>
                 Canvas not supported
-                </canvas>
-                <br>
-                <span class="coord">X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
-                <br>
-                <form class="form">
-                    <table>
-                        <tr>
-                            <td>
-                                <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="fullAnalog">Full Analog
-                            </td>
-                            <td>
-                                <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock8ways">8-Way
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock4ways">4-Way
-                            </td>
-                            <td>
-                                <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock2ways">2-Way
-                            </td>
-                        </tr>
-                    </table>
-                    <input name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()">
-                    Lock Joystick in Position <br>
-                    <input name="Display Vector" type="checkbox" data-ng-model="showVector">
-                    Display Vector <br>
-                </form>
-            </div>
-            <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
-            <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn" >
-                <canvas id="mapcanvas" class="canvas" width="300" height="300"></canvas>
-                <form class="form">
-                    Map Scale:<input id="mapscale" type="number" data-ng-model="scale">
-                </form>
-                <table id="dataTable" class="table">
+            </canvas>
+            <br>
+            <span class="coord">X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
+            <br>
+            <form class="form">
+                <table>
                     <tr>
-                        <th>Position</th>
-                        <th>Orientation</th>
-                        <th>Speed</th>
-                        <th>Angular Speed</th>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="fullAnalog">Full Analog
+                        </td>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock8ways">8-Way
+                        </td>
                     </tr>
                     <tr>
-                        <td>x: {{position.x.toFixed(3)}}</td>
-                        <td>&alpha;: {{orientation.alpha.toFixed(3)}}</td>
-                        <td>v<sub>x</sub>: {{speed.vx.toFixed(3)}}</td>
-                        <td>&alpha;&#775;: {{angularSpeed.dAlpha.toFixed(3)}}</td>
-                    </tr>
-                    <tr>
-                        <td>y: {{position.y.toFixed(3)}}</td>
-                        <td>&beta;: {{orientation.beta.toFixed(3)}}</td>
-                        <td>v<sub>y</sub>: {{speed.vy.toFixed(3)}}</td>
-                        <td>&beta;&#775;: {{angularSpeed.dBeta.toFixed(3)}}</td>
-                    </tr>
-                    <tr>
-                        <td>z: {{position.z.toFixed(3)}}</td>
-                        <td>&gamma;: {{orientation.gamma.toFixed(3)}}</td>
-                        <td>v<sub>z</sub>: {{speed.vz.toFixed(3)}}</td>
-                        <td>&gamma;&#775;: {{angularSpeed.dGamma.toFixed(3)}}</td>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock4ways">4-Way
+                        </td>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock2ways">2-Way
+                        </td>
                     </tr>
                 </table>
-            </div>
-            <div id="geolocation" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
-            <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
-                <form id="customDataform" class="form" data-ng-if="!customDataFormSubmitted">
-                    Item Name: <input type="text" data-ng-model="customDataRequest.item"> <br>
-                    Update interval: <input type="number" data-ng-model="customDataRequest.updateInterval">ms (will be rounded to 100ms) <br>
-                    <input type="submit" value="Submit" data-ng-click="customDataFormSubmit()">
-                </form>
-                <p data-ng-if="customDataFormSubmitted">
-                Requested item: {{customDataRequest.item}} <br>
-                Requested interval: {{customDataRequest.updateInterval}}ms <br>
-                <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
-                </p>
-            </div>
-            <footer class="footer">
-                <a href="http://www.w3.org/html/logo/">
-                <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
-                </a>
-                <h6>By Daniel Peiró (except where credited in source)<a href="http://github.com/xpeiro/HTML5RUI">Github Repo</a></h6>
-            </footer>
-            <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
-            <script type="text/javascript" src="javascripts/angular.min.js"></script>
-            <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
-            <script type="text/javascript" src="javascripts/angularapp.js"></script>
-            <script type="text/javascript" src="javascripts/angularservices.js"></script>
-            <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
-            <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
-            <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
-            <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
-            <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
-            <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js">
-            </script>
-            <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
-            <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
+                <input name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()"> Lock Joystick in Position
+                <br>
+                <input name="Display Vector" type="checkbox" data-ng-model="showVector"> Display Vector
+                <br>
+            </form>
         </div>
-    </body>
+        <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
+            <canvas id="mapcanvas" class="canvas" width="300" height="300"></canvas>
+            <table id="dataTable" class="table">
+                <tr>
+                    <th>Position</th>
+                    <th>Orientation</th>
+                    <th>Speed</th>
+                    <th>Angular Speed</th>
+                </tr>
+                <tr>
+                    <td>x: {{position.x.toFixed(3)}}</td>
+                    <td>&alpha;: {{orientation.alpha.toFixed(3)}}</td>
+                    <td>v<sub>x</sub>: {{speed.vx.toFixed(3)}}</td>
+                    <td>&alpha;&#775;: {{angularSpeed.dAlpha.toFixed(3)}}</td>
+                </tr>
+                <tr>
+                    <td>y: {{position.y.toFixed(3)}}</td>
+                    <td>&beta;: {{orientation.beta.toFixed(3)}}</td>
+                    <td>v<sub>y</sub>: {{speed.vy.toFixed(3)}}</td>
+                    <td>&beta;&#775;: {{angularSpeed.dBeta.toFixed(3)}}</td>
+                </tr>
+                <tr>
+                    <td>z: {{position.z.toFixed(3)}}</td>
+                    <td>&gamma;: {{orientation.gamma.toFixed(3)}}</td>
+                    <td>v<sub>z</sub>: {{speed.vz.toFixed(3)}}</td>
+                    <td>&gamma;&#775;: {{angularSpeed.dGamma.toFixed(3)}}</td>
+                </tr>
+            </table>
+            <form id="mapscaleForm" class="form">
+                Map Scale:
+                <input id="mapscale" type="number" data-ng-model="scale">
+            </form>
+        </div>
+        <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
+            <form id="customDataform" class="form" data-ng-if="!customDataFormSubmitted">
+                Item Name:
+                <input type="text" data-ng-model="customDataRequest.item">
+                <br> Update interval:
+                <input type="number" data-ng-model="customDataRequest.updateInterval">ms (will be rounded to 100ms)
+                <br>
+                <input type="submit" value="Submit" data-ng-click="customDataFormSubmit()">
+            </form>
+            <p data-ng-if="customDataFormSubmitted">
+                Requested item: {{customDataRequest.item}}
+                <br> Requested interval: {{customDataRequest.updateInterval}}ms
+                <br>
+                <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
+            </p>
+        </div>
+        <footer class="footer">
+            <a href="http://www.w3.org/html/logo/">
+                <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
+            </a>
+            <h6>By Daniel Peiró (except where credited in source)<a href="http://github.com/xpeiro/HTML5RUI">Github Repo</a></h6>
+        </footer>
+        <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
+        <script type="text/javascript" src="javascripts/angular.min.js"></script>
+        <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="javascripts/angularapp.js"></script>
+        <script type="text/javascript" src="javascripts/angularservices.js"></script>
+        <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
+        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
+        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
+        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
+        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
+        <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js">
+        </script>
+        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
+        <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
+    </div>
+</body>
+
 </html>

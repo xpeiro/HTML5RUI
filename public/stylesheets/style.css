@@ -42,12 +42,11 @@
 }
 .footer {
     clear: both;
-
 }
 #dataFrame {
     color: inherit;
     float: left;
-    clear: both;
+    clear: right;
 }
 #joystickFrame {
     clear: left;
@@ -65,7 +64,7 @@
     width: 480px;
     height: 360px;
 }
-#geolocation {    
+#geolocation {
     width: 450px;
     height: 340px;
 }
