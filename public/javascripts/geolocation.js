@@ -1,5 +1,5 @@
 app.controller('GeolocationController', ['$scope', 'SocketSrv',
-    function($scope, SocketSrv) {
+    function(scope, SocketSrv) {
         var geoMapball = {
             url: 'geomapball.svg',
             size: new google.maps.Size(245, 248),

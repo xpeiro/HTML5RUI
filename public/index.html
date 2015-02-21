@@ -18,6 +18,7 @@
             <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)"> Live Video {{ liveVideoOn | OnOff}}
             <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updadivteControls($event, geolocationOn)"> Geolocation {{ geolocationOn | OnOff}}
             <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)"> Custom Data {{ customDataOn | OnOff}}
+            <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOnOn)"> Custom Input {{ customInputOn | OnOff}}
         </div>
         <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
         <div id="geolocation" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
@@ -105,6 +106,45 @@
                 <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
             </p>
         </div>
+        <div id="customInputFrame" class="frame" data-ng-controller="CustomInputController" data-ng-if="customInputOn">
+            <form id="customInputSelectionform" class="form" data-ng-if="!customInputSelectionSubmitted" data-ng-submit="customInputSelectionSubmit()">
+                Item Name:
+                <input type="text" data-ng-model="customInputRequest.item" required>
+                <br> Number of Inputs:
+                <input type="number" data-ng-model="customInputRequest.numberOfInputs" min="1" required>
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+            <form id="customInputForm" data-ng-if="customInputSelectionSubmitted && !customInputFormSubmitted" data-ng-submit="customInputFormSubmit()">
+                Input item: {{customInputRequest.item}}
+                <br>
+                <p data-ng-if="customInputSelectionSubmitted" data-ng-repeat="input in customInputList">Input {{$index+1}} Name:
+                    <input type="text" data-ng-model="input.name" data-ng-pattern="/^[a-zA-Z0-9]*$/" required> Type:
+                    <select data-ng-model="input.type" required>
+                        <option value="text">Text</option>
+                        <option value="range">Slider</option>
+                        <option value="number">Number</option>
+                        <option value="checkbox">Checkbox</option>
+                    </select>
+                    <span data-ng-if="input.type=='range' || input.type=='number'">
+                        Min:<input type="number" data-ng-model="input.min" data-ng-required="input.type=='range'">
+                        Max:<input type="number" data-ng-model="input.max" data-ng-required="input.type=='range'">
+                    </span>
+                </p>
+                <input type="submit" value="Submit">
+                <span data-ng-show="!dataIsValid">Valid Names: No Symbols. Start with letter. Unique; Ranges Min &lt; Max.</span>
+            </form>
+            <p data-ng-if="customInputFormSubmitted">
+                Input item: {{customInputRequest.item}}
+                <br>
+                <table id="customInputTable" class="table" compile="customInputTable" data-ng-if="customInputFormSubmitted"></table>
+            </p>
+            <span data-ng-show="customInputFormSubmitted">
+            <input id="autoUpdate" type="checkbox" data-ng-model="autoUpdateOn" >Auto Send All on change {{ autoUpdateOn | OnOff}}
+            <br>
+            <button data-ng-click="inputChanged($event)">Send Input</button>
+            </span>
+        </div>
         <footer class="footer">
             <a href="http://www.w3.org/html/logo/">
                 <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
@@ -113,6 +153,7 @@
         </footer>
         <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
         <script type="text/javascript" src="javascripts/angular.min.js"></script>
+        <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
         <script type="text/javascript" src="javascripts/angularapp.js"></script>
         <script type="text/javascript" src="javascripts/angularservices.js"></script>
         <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
@@ -124,6 +165,7 @@
         </script>
         <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
         <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
+        <script data-ng-if="customInputOn" type="text/javascript" src="javascripts/custominput.js"></script>
     </div>
 </body>
 

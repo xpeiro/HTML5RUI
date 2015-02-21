@@ -1,31 +1,34 @@
-app.controller('CustomDataController', ['$scope', '$sce', 'SocketSrv',
-    function($scope, $sce, SocketSrv) {
-        $scope.customDataRequest = {
+app.controller('CustomDataController', ['$scope', 'SocketSrv',
+    function(scope, SocketSrv) {
+        scope.customDataRequest = {
             item: 'customDataTest',
             updateInterval: 1000,
         }
-        $scope.customDataFormSubmitted = false;
-        $scope.customDataTable = $sce.trustAsHtml('Waiting for first update...');
-        $scope.customDataFormSubmit = function() {
-            if ($scope.customDataRequest.updateInterval < 100) {
-                $scope.customDataRequest.updateInterval = 100;
-            } else if (!($scope.customDataRequest.updateInterval % 100 == 0)) {
-                if ($scope.customDataRequest.updateInterval % 100 >= 50) {
-                    $scope.customDataRequest.updateInterval = Math.floor($scope.customDataRequest.updateInterval / 100) * 100 + 100;
+        scope.customDataFormSubmitted = false;
+        scope.customDataTable = 'Waiting for first update...';
+        scope.customDataFormSubmit = function() {
+            if (scope.customDataRequest.updateInterval < 100) {
+                scope.customDataRequest.updateInterval = 100;
+            } else if (!(scope.customDataRequest.updateInterval % 100 == 0)) {
+                if (scope.customDataRequest.updateInterval % 100 >= 50) {
+                    scope.customDataRequest.updateInterval = Math.floor(scope.customDataRequest.updateInterval / 100) * 100 + 100;
                 } else {
-                    $scope.customDataRequest.updateInterval = Math.floor($scope.customDataRequest.updateInterval / 100) * 100;
+                    scope.customDataRequest.updateInterval = Math.floor(scope.customDataRequest.updateInterval / 100) * 100;
                 }
             }
-            SocketSrv.socket.emit('customDataFormSubmitted', $scope.customDataRequest);
-            $scope.customDataFormSubmitted = true;
+            SocketSrv.socket.emit('customDataFormSubmitted', scope.customDataRequest);
+            scope.customDataFormSubmitted = true;
         }
         SocketSrv.socket.on('updateCustomdata', function(data) {
             var customDataTable = "";
             customDataTable = generateTable(data, customDataTable);
-            $scope.customDataTable = $sce.trustAsHtml(customDataTable);
-            $scope.$apply();
+            scope.customDataTable = customDataTable;
+            scope.$apply();
         });
         generateTable = function(data, customDataTable) {
+            if (data==null) {
+                return 'No Data Recieved';
+            };
             for (var key in data) {
 
                 if (typeof data[key] === 'object') {

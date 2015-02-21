@@ -26,6 +26,10 @@ module.exports = {
             socket.on('customDataFormSubmitted', function(data) {
                 updaters.customDataSetup(data);
             });
+            //recieve customInputData
+            socket.on('updateCustomInput', function(data) {
+                updaters.updateCustomInput(data, hruiDataDB);
+            });
             // function to send an event with associated data to front end when called
             sendData = function(event, data) {
                 socket.emit(event, data);

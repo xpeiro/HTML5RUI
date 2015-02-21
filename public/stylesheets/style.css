@@ -17,7 +17,7 @@
     white-space: nowrap;
     display: inline;
 }
-#mapscale {
+input[type="number"] {
     width: 50px;
     text-align: right;
 }
@@ -73,3 +73,9 @@
     float: left;
     clear: right;
 }
+#customInputFrame {
+    color: inherit;
+    float: left;
+    clear: right;
+}
+

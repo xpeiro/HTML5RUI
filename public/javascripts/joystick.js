@@ -1,9 +1,9 @@
 app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'GeometrySrv',
-    function($scope, SocketSrv, DrawSrv, GeometrySrv) {
-        $scope.lockJoystick = false;
-        $scope.lockMode = 'lock4ways';
-        $scope.showVector = true;
-        $scope.point = {
+    function(scope, SocketSrv, DrawSrv, GeometrySrv) {
+        scope.lockJoystick = false;
+        scope.lockMode = 'lock4ways';
+        scope.showVector = true;
+        scope.point = {
             x: 0,
             y: 0,
         };
@@ -19,26 +19,26 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         //draw canvas in initial state
         drawAll();
         //sets left click flag UP and calls mouseMove handler
-        $scope.mouseDown = function($event) {
+        scope.mouseDown = function($event) {
                 evt = $event;
                 leftClick = 1;
-                $scope.mouseMove(evt);
+                scope.mouseMove(evt);
             }
             //overrides touch event handler
-        $scope.touchMove = function(evt) {
+        scope.touchMove = function(evt) {
                 evt.preventDefault();
                 leftClick = 1;
-                $scope.mouseMove(evt);
+                scope.mouseMove(evt);
             }
             //sets left click flag DOWN and resets both canvas to initial state (unless position lock is ON)
-        $scope.mouseUp = function() {
+        scope.mouseUp = function() {
                 leftClick = 0;
-                if (!$scope.lockJoystick) {
-                    $scope.resetAll();
+                if (!scope.lockJoystick) {
+                    scope.resetAll();
                 }
             }
             //handles mouse or touch movement on joystick
-        $scope.mouseMove = function(evt) {
+        scope.mouseMove = function(evt) {
             if (leftClick == 1) { //check if left mouse button down or touch
                 //erases previous joystick position
                 resetJoystick();
@@ -46,40 +46,40 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
                 resetVector();
                 // get cursor or touch coordinates, saved in point object.
                 if (evt.type == 'touchstart' || evt.type == 'touchmove') {
-                    $scope.point.x = evt.touches[0].pageX - joystick.offsetLeft;
-                    $scope.point.y = evt.touches[0].pageY - joystick.offsetTop;
+                    scope.point.x = evt.touches[0].pageX - joystick.offsetLeft;
+                    scope.point.y = evt.touches[0].pageY - joystick.offsetTop;
                 } else {
-                    $scope.point.x = evt.pageX - joystick.offsetLeft - 3;
-                    $scope.point.y = evt.pageY - joystick.offsetTop - 3;
+                    scope.point.x = evt.pageX - joystick.offsetLeft - 3;
+                    scope.point.y = evt.pageY - joystick.offsetTop - 3;
                 };
                 //make coordinates relative to canvas center
-                $scope.point = GeometrySrv.centerCoord($scope.point, joystick);
+                scope.point = GeometrySrv.centerCoord(scope.point, joystick);
                 //if Directional Lock is ON, enforce
-                if ($scope.lockMode != "fullAnalog") {
-                    $scope.point = GeometrySrv.forceDirectionLock($scope.point.x, $scope.point.y, $scope.lockMode);
+                if (scope.lockMode != "fullAnalog") {
+                    scope.point = GeometrySrv.forceDirectionLock(scope.point.x, scope.point.y, scope.lockMode);
                 }
                 // force coordinates into maxRadius
-                if (!GeometrySrv.isInsideCircle($scope.point.x, $scope.point.y, maxRadius)) {
-                    $scope.point = GeometrySrv.forceIntoCircle($scope.point.x, $scope.point.y, maxRadius);
+                if (!GeometrySrv.isInsideCircle(scope.point.x, scope.point.y, maxRadius)) {
+                    scope.point = GeometrySrv.forceIntoCircle(scope.point.x, scope.point.y, maxRadius);
                 }
                 //change coordinates back to absolute reference
-                $scope.point = GeometrySrv.canvasCoord($scope.point, joystick);
-                DrawSrv.drawLineFromCenter(joystickctx, $scope.point.x, $scope.point.y);
-                DrawSrv.drawLineFromCenter(vectorctx, $scope.point.x * vector.width / joystick.width, $scope.point.y * vector.width / joystick.width);
+                scope.point = GeometrySrv.canvasCoord(scope.point, joystick);
+                DrawSrv.drawLineFromCenter(joystickctx, scope.point.x, scope.point.y);
+                DrawSrv.drawLineFromCenter(vectorctx, scope.point.x * vector.width / joystick.width, scope.point.y * vector.width / joystick.width);
                 //redraw joystick position
-                DrawSrv.drawCircle(joystickctx, $scope.point.x, $scope.point.y, radius, maxRadiusBGColor);
+                DrawSrv.drawCircle(joystickctx, scope.point.x, scope.point.y, radius, maxRadiusBGColor);
                 //set relative coordinates
-                $scope.point = GeometrySrv.centerCoord($scope.point, joystick);
+                scope.point = GeometrySrv.centerCoord(scope.point, joystick);
                 //send coordinates back to server (websocket)
-                updateJoystick($scope.point, $scope.lockMode);
+                updateJoystick(scope.point, scope.lockMode);
             };
         }
-        $scope.resetAll = function() {
+        scope.resetAll = function() {
             leftClick = 0;
             drawAll();
-            $scope.point.x = 0;
-            $scope.point.y = 0;
-            updateJoystick($scope.point, $scope.lockMode);
+            scope.point.x = 0;
+            scope.point.y = 0;
+            updateJoystick(scope.point, scope.lockMode);
         }
 
         function resetJoystick() {

@@ -94,6 +94,22 @@ module.exports = {
                 break;
         }
     },
+    updateCustomInput: function(data, hruiDataDB) {
+        var result = hruiDataDB.findOne({
+            item: data.item
+        });
+        result.success(function(foundObject) {
+            if (!!foundObject) {
+                hruiDataDB.update({
+                    item: data.item
+                }, {
+                    $set: data
+                });
+            } else {
+                hruiDataDB.insert(data);
+            }
+        });
+    },
     periodicUpdate: periodicUpdate,
     customDataSetup: customDataSetup,
 };
