@@ -12,7 +12,7 @@ app.controller('GeolocationController', ['$scope', 'SocketSrv',
             mapTypeId: google.maps.MapTypeId.HYBRID,
             streetViewControl: false,
         };
-        var geoMap = new google.maps.Map(document.getElementById('geolocation'), geoMapOptions);
+        var geoMap = new google.maps.Map(document.getElementById('geolocationFrame'), geoMapOptions);
         var marker = new google.maps.Marker({
             icon: geoMapball,
             position: new google.maps.LatLng(40.496534, -3.877457),

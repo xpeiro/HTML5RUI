@@ -18,10 +18,11 @@
             <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)"> Live Video {{ liveVideoOn | OnOff}}
             <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updadivteControls($event, geolocationOn)"> Geolocation {{ geolocationOn | OnOff}}
             <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)"> Custom Data {{ customDataOn | OnOff}}
-            <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOnOn)"> Custom Input {{ customInputOn | OnOff}}
+            <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)"> Custom Input {{ customInputOn | OnOff}}
+            <input id="sshClientCheckbox" type="checkbox" data-ng-model="sshClientOn" data-ng-click="updateControls($event, sshClientOn)"> SSH Client {{ sshClientOn | OnOff}}
         </div>
         <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
-        <div id="geolocation" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
+        <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
             <canvas id="joystick" class="canvas" data-touch width=300 height=300>
                 Canvas not supported
@@ -145,6 +146,7 @@
             <button data-ng-click="inputChanged($event)">Send Input</button>
             </span>
         </div>
+        <div id="sshClientFrame" class="frame" data-ng-controller="SSHClientController" data-ng-if="sshClientOn"></div>
         <footer class="footer">
             <a href="http://www.w3.org/html/logo/">
                 <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
@@ -166,6 +168,7 @@
         <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
         <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
         <script data-ng-if="customInputOn" type="text/javascript" src="javascripts/custominput.js"></script>
+        <script data-ng-if="sshClientOn" type="text/javascript" src="javascripts/sshclient.js"></script>
     </div>
 </body>
 

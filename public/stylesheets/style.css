@@ -30,6 +30,8 @@ input[type="number"] {
     border: 2px solid #122960;
     background: #8598C4;
     color: #3D3242;
+    float: left;
+    clear: right;
 }
 #body {
     color: #122960;
@@ -42,11 +44,6 @@ input[type="number"] {
 }
 .footer {
     clear: both;
-}
-#dataFrame {
-    color: inherit;
-    float: left;
-    clear: right;
 }
 #joystickFrame {
     clear: left;
@@ -64,18 +61,8 @@ input[type="number"] {
     width: 480px;
     height: 360px;
 }
-#geolocation {
+#geolocationFrame {
     width: 450px;
     height: 340px;
-}
-#customDataFrame {
-    color: inherit;
-    float: left;
-    clear: right;
-}
-#customInputFrame {
-    color: inherit;
-    float: left;
-    clear: right;
 }
 
