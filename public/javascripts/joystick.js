@@ -13,8 +13,8 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         var vectorctx = vector.getContext('2d');
         var radius = joystick.width * 0.2;
         var maxRadius = joystick.width * 0.3;
-        var backgroundColor = "#8598C4";
-        var maxRadiusBGColor = "#39538D";
+        var backgroundColor = BACKGROUND_COLOR;
+        var maxRadiusBGColor = FOREGROUND_COLOR;
         var leftClick = 0;
         //draw canvas in initial state
         drawAll();

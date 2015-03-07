@@ -2,7 +2,7 @@ app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv',
     function(scope, SocketSrv, DrawSrv) {
         var map = document.getElementById('mapcanvas');
         var mapctx = map.getContext('2d');
-        var backgroundColor = "#8598C4";
+        var backgroundColor = BACKGROUND_COLOR;
         scope.scale = 60;
 
 

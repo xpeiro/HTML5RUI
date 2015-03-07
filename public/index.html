@@ -20,6 +20,7 @@
             <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)"> Custom Data {{ customDataOn | OnOff}}
             <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)"> Custom Input {{ customInputOn | OnOff}}
             <input id="sshClientCheckbox" type="checkbox" data-ng-model="sshClientOn" data-ng-click="updateControls($event, sshClientOn)"> SSH Client {{ sshClientOn | OnOff}}
+            <button class="menubutton" data-ng-click="optionsClick()">&#9776;</button>
         </div>
         <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
         <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
@@ -92,28 +93,28 @@
             </form>
         </div>
         <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
-            <form id="customDataform" class="form" data-ng-if="!customDataFormSubmitted">
+            <form id="customDataForm" class="form" data-ng-if="!customDataFormSubmitted">
                 Item Name:
                 <input type="text" data-ng-model="customDataRequest.item">
-                <br> Update interval:
-                <input type="number" data-ng-model="customDataRequest.updateInterval">ms (will be rounded to 100ms)
+                <br> Update interval (ms):
+                <input type="number" data-ng-model="customDataRequest.updateInterval">
                 <br>
                 <input type="submit" value="Submit" data-ng-click="customDataFormSubmit()">
             </form>
             <span data-ng-if="customDataFormSubmitted">
                 Requested item: {{customDataRequest.item}}
-                <br> Requested interval: {{customDataRequest.updateInterval}}ms
+                <br> Requested interval: {{customDataRequest.updateInterval}}ms (rounded to 100ms)
                 <br>
                 </span>
-                <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
-            
+            <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
+
         </div>
         <div id="customInputFrame" class="frame" data-ng-controller="CustomInputController" data-ng-if="customInputOn">
-            <form id="customInputSelectionform" class="form" data-ng-if="!customInputSelectionSubmitted" data-ng-submit="customInputSelectionSubmit()">
+            <form id="customInputSelectionForm" class="form" data-ng-if="!customInputSelectionSubmitted" data-ng-submit="customInputSelectionSubmit()">
                 Item Name:
                 <input type="text" data-ng-model="customInputRequest.item" required>
                 <br> Number of Inputs:
-                <input type="number" data-ng-model="customInputRequest.numberOfInputs" min="1" required>
+                <input type="number" data-ng-model="customInputRequest.numberOfInputs" min="1" max="50" required>
                 <br>
                 <input type="submit" value="Submit">
             </form>
@@ -121,7 +122,7 @@
                 Input item: {{customInputRequest.item}}
                 <br>
                 <p data-ng-if="customInputSelectionSubmitted" data-ng-repeat="input in customInputList">Input {{$index+1}} Name:
-                    <input type="text" data-ng-model="input.name" data-ng-pattern="/^[a-zA-Z0-9]*$/" required> Type:
+                    <input type="text" data-ng-model="input.name" data-ng-pattern="/^[a-zA-Z0-9-_]*$/" required> Type:
                     <select data-ng-model="input.type" required>
                         <option value="">Select...</option>
                         <option value="text">Text</option>
@@ -135,7 +136,7 @@
                     </span>
                 </p>
                 <input type="submit" value="Submit">
-                <span data-ng-show="!dataIsValid">Valid Names: No Symbols. Start with letter. Unique; Ranges Min &lt; Max.</span>
+                <span class="smalltext" data-ng-show="!dataIsValid">Valid Names: Start with letter or _. No Symbols (except _) or Spaces. Unique; Ranges Min &lt; Max.</span>
             </form>
             <span data-ng-if="customInputFormSubmitted">
                 Input item: {{customInputRequest.item}}

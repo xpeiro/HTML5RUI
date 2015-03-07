@@ -1,6 +1,10 @@
+input[type="number"] {
+    width: 50px;
+    text-align: right;
+}
 .form {
     white-space: nowrap;
-    display: inline;
+    display: inline-block;
 }
 .canvas {
     float: left;
@@ -17,25 +21,17 @@
     white-space: nowrap;
     display: inline;
 }
-input[type="number"] {
-    width: 50px;
-    text-align: right;
-}
 .frame {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #122960;
     background: #8598C4;
     color: #3D3242;
     float: left;
     clear: right;
-}
-#body {
-    color: #122960;
-    display: inline-block;
 }
 .table td, th {
     border: 1px solid #122960;
@@ -44,6 +40,21 @@ input[type="number"] {
 }
 .footer {
     clear: both;
+}
+.smalltext {
+    font-size: 70%;
+}
+.menubutton {
+    margin-left: 10px;
+    border-radius: 3px;
+    font-size: 90%;
+    box-shadow: 1px 1px 3px #3D3242;
+    background: #8598C4;
+    color: #3D3242;
+}
+#body {
+    color: #122960;
+    display: inline-block;
 }
 #joystickFrame {
     clear: left;
@@ -65,4 +76,13 @@ input[type="number"] {
     width: 450px;
     height: 340px;
 }
+.form > input[type="text"] {
+    width: 111px;
+    text-align: center;
+}
+#customInputSelectionForm > input[type="number"] {
+    margin-left: 34px; 
+    width: 35px;
+}
+
 

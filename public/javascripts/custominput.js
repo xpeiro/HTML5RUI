@@ -16,7 +16,6 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv',
         scope.inputChanged = function(event) {
 
             if (scope.autoUpdateOn || !!event) {
-                console.log(scope.customInputData);
                 SocketSrv.socket.emit('updateCustomInput', scope.customInputData);
             };
         };

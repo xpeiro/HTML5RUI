@@ -1,4 +1,7 @@
 var app = angular.module('HRUI', ['ngSanitize']);
+//set color constants
+var BACKGROUND_COLOR = "#8598C4";
+var FOREGROUND_COLOR = "#39538D";
 //directive to override default touch controls on joystick and link touch events to handler functions
 app.directive('touch', function() {
     return {
@@ -40,6 +43,9 @@ app.controller('HRUIController', ['$scope', 'SocketSrv',
             if (changedControl == "liveVideoCheckbox" && newValue == false) {
                 SocketSrv.wsocket.close();
             };
+        }
+        scope.optionsClick = function  () {
+            
         }
     }
 ]);
