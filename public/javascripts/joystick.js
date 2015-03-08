@@ -1,5 +1,5 @@
-app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'GeometrySrv',
-    function(scope, SocketSrv, DrawSrv, GeometrySrv) {
+app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'GeometrySrv', 'ProfileSrv',
+    function(scope, SocketSrv, DrawSrv, GeometrySrv, ProfileSrv) {
         scope.lockJoystick = false;
         scope.lockMode = 'lock4ways';
         scope.showVector = true;
@@ -18,6 +18,11 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         var leftClick = 0;
         //draw canvas in initial state
         drawAll();
+        scope.$on('getProfile', function() {
+            ProfileSrv.profile.lockJoystick = scope.lockJoystick;
+            ProfileSrv.profile.lockMode = scope.lockMode;
+            ProfileSrv.profile.showVector = scope.showVector;
+        });
         //sets left click flag UP and calls mouseMove handler
         scope.mouseDown = function($event) {
                 evt = $event;

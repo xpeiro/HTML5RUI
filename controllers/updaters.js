@@ -1,46 +1,56 @@
+//DataBase and Back-end Process Controllers
 const process = require("child_process");
 const INTERVALINCREMENT = 100;
 const GEOMULTIPLIER = 20;
-var geoMultiplier = GEOMULTIPLIER;
+var avconvcmd;
+var hruiDataDB;
+var geoMultiplier = -1;
 var customData = {
     item: "",
     updateInterval: INTERVALINCREMENT,
     MULTIPLIER: -1,
     multiplier: -1,
 };
-//gets data from Database associated to given item and calls io to fire an event to front-end with the requested data
-var update = function(hruiDataDB, sendData, item, eventname) {
-        hruiDataDB.findOne({
-            "item": item
-        }, function(err, data) {
-            sendData(eventname, data);
-        });
-    }
-    // fires updates for robot data periodically (in increments of INTERVALINCREMENT ms, defined with multipliers)
-var periodicUpdate = function(hruiDataDB, sendData) {
+//gets data from Database associated to given item
+//and calls io to fire an event to front-end with the requested data
+//using the callback funcion 'sendData' (in websockets/io.js)
+var update = function(sendData, item, eventname) {
+    hruiDataDB.findOne({
+        "item": item
+    }, function(err, data) {
+        sendData(eventname, data);
+    });
+};
+// fires updates for robot data periodically (in increments of INTERVALINCREMENT ms, defined with multipliers)
+var periodicUpdate = function(sendData) {
     //get robot data
-    update(hruiDataDB, sendData, "robotData", 'updateData');
+    update(sendData, "robotData", 'updateData');
     //get custom data (if requested)
     if (customData.multiplier == 0) {
-        update(hruiDataDB, sendData, customData.item, 'updateCustomdata');
+        update(sendData, customData.item, 'updateCustomdata');
         customData.multiplier = customData.MULTIPLIER + 1;
     };
     //get geolocation data (when requested)
     if (geoMultiplier == 0) {
-        update(hruiDataDB, sendData, "robotGeolocation", 'updateGeolocation');
+        update(sendData, "robotGeolocation", 'updateGeolocation');
         geoMultiplier = GEOMULTIPLIER + 1;
     };
+    //fire periodic timeout
     setTimeout(function() {
         if (customData.multiplier > 0) {
             customData.multiplier--;
         };
-        geoMultiplier--;
-        periodicUpdate(hruiDataDB, sendData);
+        if (geoMultiplier > 0) {
+            geoMultiplier--;
+        };
+        periodicUpdate(sendData);
     }, INTERVALINCREMENT);
 };
+//setup customData requested item and requested interval
 var customDataSetup = function(recievedCustomdata) {
     customData.item = recievedCustomdata.item;
     customData.updateInterval = recievedCustomdata.updateInterval;
+    //round recieved multiplier to 100ms with a 100ms floor
     customData.MULTIPLIER = Math.floor(customData.updateInterval / INTERVALINCREMENT);
     if (customData.MULTIPLIER == 0) {
         customData.MULTIPLIER = 1;
@@ -51,23 +61,26 @@ var customDataSetup = function(recievedCustomdata) {
 };
 module.exports = {
     //update MongoDB with joystick coordinates    
-    updateJoystick: function(data, hruiDataDB) {
+    updateJoystick: function(joystickData) {
         hruiDataDB.update({
             item: "joystick"
         }, {
             $set: {
-                x: data.x,
-                y: data.y,
-                mode: data.mode,
+                _id: 0,
+                x: joystickData.x,
+                y: joystickData.y,
+                mode: joystickData.mode,
             }
+        }, {
+            upsert: true
         });
     },
-    updateControls: function(changedControldata, AVCONVCMD) {
-        switch (changedControldata.changedControl) {
+    updateControls: function(changedControlData) {
+        switch (changedControlData.changedControl) {
             // Run AVCONV when live video is toggled on. Log when the processed is killed (liveVideoServer.js).
             case "liveVideoCheckbox":
-                if (changedControldata.newValue === true) {
-                    process.exec(AVCONVCMD, function(error, stdout, stderr) {
+                if (changedControlData.newValue === true) {
+                    process.exec(avconvcmd, function(error, stdout, stderr) {
                         if (!!error) {
                             switch (error.code) {
                                 case 255:
@@ -83,7 +96,7 @@ module.exports = {
                 break;
                 //Deactivate custom data update (by resetting the multiplier to -1) when custom data is toggle off.
             case "customDataCheckbox":
-                if (changedControldata.newValue === false) {
+                if (changedControlData.newValue === false) {
                     customData = {
                         item: "",
                         updateInterval: INTERVALINCREMENT,
@@ -92,23 +105,46 @@ module.exports = {
                     };
                 };
                 break;
+                //Activate or Deactivate geolocation update when geolocation control is toggled
+            case "geolocationCheckbox":
+                if (changedControlData.newValue === true) {
+                    geoMultiplier = GEOMULTIPLIER;
+                } else {
+                    geoMultiplier = -1;
+                }
+                break;
         }
     },
-    updateCustomInput: function(data, hruiDataDB) {
-        var result = hruiDataDB.findOne({
-            item: data.item
+    updateCustomInput: function(customInput) {
+        hruiDataDB.update({
+            item: customInput.item
+        }, {
+            $set: customInput
+        }, {
+            upsert: true
         });
-        result.success(function(foundObject) {
-            if (!!foundObject) {
-                hruiDataDB.update({
-                    item: data.item
-                }, {
-                    $set: data
-                });
-            } else {
-                hruiDataDB.insert(data);
+    },
+    //get profiles from DB and fire event with data to front-end
+    fetchProfiles: function(sendData) {
+        update(sendData, 'profiles', 'fetchedProfiles');
+    },
+    saveProfile: function(profile) {
+        setObj = {
+            $set: {
+
             }
+        };
+        setObj.$set[profile.name] = profile;
+        setObj.$set._id = 4;
+        hruiDataDB.update({
+            item: "profiles"
+        }, setObj, {
+            upsert: true
         });
+    },
+    setup: function(HRUIDATADB, AVCONVCMD) {
+        hruiDataDB = HRUIDATADB;
+        avconvcmd = AVCONVCMD;
     },
     periodicUpdate: periodicUpdate,
     customDataSetup: customDataSetup,

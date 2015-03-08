@@ -15,19 +15,21 @@ const io = require('socket.io')(http);
 const liveVideoServer = new(require('ws').Server)({
     port: WSPORT
 });
-const monk = require('monk');
 const process = require("child_process");
 const compression = require('compression');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const path = require('path');
+const monk = require('monk');
 // MongoDB Connection Setup (through monk)
 const db = monk('localhost:27017/hrui');
-const hruiDataDB = db.get('data');
-// Socket.io setup
-require('./websockets/io').setup(io, AVCONVCMD, hruiDataDB);
-// Live Video Server Setup
-require('./websockets/liveVideoServer')(liveVideoServer, AVCONVPORT, VIDEOWIDTH, VIDEOHEIGHT);
+const HRUIDATADB = db.get('data');
+// Socket.io Setup event handlers
+require('./controllers/websockets/io').setup(io);
+// Live Video Server Setup Parameters and Run
+require('./controllers/websockets/liveVideoServer')(liveVideoServer, AVCONVPORT, VIDEOWIDTH, VIDEOHEIGHT);
+// Updaters Setup Parameters
+require('./controllers/updaters').setup(HRUIDATADB, AVCONVCMD);
 // App Setup
 // compression setup (compress all requests)
 app.use(compression());

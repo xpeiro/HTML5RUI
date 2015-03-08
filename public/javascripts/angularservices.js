@@ -1,3 +1,6 @@
+app.service('ProfileSrv', function() {
+    this.profile = {};
+});
 app.service('SocketSrv', function() {
     //open WebSocket
     this.socket = io.connect();

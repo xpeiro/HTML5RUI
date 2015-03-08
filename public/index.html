@@ -16,11 +16,19 @@
             <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)"> Joystick {{ joystickOn | OnOff}}
             <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)"> Data Monitor {{ dataMonitorOn | OnOff}}
             <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)"> Live Video {{ liveVideoOn | OnOff}}
-            <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updadivteControls($event, geolocationOn)"> Geolocation {{ geolocationOn | OnOff}}
+            <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)"> Geolocation {{ geolocationOn | OnOff}}
             <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)"> Custom Data {{ customDataOn | OnOff}}
             <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)"> Custom Input {{ customInputOn | OnOff}}
             <input id="sshClientCheckbox" type="checkbox" data-ng-model="sshClientOn" data-ng-click="updateControls($event, sshClientOn)"> SSH Client {{ sshClientOn | OnOff}}
-            <button class="menubutton" data-ng-click="optionsClick()">&#9776;</button>
+            <select id="profilesList" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
+                <option value="" disabled selected>Load Profile...</option>
+            </select>
+            <button id="saveProfile" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
+            <form data-ng-submit="saveProfile()">
+                <input id="profileNameText" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
+                <button id="saveProfileNow" type="submit" data-ng-show="saveProfileClicked">Save</button>
+            </form>
+
         </div>
         <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
         <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>

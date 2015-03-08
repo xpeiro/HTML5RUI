@@ -1,5 +1,5 @@
-app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv',
-    function(scope, SocketSrv, DrawSrv) {
+app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv', 'ProfileSrv',
+    function(scope, SocketSrv, DrawSrv, ProfileSrv) {
         var map = document.getElementById('mapcanvas');
         var mapctx = map.getContext('2d');
         var backgroundColor = BACKGROUND_COLOR;
@@ -26,8 +26,12 @@ app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv',
             dBeta: 0,
             dGamma: 0
         };
-
-
+        scope.$on('getProfile', function() {
+            ProfileSrv.profile.scale = scope.scale;
+        });
+        scope.$on('setProfile', function() {
+            scope.scale = ProfileSrv.profile.scale;
+        });
         SocketSrv.socket.on('updateData', function(data) {
 
             mapctx.fillStyle = backgroundColor;

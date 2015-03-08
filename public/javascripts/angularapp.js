@@ -26,27 +26,87 @@ app.directive('touch', function() {
     }
 });
 //main app controller. manages active modules and notifies back-end of change in controls when necessary.
-app.controller('HRUIController', ['$scope', 'SocketSrv',
-    function(scope, SocketSrv) {
+app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
+    function(rootScope, scope, SocketSrv, ProfileSrv) {
         scope.joystickOn = true;
         scope.dataMonitorOn = true;
         scope.liveVideoOn = false;
         scope.geolocationOn = false;
         scope.customDataOn = false;
         scope.customInputOn = false;
+        scope.selectedProfile = {};
+        scope.profileName = "";
+        scope.profiles = {};
+        scope.saveProfileClicked = false;
+        setTimeout(function() {
+            SocketSrv.socket.emit('fetchProfiles');
+        }, 500);
+        //save current profile and send it to backend
+        scope.saveProfile = function() {
+            scope.saveProfileClicked = false;
+            ProfileSrv.profile.name = scope.profileName;
+            //notify all controllers to share profile data to service
+            rootScope.$broadcast('getProfile');
+            console.log(ProfileSrv.profile);
+            SocketSrv.socket.emit('saveProfile', ProfileSrv.profile);
+            setTimeout(function() {
+                SocketSrv.socket.emit('fetchProfiles');
+            }, 500);
+        };
+        //share profile data to profile service (to send it to backend)
+        scope.$on('getProfile', function() {
+            ProfileSrv.profile.joystickOn = scope.joystickOn;
+            ProfileSrv.profile.dataMonitorOn = scope.dataMonitorOn;
+            ProfileSrv.profile.liveVideoOn = scope.liveVideoOn;
+            ProfileSrv.profile.geolocationOn = scope.geolocationOn;
+            ProfileSrv.profile.customDataOn = scope.customDataOn;
+            ProfileSrv.profile.customInputOn = scope.customInputOn;
+        });
+        //extract updated control from event, and notify back-end of selected controls
         scope.updateControls = function(control, newValue) {
             var changedControl = control.target.attributes.id.value;
+            scope.sendControl(changedControl, newValue);
+        };
+        //notify back-end of selected controls
+        scope.sendControl = function(changedControl, newValue) {
             SocketSrv.socket.emit('updateControls', {
                 changedControl: changedControl,
                 newValue: newValue,
             });
+            //if live video is turned off, close the websocket
             if (changedControl == "liveVideoCheckbox" && newValue == false) {
                 SocketSrv.wsocket.close();
             };
-        }
-        scope.optionsClick = function  () {
-            
-        }
+        };
+        //load selected profile
+        scope.profileSelected = function() {
+            //share selected profile to profile service
+            ProfileSrv.profile = scope.selectedProfile;
+            //load selected profile 
+            scope.joystickOn = scope.selectedProfile.joystickOn;
+            scope.dataMonitorOn = scope.selectedProfile.dataMonitorOn;
+            scope.geolocationOn = scope.selectedProfile.geolocationOn;
+            scope.customDataOn = scope.selectedProfile.customDataOn;
+            scope.customInputOn = scope.selectedProfile.customInputOn;
+            //notify backend of new selected controls (only required for video and location)
+            if (scope.liveVideoOn != scope.selectedProfile.liveVideoOn) {
+                scope.liveVideoOn = scope.selectedProfile.liveVideoOn;
+                scope.sendControl('liveVideoCheckbox', scope.liveVideoOn);
+            };
+            scope.sendControl('geolocationCheckbox', scope.geolocationOn);
+            //notify all controllers to set selected profile from service (delay to allow script loading)
+            setTimeout(function() {
+                rootScope.$broadcast('setProfile');
+            }, 1);            
+        };
+        //populate profiles array on profile list reception
+        SocketSrv.socket.on('fetchedProfiles', function(profiles) {
+            if (!!profiles) {
+                delete profiles._id;
+                delete profiles.item;
+                scope.profiles = profiles;
+            };
+        });
     }
 ]);
 //string filter. Returns 'On' if given boolean is true, 'Off' otherwise.

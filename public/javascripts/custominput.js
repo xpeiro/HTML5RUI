@@ -1,5 +1,5 @@
-app.controller('CustomInputController', ['$scope', 'SocketSrv',
-    function(scope, SocketSrv) {
+app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
+    function(scope, SocketSrv, ProfileSrv) {
         scope.customInputData = {
             item: '',
         };
@@ -14,23 +14,35 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv',
         scope.customInputTable = 'placeholder';
         scope.autoUpdateOn = true;
         scope.inputChanged = function(event) {
-
             if (scope.autoUpdateOn || !!event) {
                 SocketSrv.socket.emit('updateCustomInput', scope.customInputData);
             };
         };
+        scope.$on('getProfile', function() {
+            ProfileSrv.profile.customInputList = scope.customInputList;
+            ProfileSrv.profile.customInputData = scope.customInputData;
+            ProfileSrv.profile.customInputSelectionSubmitted = scope.customInputSelectionSubmitted;
+            ProfileSrv.profile.customInputFormSubmitted = scope.customInputFormSubmitted;
+        });
+        scope.$on('setProfile', function() {
+            scope.customInputData = ProfileSrv.profile.customInputData;
+            scope.customInputSelectionSubmitted = ProfileSrv.profile.customInputSelectionSubmitted;
+            scope.customInputList = ProfileSrv.profile.customInputList;
+            scope.customInputFormSubmitted = ProfileSrv.profile.customInputFormSubmitted;
+            scope.customInputTable = generateInputTable(scope.customInputList, scope.customInputTable);
+        });
         //when user submits number of inputs requested, create list element
         //with empty name and type fields for each input.
         scope.customInputSelectionSubmit = function() {
-                scope.customInputSelectionSubmitted = true;
-                for (var i = 1; i <= scope.customInputRequest.numberOfInputs; i++) {
-                    scope.customInputList[i.toString()] = {
-                        name: "",
-                        type: "text",
-                    }
-                };
-            }
-            //runs once name and type for each input is selected by user
+            scope.customInputSelectionSubmitted = true;
+            for (var i = 1; i <= scope.customInputRequest.numberOfInputs; i++) {
+                scope.customInputList[i.toString()] = {
+                    name: "",
+                    type: "text",
+                }
+            };
+        };
+        //runs once name and type for each input is selected by user
         scope.customInputFormSubmit = function() {
             //check if names and ranges are valid.
             //(no repeating names, no names starting with numbers min<max.)

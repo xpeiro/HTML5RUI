@@ -2,9 +2,27 @@ input[type="number"] {
     width: 50px;
     text-align: right;
 }
+input[type="submit"], button {
+    border-radius: 3px;
+    font-size: 65%;
+    box-shadow: 1px 1px 1px #3D3242;
+    background: #8598C4;
+    color: #3D3242;
+}
+select, input[type="text"], input[type="number"] {
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    background: #8598C4;
+    color: #3D3242;
+}
 .form {
     white-space: nowrap;
     display: inline-block;
+}
+.form > input[type="text"] {
+    width: 111px;
+    text-align: center;
 }
 .canvas {
     float: left;
@@ -44,14 +62,6 @@ input[type="number"] {
 .smalltext {
     font-size: 70%;
 }
-.menubutton {
-    margin-left: 10px;
-    border-radius: 3px;
-    font-size: 90%;
-    box-shadow: 1px 1px 3px #3D3242;
-    background: #8598C4;
-    color: #3D3242;
-}
 #body {
     color: #122960;
     display: inline-block;
@@ -76,13 +86,12 @@ input[type="number"] {
     width: 450px;
     height: 340px;
 }
-.form > input[type="text"] {
-    width: 111px;
-    text-align: center;
-}
 #customInputSelectionForm > input[type="number"] {
-    margin-left: 34px; 
+    margin-left: 34px;
     width: 35px;
 }
-
-
+#saveProfile, #saveProfileNow, #profileNameText, #profilesList {
+    float: right;
+    clear: both;
+    margin-left: 6px;
+}
