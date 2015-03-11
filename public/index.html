@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <div id="body" class="frame">
+    <div id="body" class="frame" width="device-width">
         <div id="toolbar" class="frame">
             <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)"> Joystick {{ joystickOn | OnOff}}
             <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)"> Data Monitor {{ dataMonitorOn | OnOff}}
@@ -28,8 +28,8 @@
                 <input id="profileNameText" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
                 <button id="saveProfileNow" type="submit" data-ng-show="saveProfileClicked">Save</button>
             </form>
-
         </div>
+        <br>
         <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
         <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
@@ -95,10 +95,8 @@
                     <td>&gamma;&#775;: {{angularSpeed.dGamma.toFixed(3)}}</td>
                 </tr>
             </table>
-            <form id="mapscaleForm" class="form">
-                Map Scale:
-                <input id="mapscale" type="number" data-ng-model="scale">
-            </form>
+            <span>Map Scale:</span>
+            <input id="mapscale" type="number" data-ng-model="scale">
         </div>
         <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
             <form id="customDataForm" class="form" data-ng-if="!customDataFormSubmitted">
@@ -160,10 +158,12 @@
         </div>
         <div id="sshClientFrame" class="frame" data-ng-controller="SSHClientController" data-ng-if="sshClientOn"></div>
         <footer class="footer">
-            <a href="http://www.w3.org/html/logo/">
-                <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-graphics-multimedia-semantics.png" width="130" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, and Semantics">
-            </a>
-            <h6>By Daniel Peiró (except where credited in source)<a href="http://github.com/xpeiro/HTML5RUI">Github Repo</a></h6>
+            <h6>
+            <a href="http://www.aslab.upm.es"> <img src="aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
+            <img src="HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
+            <a href="http://github.com/xpeiro/HTML5RUI"><img src="githublogo.svg" width="24" height="24"></a>
+            An ASLab Project Developed By Daniel Peiró (except where credited in source)
+            </h6>
         </footer>
         <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
         <script type="text/javascript" src="javascripts/angular.min.js"></script>

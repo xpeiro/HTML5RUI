@@ -25,7 +25,7 @@ app.directive('touch', function() {
         }
     }
 });
-//main app controller. manages active modules and notifies back-end of change in controls when necessary.
+//main app controller. manages active modules, profiles and notifies back-end of change in controls when necessary.
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
         scope.joystickOn = true;
@@ -43,12 +43,15 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         }, 500);
         //save current profile and send it to backend
         scope.saveProfile = function() {
+            //hide save profile textbox
             scope.saveProfileClicked = false;
+            //name current profil
             ProfileSrv.profile.name = scope.profileName;
-            //notify all controllers to share profile data to service
+            //notify all controllers to share profile data to ProfileSrv
             rootScope.$broadcast('getProfile');
-            console.log(ProfileSrv.profile);
+            //send current profile to backend
             SocketSrv.socket.emit('saveProfile', ProfileSrv.profile);
+            //fetch new list of profiles
             setTimeout(function() {
                 SocketSrv.socket.emit('fetchProfiles');
             }, 500);

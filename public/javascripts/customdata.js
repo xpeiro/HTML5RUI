@@ -6,10 +6,12 @@ app.controller('CustomDataController', ['$scope', 'SocketSrv', 'ProfileSrv',
         }
         scope.customDataFormSubmitted = false;
         scope.customDataTable = 'Waiting for first update...';
+        //share profile data to profile service
         scope.$on('getProfile', function() {
             ProfileSrv.profile.customDataRequest = scope.customDataRequest;
             ProfileSrv.profile.customDataFormSubmitted = scope.customDataFormSubmitted;
         });
+        //load profile from ProfileSrv
         scope.$on('setProfile', function() {
             scope.customDataRequest = ProfileSrv.profile.customDataRequest;
             scope.customDataFormSubmitted = ProfileSrv.profile.customDataFormSubmitted;

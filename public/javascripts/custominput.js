@@ -18,12 +18,14 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
                 SocketSrv.socket.emit('updateCustomInput', scope.customInputData);
             };
         };
+        //share profile data to profile service
         scope.$on('getProfile', function() {
             ProfileSrv.profile.customInputList = scope.customInputList;
             ProfileSrv.profile.customInputData = scope.customInputData;
             ProfileSrv.profile.customInputSelectionSubmitted = scope.customInputSelectionSubmitted;
             ProfileSrv.profile.customInputFormSubmitted = scope.customInputFormSubmitted;
         });
+        //load profile from ProfileSrv
         scope.$on('setProfile', function() {
             scope.customInputData = ProfileSrv.profile.customInputData;
             scope.customInputSelectionSubmitted = ProfileSrv.profile.customInputSelectionSubmitted;

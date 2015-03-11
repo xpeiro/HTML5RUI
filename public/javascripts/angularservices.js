@@ -1,11 +1,14 @@
+//Sharing service for controllers to push and pull Profile data
 app.service('ProfileSrv', function() {
     this.profile = {};
 });
+//Websocket server (for livevideo and Socket.io) shared between controllers
 app.service('SocketSrv', function() {
     //open WebSocket
     this.socket = io.connect();
     this.wsocket;
 });
+//Service with typical drawing methods shared between controllers
 app.service('DrawSrv', function() {
     return {
         drawCircle: function(ctx, x, y, radius, fillColor) {
@@ -29,6 +32,7 @@ app.service('DrawSrv', function() {
         },
     }
 });
+//Service with typical Geometric methods shared between controllers
 app.service('GeometrySrv', function() {
     return {
         isInsideCircle: function(x, y, radius) {

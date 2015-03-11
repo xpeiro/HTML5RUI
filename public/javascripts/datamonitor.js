@@ -26,9 +26,11 @@ app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv', 'ProfileSrv'
             dBeta: 0,
             dGamma: 0
         };
+        //share profile data with ProfileSrv
         scope.$on('getProfile', function() {
             ProfileSrv.profile.scale = scope.scale;
         });
+        //load profile from ProfileSrv
         scope.$on('setProfile', function() {
             scope.scale = ProfileSrv.profile.scale;
         });

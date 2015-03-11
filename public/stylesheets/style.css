@@ -16,6 +16,9 @@ select, input[type="text"], input[type="number"] {
     background: #8598C4;
     color: #3D3242;
 }
+footer > h6 > img {
+    margin: 5px;
+}
 .form {
     white-space: nowrap;
     display: inline-block;
@@ -62,6 +65,9 @@ select, input[type="text"], input[type="number"] {
 .smalltext {
     font-size: 70%;
 }
+#toolbar {
+    clear: both;
+}
 #body {
     color: #122960;
     display: inline-block;
@@ -85,6 +91,10 @@ select, input[type="text"], input[type="number"] {
 #geolocationFrame {
     width: 450px;
     height: 340px;
+}
+
+#dataFrame > * {
+    clear: both;
 }
 #customInputSelectionForm > input[type="number"] {
     margin-left: 34px;
