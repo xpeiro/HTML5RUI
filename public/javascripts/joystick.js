@@ -11,8 +11,12 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         var joystickctx = joystick.getContext('2d');
         var vector = document.getElementById('vector');
         var vectorctx = vector.getContext('2d');
+        joystick.width = 300;
+        joystick.height = joystick.width;
+        vector.width = 100;
+        vector.height = vector.width;
         var radius = joystick.width * 0.2;
-        var maxRadius = joystick.width * 0.3;
+        var maxRadius = joystick.width/3;
         var backgroundColor = BACKGROUND_COLOR;
         var maxRadiusBGColor = FOREGROUND_COLOR;
         var leftClick = 0;

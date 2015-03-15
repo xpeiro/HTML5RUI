@@ -1,7 +1,7 @@
 app.controller('GeolocationController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
         var geoMapball = {
-            url: 'geomapball.svg',
+            url: 'images/geomapball.svg',
             size: new google.maps.Size(245, 248),
             scaledSize: new google.maps.Size(10, 10),
             anchor: new google.maps.Point(5, 5),
@@ -13,6 +13,8 @@ app.controller('GeolocationController', ['$scope', 'SocketSrv',
             streetViewControl: false,
         };
         var geoMap = new google.maps.Map(document.getElementById('geolocationFrame'), geoMapOptions);
+        geoMap.width = 320;
+        geoMap.height = 240;
         var marker = new google.maps.Marker({
             icon: geoMapball,
             position: new google.maps.LatLng(40.496534, -3.877457),

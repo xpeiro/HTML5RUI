@@ -3,12 +3,15 @@
 
   Adapted to express, small modifications.
 */
-
+const app = require('../../app');
+const AVCONVPORT = app.AVCONVPORT;
+const VIDEOWIDTH = app.VIDEOWIDTH;
+const VIDEOHEIGHT = app.VIDEOHEIGHT;
 const STREAM_MAGIC_BYTES = 'jsmp';
 const PASSWORD = "hrui1311"
 const process = require("child_process");
 
-module.exports = function(socketServer, FFMPEGPORT, VIDEOWIDTH, VIDEOHEIGHT) {
+module.exports = function(socketServer) {
     socketServer.on('connection', function(socket) {
         var streamHeader = new Buffer(8);
         streamHeader.write(STREAM_MAGIC_BYTES);
@@ -40,8 +43,8 @@ module.exports = function(socketServer, FFMPEGPORT, VIDEOWIDTH, VIDEOHEIGHT) {
     };
     var streamServer = require('http').createServer(function(request, response) {
         var params = request.url.substr(1).split('/');
-        width = (params[1] || 320) | 0;
-        height = (params[2] || 240) | 0;
+        width = (params[1] || VIDEOWIDTH) | 0;
+        height = (params[2] || VIDEOHEIGHT) | 0;
         if (params[0] == PASSWORD) {
             console.log('Stream Connected: ' + request.socket.remoteAddress + ':' + request.socket.remotePort + ' size: ' + width + 'x' + height);
             request.on('data', function(data) {
@@ -53,6 +56,6 @@ module.exports = function(socketServer, FFMPEGPORT, VIDEOWIDTH, VIDEOHEIGHT) {
             console.log('Failed Stream Connection: ' + request.socket.remoteAddress + request.socket.remotePort + ' - wrong secret.');
             response.end();
         }
-    }).listen(FFMPEGPORT);
+    }).listen(AVCONVPORT);
 
 }

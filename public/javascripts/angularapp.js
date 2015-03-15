@@ -1,7 +1,7 @@
 var app = angular.module('HRUI', ['ngSanitize']);
 //set color constants
-var BACKGROUND_COLOR = "#8598C4";
-var FOREGROUND_COLOR = "#39538D";
+var BACKGROUND_COLOR = "#8BA987";
+var FOREGROUND_COLOR = "grey";
 //directive to override default touch controls on joystick and link touch events to handler functions
 app.directive('touch', function() {
     return {
@@ -28,18 +28,19 @@ app.directive('touch', function() {
 //main app controller. manages active modules, profiles and notifies back-end of change in controls when necessary.
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
-        scope.joystickOn = true;
-        scope.dataMonitorOn = true;
+        scope.joystickOn = false;
+        scope.dataMonitorOn = false;
         scope.liveVideoOn = false;
         scope.geolocationOn = false;
         scope.customDataOn = false;
         scope.customInputOn = false;
+        scope.scriptExecOn = false;
         scope.selectedProfile = {};
         scope.profileName = "";
         scope.profiles = {};
         scope.saveProfileClicked = false;
         setTimeout(function() {
-            SocketSrv.socket.emit('fetchProfiles');
+            SocketSrv.socket.emit('fetchProfiles');            
         }, 500);
         //save current profile and send it to backend
         scope.saveProfile = function() {
@@ -64,6 +65,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             ProfileSrv.profile.geolocationOn = scope.geolocationOn;
             ProfileSrv.profile.customDataOn = scope.customDataOn;
             ProfileSrv.profile.customInputOn = scope.customInputOn;
+            ProfileSrv.profile.scriptExecOn = scope.scriptExecOn;
         });
         //extract updated control from event, and notify back-end of selected controls
         scope.updateControls = function(control, newValue) {
@@ -91,6 +93,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             scope.geolocationOn = scope.selectedProfile.geolocationOn;
             scope.customDataOn = scope.selectedProfile.customDataOn;
             scope.customInputOn = scope.selectedProfile.customInputOn;
+            scope.scriptExecOn = scope.selectedProfile.scriptExecOn;
             //notify backend of new selected controls (only required for video and location)
             if (scope.liveVideoOn != scope.selectedProfile.liveVideoOn) {
                 scope.liveVideoOn = scope.selectedProfile.liveVideoOn;
@@ -109,6 +112,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
                 delete profiles.item;
                 scope.profiles = profiles;
             };
+            scope.$apply();
         });
     }
 ]);

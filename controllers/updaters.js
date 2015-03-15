@@ -1,9 +1,11 @@
-//DataBase and Back-end Process Controllers
-const process = require("child_process");
+//DataBase Controller
+const app = require('../app');
+const fs = require("fs");
+const io = require('./websockets/io');
+const scriptCtrl = require('./scriptController');
 const INTERVALINCREMENT = 100;
 const GEOMULTIPLIER = 20;
-var avconvcmd;
-var hruiDataDB;
+const hruiDataDB = app.HRUIDATADB;
 var geoMultiplier = -1;
 var customData = {
     item: "",
@@ -13,26 +15,26 @@ var customData = {
 };
 //gets data from Database associated to given item
 //and calls io to fire an event to front-end with the requested data
-//using the callback funcion 'sendData' (in websockets/io.js)
-var update = function(sendData, item, eventname) {
+//using the callback funcion 'io.sendData' (in websockets/io.js)
+var update = function(item, eventname) {
     hruiDataDB.findOne({
         "item": item
     }, function(err, data) {
-        sendData(eventname, data);
+        io.sendData(eventname, data);
     });
 };
 // fires updates for robot data periodically (in increments of INTERVALINCREMENT ms, defined with multipliers)
-var periodicUpdate = function(sendData) {
+var periodicUpdate = function() {
     //get robot data
-    update(sendData, "robotData", 'updateData');
+    update("robotData", 'updateData');
     //get custom data (if requested)
     if (customData.multiplier == 0) {
-        update(sendData, customData.item, 'updateCustomdata');
+        update(customData.item, 'updateCustomdata');
         customData.multiplier = customData.MULTIPLIER + 1;
     };
     //get geolocation data (when requested)
     if (geoMultiplier == 0) {
-        update(sendData, "robotGeolocation", 'updateGeolocation');
+        update("robotGeolocation", 'updateGeolocation');
         geoMultiplier = GEOMULTIPLIER + 1;
     };
     //fire periodic timeout
@@ -43,7 +45,7 @@ var periodicUpdate = function(sendData) {
         if (geoMultiplier > 0) {
             geoMultiplier--;
         };
-        periodicUpdate(sendData);
+        periodicUpdate();
     }, INTERVALINCREMENT);
 };
 //setup customData requested item and requested interval
@@ -59,6 +61,24 @@ var customDataSetup = function(recievedCustomdata) {
     };
     customData.multiplier = customData.MULTIPLIER;
 };
+//fetch available scripts in utils
+var fetchScripts = function() {
+    //reads files in utils dir and asynchronously calls updateScripts
+    fs.readdir("utils/", updateScripts);
+};
+//parses files in utils/ for python/node scripts and sends list to front-end
+var updateScripts = function(err, files) {
+    var scripts = [];
+    var j = 0;
+    for (var i = 0; i < files.length; i++) {
+        if (files[i].indexOf(".py") > 0 || files[i].indexOf(".js") > 0) {
+            scripts[j]=files[i];
+            j++;
+        };        
+    };
+    io.sendData('fetchedScripts', scripts);
+};
+//export methods to be accessed from other modules
 module.exports = {
     //update MongoDB with joystick coordinates    
     updateJoystick: function(joystickData) {
@@ -80,18 +100,7 @@ module.exports = {
             // Run AVCONV when live video is toggled on. Log when the processed is killed (liveVideoServer.js).
             case "liveVideoCheckbox":
                 if (changedControlData.newValue === true) {
-                    process.exec(avconvcmd, function(error, stdout, stderr) {
-                        if (!!error) {
-                            switch (error.code) {
-                                case 255:
-                                    console.log("AVCONV: Killed Process");
-                                    break;
-                                case 1:
-                                    console.log("AVCONV: Device Not Found or Already Streaming");
-                                    break;
-                            }
-                        }
-                    });
+                    scriptCtrl.runavconv();
                 }
                 break;
                 //Deactivate custom data update (by resetting the multiplier to -1) when custom data is toggle off.
@@ -125,8 +134,8 @@ module.exports = {
         });
     },
     //get profiles from DB and fire event with data to front-end
-    fetchProfiles: function(sendData) {
-        update(sendData, 'profiles', 'fetchedProfiles');
+    fetchProfiles: function() {
+        update('profiles', 'fetchedProfiles');
     },
     saveProfile: function(profile) {
         setObj = {
@@ -142,10 +151,7 @@ module.exports = {
             upsert: true
         });
     },
-    setup: function(HRUIDATADB, AVCONVCMD) {
-        hruiDataDB = HRUIDATADB;
-        avconvcmd = AVCONVCMD;
-    },
     periodicUpdate: periodicUpdate,
     customDataSetup: customDataSetup,
+    fetchScripts: fetchScripts,
 };

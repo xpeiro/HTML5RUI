@@ -11,20 +11,35 @@
 </head>
 
 <body>
-    <div id="body" class="frame" width="device-width">
+    <div id="body">
         <div id="toolbar" class="frame">
-            <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)"> Joystick {{ joystickOn | OnOff}}
-            <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)"> Data Monitor {{ dataMonitorOn | OnOff}}
-            <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)"> Live Video {{ liveVideoOn | OnOff}}
-            <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)"> Geolocation {{ geolocationOn | OnOff}}
-            <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)"> Custom Data {{ customDataOn | OnOff}}
-            <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)"> Custom Input {{ customInputOn | OnOff}}
-            <input id="sshClientCheckbox" type="checkbox" data-ng-model="sshClientOn" data-ng-click="updateControls($event, sshClientOn)"> SSH Client {{ sshClientOn | OnOff}}
-            <select id="profilesList" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
+            <span>
+                <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
+                <label for="joystickCheckbox">Joystick {{ joystickOn | OnOff}}</label>
+                <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
+                <label for="dataMonitorCheckbox">Data Monitor {{ dataMonitorOn | OnOff}}</label>
+            </span>
+            <span>
+                <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
+                <label for="customDataCheckbox">Custom Data {{ customDataOn | OnOff}}</label>
+                <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)">
+                <label for="customInputCheckbox">Custom Input {{ customInputOn | OnOff}}</label>
+            </span>
+            <span>
+                <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
+                <label for="liveVideoCheckbox">Live Video {{ liveVideoOn | OnOff}}</label>
+                <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
+                <label for="geolocationCheckbox">Geolocation {{ geolocationOn | OnOff}}</label>
+            </span>
+            <span>
+                <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
+                <label for="scriptExecCheckbox">Run Scripts {{ scriptExecOn | OnOff}}</label>
+            </span>
+            <select id="profilesList" class="profileSection" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
                 <option value="" disabled selected>Load Profile...</option>
             </select>
-            <button id="saveProfile" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
-            <form data-ng-submit="saveProfile()">
+            <button id="saveProfile" class="profileSection" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
+            <form data-ng-submit="saveProfile()" class="profileSection">
                 <input id="profileNameText" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
                 <button id="saveProfileNow" type="submit" data-ng-show="saveProfileClicked">Save</button>
             </form>
@@ -33,10 +48,10 @@
         <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
         <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
-            <canvas id="joystick" class="canvas" data-touch width=300 height=300>
+            <canvas id="joystick" class="canvas" data-touch>
                 Canvas not supported
             </canvas>
-            <canvas id="vector" class="canvas" data-ng-show="showVector" width=100 height=100>
+            <canvas id="vector" class="canvas" data-ng-show="showVector">
                 Canvas not supported
             </canvas>
             <br>
@@ -68,9 +83,9 @@
             </form>
         </div>
         <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
-            <canvas id="mapcanvas" class="canvas" width="300" height="300"></canvas>
+            <canvas id="mapcanvas" class="canvas"></canvas>
             <table id="dataTable" class="table">
-                <tr>
+                <tr class="smalltext">
                     <th>Position</th>
                     <th>Orientation</th>
                     <th>Speed</th>
@@ -95,7 +110,7 @@
                     <td>&gamma;&#775;: {{angularSpeed.dGamma.toFixed(3)}}</td>
                 </tr>
             </table>
-            <span>Map Scale:</span>
+            <label for="mapscale">Map Scale:</label>
             <input id="mapscale" type="number" data-ng-model="scale">
         </div>
         <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
@@ -149,19 +164,41 @@
                 <br>
             </span>
             <table id="customInputTable" class="table" data-compile="customInputTable" data-ng-if="customInputFormSubmitted"></table>
-
             <span data-ng-show="customInputFormSubmitted">
             <input id="autoUpdate" type="checkbox" data-ng-model="autoUpdateOn" >Auto Send All on change {{ autoUpdateOn | OnOff}}
             <br>
             <button data-ng-click="inputChanged($event)">Send Input</button>
             </span>
         </div>
-        <div id="sshClientFrame" class="frame" data-ng-controller="SSHClientController" data-ng-if="sshClientOn"></div>
+        <div id="scriptExecFrame" class="frame" data-ng-controller="ScriptExecController" data-ng-if="scriptExecOn">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+                <tr data-ng-repeat="script in scripts">
+                    <td>{{script.name}}</td>
+                    <td class="tdimg"><img data-ng-src="images/{{script.status}}.svg" width="12px" height="12px">
+                    </td>
+                    <td>
+                        <button data-ng-click="runScript(script)">Run</button>
+                    </td>
+                    <td>
+                        <button data-ng-click="killScript(script)" data-ng-disabled="{{script.status=='running'}}">Kill</button>
+                    </td>
+                </tr>
+            </table>
+            <span class="smalltext"><img data-ng-src="images/running.svg" width="12px" height="12px"> Running</span>
+            <span class="smalltext"><img data-ng-src="images/killed.svg" width="12px" height="12px"> Not Running</span>
+            <span class="smalltext"><img data-ng-src="images/standby.svg" width="12px" height="12px"> Standby</span>
+            <br>
+            <span class="smalltext">Deactivating 'Run Scripts' will kill all running scripts</span>
+        </div>
         <footer class="footer">
             <h6>
-            <a href="http://www.aslab.upm.es"> <img src="aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
-            <img src="HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
-            <a href="http://github.com/xpeiro/HTML5RUI"><img src="githublogo.svg" width="24" height="24"></a>
+            <a href="http://www.aslab.upm.es"> <img src="images/aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
+            <img src="images/HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
+            <a href="http://github.com/xpeiro/HTML5RUI"><img src="images/githublogo.svg" width="24" height="24"></a>
             An ASLab Project Developed By Daniel Peiró (except where credited in source)
             </h6>
         </footer>
@@ -180,7 +217,7 @@
         <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
         <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
         <script data-ng-if="customInputOn" type="text/javascript" src="javascripts/custominput.js"></script>
-        <script data-ng-if="sshClientOn" type="text/javascript" src="javascripts/sshclient.js"></script>
+        <script data-ng-if="sshClientOn" type="text/javascript" src="javascripts/scriptexec.js"></script>
     </div>
 </body>
 

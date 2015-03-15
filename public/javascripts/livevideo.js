@@ -8,6 +8,8 @@ app.controller('LiveVideoController', ['$scope', 'SocketSrv',
         var WSPORT = 3000;
         var videoCanvas = document.getElementById('videoCanvas');
         var ctx = videoCanvas.getContext('2d');
+        videoCanvas.width = 320;
+        videoCanvas.height = 240;
         ctx.fillStyle = '#444';
         ctx.fillText('Loading...', videoCanvas.width / 2 - 30, videoCanvas.height / 3);
         // get URL

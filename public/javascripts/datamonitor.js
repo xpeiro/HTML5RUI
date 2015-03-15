@@ -2,10 +2,10 @@ app.controller('DataController', ['$scope', 'SocketSrv', 'DrawSrv', 'ProfileSrv'
     function(scope, SocketSrv, DrawSrv, ProfileSrv) {
         var map = document.getElementById('mapcanvas');
         var mapctx = map.getContext('2d');
+        map.width = 300;
+        map.height = map.width;
         var backgroundColor = BACKGROUND_COLOR;
         scope.scale = 60;
-
-
         scope.position = {
             x: 0,
             y: 0,

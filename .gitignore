@@ -34,3 +34,4 @@ _$*
 node_modules
 daemon
 npm-debug.log
+utils
