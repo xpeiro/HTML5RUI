@@ -1,10 +1,11 @@
 app.controller('ScriptExecController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
         scope.scripts = {};
-        // fetch available scripts every 5 seconds
+        scope.stdout = "stdout: ";
+        scope.stderr = "stderr: ";
+        // fetch available scripts on load
         scope.fetchScripts = function() {
             SocketSrv.socket.emit('fetchScripts');
-            setTimeout(scope.fetchScripts, 5000);
         };
 
         scope.runScript = function(script) {
@@ -19,10 +20,29 @@ app.controller('ScriptExecController', ['$scope', 'SocketSrv',
                 scope.scripts[scripts[i]] = {
                     name: scripts[i],
                     status: 'standby',
+                    showRun: true,
                 };
             };
             scope.$apply();
         });
+
+        SocketSrv.socket.on('scriptRunning', function(scriptName) {
+            scope.scripts[scriptName].status = 'running';
+            scope.scripts[scriptName].showRun = false;
+            scope.$apply();
+        });
+        SocketSrv.socket.on('scriptError', function(scriptName) {
+            scope.scripts[scriptName].status = 'killed';
+            scope.scripts[scriptName].showRun = true;
+            scope.$apply();
+        });
+        SocketSrv.socket.on('scriptStdout', function(stdout) {
+            scope.stdout = "stdout: " + stdout;
+        });
+        SocketSrv.socket.on('scriptStderr', function(stderr) {
+            scope.stderr = "stderr: " + stderr;
+        });
+
         //fetch scripts on controller load
         scope.fetchScripts();
     }

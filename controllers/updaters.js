@@ -122,7 +122,11 @@ module.exports = {
                     geoMultiplier = -1;
                 }
                 break;
-        }
+            case "scriptExecCheckbox":
+                if (changedControlData.newValue === false) {
+                    scriptCtrl.killAllScripts();
+                };
+        };
     },
     updateCustomInput: function(customInput) {
         hruiDataDB.update({

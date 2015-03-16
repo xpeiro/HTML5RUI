@@ -181,18 +181,28 @@
                     <td class="tdimg"><img data-ng-src="images/{{script.status}}.svg" width="12px" height="12px">
                     </td>
                     <td>
-                        <button data-ng-click="runScript(script)">Run</button>
-                    </td>
-                    <td>
-                        <button data-ng-click="killScript(script)" data-ng-disabled="{{script.status=='running'}}">Kill</button>
+                        <button data-ng-click="runScript(script)" data-ng-show="script.showRun">Run </button>
+                        <button data-ng-click="killScript(script)" data-ng-show="!script.showRun">Kill</button>
                     </td>
                 </tr>
             </table>
+            <span class="smalltext"><img data-ng-src="images/standby.svg" width="12px" height="12px"> Standby</span>
             <span class="smalltext"><img data-ng-src="images/running.svg" width="12px" height="12px"> Running</span>
             <span class="smalltext"><img data-ng-src="images/killed.svg" width="12px" height="12px"> Not Running</span>
-            <span class="smalltext"><img data-ng-src="images/standby.svg" width="12px" height="12px"> Standby</span>
             <br>
-            <span class="smalltext">Deactivating 'Run Scripts' will kill all running scripts</span>
+            <span class="smalltext">Deactivating 'Run Scripts' will kill all running scripts.</span>
+            <br>
+            <span class="smalltext">Streams Update on script exit (or buffer size exceded)</span>
+            <br>
+            <input id="stdoutCheckbox" type="checkbox" data-ng-model="stdoutOn">
+            <label for="stdoutCheckbox">Show stdout</label>
+            <input id="stderrCheckbox" type="checkbox" data-ng-model="stderrOn">
+            <label for="stderrCheckbox">Show stderr</label>
+            <p>
+                <textarea id="stdout" class="smalltext" data-ng-show="stdoutOn" data-ng-model="stdout" readonly></textarea>
+                <textarea id="stderr" class="smalltext" data-ng-show="stderrOn" data-ng-model="stderr" readonly></textarea>
+            </p>
+
         </div>
         <footer class="footer">
             <h6>
