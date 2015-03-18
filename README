@@ -1,5 +1,13 @@
 HTML5 Robot User Interface
 
+Quick Install Instructions (Detailed instructions follow):
+
+1.Install nodejs, npm.
+2.Install avconv (Optional, see below).
+3.Install MongoDB and start service.
+4.Run mongo utils/hruiconfig.js.
+4.Run npm install && npm start.
+
 Installation (Debian/Ubuntu/Mint):
 
 1. Install nodejs, npm:
@@ -7,53 +15,61 @@ Installation (Debian/Ubuntu/Mint):
 
    NOTE: On older systems (i.e. 32-Bit, Debian), nodejs-legacy package may also be required.
 
-2. Install MongoDB (http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/):
+2. Install avconv/ffmpeg (Optional, required for media streaming. Should be installed by default, but just in case):
+	$ sudo apt-get install libav-tools
+		or
+	$ sudo apt-get install ffmpeg
+	(Note: if you wish to use ffmpeg instead of avconv, change parameter AVCONV in app.js to 'ffmpeg' so the app calls
+	ffmpeg instead of avconv).
 
+3. Install MongoDB (http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/):
+	#get software source (use method of your choice):
 	$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 	$ echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+ 	#update package list:
 	$ sudo apt-get update
+	#install mongodb and start service:
 	$ sudo apt-get install -y mongodb-org
 	$ sudo service mongod start
 
    To check if mongodb was installed correctly, run mongo:
 	$ mongo
 
-   Configure MongoDB:
-     //In Construction.
+4. Configure MongoDB (required if you want to use Data Monitor Module and Geolocation out of the box):
+	$ mongo utils/hruiconfig.js
+	(alternatively, backup/restore a working db with mongobackup and mongorestore)
 
-3. Open HTML5RUI-master directory.
-
-4. install app:
+5. Install app and run:
+	Open HTML5RUI-master directory and run:
 	$ npm install
-
-5. run app:
-	$ npm start
-
-6. Install avconv (Optional, required for video streaming):
-	$ sudo apt-get install libav-tools
+	$ npm start	
+	
+6. (Optional) Use PM2 Service to monitor/manage server:
+	https://github.com/Unitech/pm2
 
 Note on using port 80:
 	The app is setup to use port 80 by default.
 	Using standard HTTP Port 80 requires root privileges.
 	If user is not root, an EACCES error will be thrown on app start (using sudo will work, but is a security risk).
-	To use a different port (greater than 1024), Open app.js and modify line 2 to the desired Port (should not be the same as AVCONVPORT or WSPORT),save changes and restart app if necessary.
+	To use a different port (greater than 1024), Open app.js and modify the PORT Parameter (should not be the same as other XXXPORT Parameters),save changes and restart app if necessary.
 	The server can then be reached at:
 		http://localhost:XXXX/ 
 	where XXXX is the chosen PORT. (i.e. for PORT=8100; http://localhost:8100)
-
 
 	There are several ways to use or redirect Port 80 without root privileges:
 		http://stackoverflow.com/questions/413807/is-there-a-way-for-non-root-processes-to-bind-to-privileged-ports-1024-on-l
 
 Installation (Windows):
 
-The server is meant to be deployed on Linux. It can be installed on Windows, but it's not recommended as installation is cumbersome (not of the app itself, dependencies) and some features aren't available (Live Video for example, requires dev/videoN devices, not available on windows).
+**The server is meant to be deployed on a Linux server**
+
+It can be installed on Windows, but it's not recommended as installation is cumbersome (not of the app itself, dependencies) and some features aren't available (namely: Live Media and Script Exec.)
 
 1. Install NodeJS from http://nodejs.org/ . Make sure NPM package manager is installed (it is by default).
 
 2. Install MongoDB from http://www.mongodb.org/downloads
 
-3. Configure MongoDB: In construction.
+3. Configure MongoDB: See linux.
 
 4. Install HTML5RUI:
 	Open cmd in HTML5RUI directory.
@@ -62,19 +78,20 @@ The server is meant to be deployed on Linux. It can be installed on Windows, but
 	(Optional) Install app as windows service (daemonize and keep running):
 		Install node-windows (globally):
 			>npm install -g node-windows
-		Open cmd in HTML5RUI/utils.
+		Open cmd in HTML5RUI/winutils.
 			>node winsvc install name
 			(where "name" is the name the service will have/has)
 		Other actions:
 			>node winsvc uninstall name
 			>node winsvc start name
 			>node winsvc stop name
+	or use PM2 for Windows
 
 5. Run app manually (if not installed as service):
 	Open cmd in HTML5RUI directory:
 		>npm start
 
 Possible issues with Windows installation:
-	npm error when trying to install (missing folder npm): Create folder manually (normally in AppData/Roaming/npm).
-	MongoDB error (missing data/db/): Create folder manually where the database will be stored (use of MongoDB installation folder recommended).
-	npm, node, mongod and mongo should be in your PATH if you don't want to specify it each time you use them.
+	-npm error when trying to install (missing folder npm): Create folder manually (normally in AppData/Roaming/npm).
+	-MongoDB error (missing data/db/): Create folder manually where the database will be stored (use of MongoDB installation folder recommended).
+	-npm, node, mongod and mongo should be in your PATH if you don't want to specify it each time you use them.

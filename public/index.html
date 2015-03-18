@@ -28,12 +28,14 @@
             <span>
                 <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
                 <label for="liveVideoCheckbox">Live Video {{ liveVideoOn | OnOff}}</label>
-                <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
-                <label for="geolocationCheckbox">Geolocation {{ geolocationOn | OnOff}}</label>
+                <input id="liveAudioCheckbox" type="checkbox" data-ng-model="liveAudioOn" data-ng-click="updateControls($event, liveAudioOn)">
+                <label for="liveAudioCheckbox">Live Audio {{ liveAudioOn | OnOff}}</label>
             </span>
             <span>
+                <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
+                <label for="geolocationCheckbox">Geolocation {{ geolocationOn | OnOff}}</label>
                 <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
-                <label for="scriptExecCheckbox">Run Scripts {{ scriptExecOn | OnOff}}</label>
+                <label for="scriptExecCheckbox">Run Scripts {{ scriptExecOn | OnOff}}</label>                
             </span>
             <select id="profilesList" class="profileSection" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
                 <option value="" disabled selected>Load Profile...</option>
@@ -45,8 +47,11 @@
             </form>
         </div>
         <br>
-        <canvas id="videoCanvas" class="canvas" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn"></canvas>
+        <div id="videoFrame" class="frame" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn">
+            <canvas id="videoCanvas" class="canvas"></canvas>
+        </div>
         <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
+        <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn"></div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
             <canvas id="joystick" class="canvas" data-touch>
                 Canvas not supported
@@ -217,12 +222,16 @@
         <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
         <script type="text/javascript" src="javascripts/angularapp.js"></script>
         <script type="text/javascript" src="javascripts/angularservices.js"></script>
+        <script type="text/javascript" src="javascripts/aurora.js"></script>
+        <script type="text/javascript" src="javascripts/aurora-websocket.js"></script>
+        <script type="text/javascript" src="javascripts/flac.js"></script>
+        <script type="text/javascript" src="javascripts/liveaudio.js"></script>
         <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
         <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
         <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
-        <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js">
+        <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=2">
         </script>
         <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
         <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>

@@ -16,7 +16,7 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         vector.width = 100;
         vector.height = vector.width;
         var radius = joystick.width * 0.2;
-        var maxRadius = joystick.width/3;
+        var maxRadius = joystick.width / 3;
         var backgroundColor = BACKGROUND_COLOR;
         var maxRadiusBGColor = FOREGROUND_COLOR;
         var leftClick = 0;
@@ -26,6 +26,11 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
             ProfileSrv.profile.lockJoystick = scope.lockJoystick;
             ProfileSrv.profile.lockMode = scope.lockMode;
             ProfileSrv.profile.showVector = scope.showVector;
+        });
+        scope.$on('setProfile', function() {
+            scope.lockJoystick = ProfileSrv.profile.lockJoystick;
+            scope.lockMode = ProfileSrv.profile.lockMode;
+            scope.showVector = ProfileSrv.profile.showVector;
         });
         //sets left click flag UP and calls mouseMove handler
         scope.mouseDown = function($event) {
@@ -121,3 +126,26 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         }
     }
 ]);
+//directive to override default touch controls on joystick and link touch events to handler functions
+app.directive('touch', function() {
+    return {
+        link: function(scope, element, attrs) {
+            element.on('touchmove', function(event) {
+                scope.touchMove(event);
+                scope.$apply();
+            });
+            element.on('touchdown mousedown', function(event) {
+                scope.mouseDown(event);
+                scope.$apply();
+            });
+            element.on('mousemove', function(event) {
+                scope.mouseMove(event);
+                scope.$apply();
+            });
+            element.on('mouseup touchend', function(event) {
+                scope.mouseUp(event);
+                scope.$apply();
+            });
+        }
+    }
+});

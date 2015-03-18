@@ -13,8 +13,6 @@ app.controller('GeolocationController', ['$scope', 'SocketSrv',
             streetViewControl: false,
         };
         var geoMap = new google.maps.Map(document.getElementById('geolocationFrame'), geoMapOptions);
-        geoMap.width = 320;
-        geoMap.height = 240;
         var marker = new google.maps.Marker({
             icon: geoMapball,
             position: new google.maps.LatLng(40.496534, -3.877457),

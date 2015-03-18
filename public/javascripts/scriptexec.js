@@ -1,6 +1,8 @@
-app.controller('ScriptExecController', ['$scope', 'SocketSrv',
-    function(scope, SocketSrv) {
+app.controller('ScriptExecController', ['$scope', 'SocketSrv', 'ProfileSrv',
+    function(scope, SocketSrv, ProfileSrv) {
         scope.scripts = {};
+        scope.stdoutOn = false;
+        scope.stderrOn = false;
         scope.stdout = "stdout: ";
         scope.stderr = "stderr: ";
         // fetch available scripts on load
@@ -41,6 +43,16 @@ app.controller('ScriptExecController', ['$scope', 'SocketSrv',
         });
         SocketSrv.socket.on('scriptStderr', function(stderr) {
             scope.stderr = "stderr: " + stderr;
+        });
+        //share profile data with ProfileSrv
+        scope.$on('getProfile', function() {
+            ProfileSrv.profile.stdoutOn = scope.stdoutOn;
+            ProfileSrv.profile.stderrOn = scope.stderrOn;
+        });
+        //load profile from ProfileSrv
+        scope.$on('setProfile', function() {
+            scope.stdoutOn = ProfileSrv.profile.stdoutOn;
+            scope.stderrOn = ProfileSrv.profile.stderrOn;            
         });
 
         //fetch scripts on controller load

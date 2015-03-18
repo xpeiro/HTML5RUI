@@ -2,51 +2,70 @@
 const app = require('../app');
 const io = require('./websockets/io');
 const process = require("child_process");
-const avconvcmd = app.AVCONVCMD;
-var processes = {};
+const AVCONV = app.AVCONV;
+const VIDEOARGS = app.VIDEOARGS;
+const AUDIOARGS = app.AUDIOARGS;
+var scripts = {};
+var streams = {
+    audioStream: {
+        ARGS: AUDIOARGS,
+        proc: {},
+    },
+    videoStream: {
+        ARGS: VIDEOARGS,
+        proc: {},
+    },
+};
 // Run AVCONV when live video is toggled on. Log when the processed is killed (liveVideoServer.js).
 module.exports = {
-    runavconv: function() {
-        process.exec(avconvcmd, function(error, stdout, stderr) {
-            if (!!error) {
-                switch (error.code) {
+    runStream: function(streamType) {
+        //stream from audio/video device.
+        streams[streamType].proc = process.spawn(AVCONV, streams[streamType].ARGS);
+        //on process exit, report cause.
+        streams[streamType].proc.on('close', function(code, signal) {
+            if (!!signal) {
+                console.log(streamType + ' Closed on ' + signal + ' received');
+            };
+            if (!!code) {
+                switch (code) {
                     case 255:
-                        console.log("AVCONV: Killed Process");
+                        console.log(streamType + ': Process Killed');
                         break;
                     case 1:
-                        console.log("AVCONV: Device Not Found or Already Streaming");
+                        console.log(streamType + ': Device Not Found or Already Streaming');
                         break;
                 };
             };
         });
     },
+
     runScript: function(scriptName) {
         //check for type of script (check for stuff like 'trickyscript.js.py')
         if (scriptName.indexOf(".py") > 0 && scriptName.lastIndexOf(".py") > scriptName.lastIndexOf(".js")) {
-            processes[scriptName] = process.spawn('python', ["utils/" + scriptName]);
+            scripts[scriptName] = process.spawn('python', ["userscripts/" + scriptName]);
         } else if (scriptName.indexOf(".js") > 0 && scriptName.lastIndexOf(".js") > scriptName.lastIndexOf(".py")) {
-            processes[scriptName] = process.spawn('node', ["utils/" + scriptName]);
+            scripts[scriptName] = process.spawn('node', ["userscripts/" + scriptName]);
         };
         //on script exit, notify front-end
-        processes[scriptName].on('close', function(code) {
+        scripts[scriptName].on('close', function(code) {
             io.sendData('scriptError', scriptName);
         });
         //send stdout and stderr to front-end
-        processes[scriptName].stdout.on('data', function(data) {
+        scripts[scriptName].stdout.on('data', function(data) {
             io.sendData('scriptStdout', ab2str(data));
         });
-        processes[scriptName].stderr.on('data', function(data) {
+        scripts[scriptName].stderr.on('data', function(data) {
             io.sendData('scriptStderr', ab2str(data));
         });
         //notify front-end of script running
         io.sendData('scriptRunning', scriptName);
     },
     killScript: function(scriptName) {
-        processes[scriptName].kill('SIGINT');
+        scripts[scriptName].kill('SIGINT');
     },
     killAllScripts: function() {
-        for (var proc in processes) {
-            processes[proc].kill('SIGINT');
+        for (var scriptName in scripts) {
+            scripts[scriptName].kill('SIGINT');
         };
     },
 };

@@ -61,12 +61,12 @@ var customDataSetup = function(recievedCustomdata) {
     };
     customData.multiplier = customData.MULTIPLIER;
 };
-//fetch available scripts in utils
+//fetch available scripts in userscripts/
 var fetchScripts = function() {
-    //reads files in utils dir and asynchronously calls updateScripts
-    fs.readdir("utils/", updateScripts);
+    //reads files in userscripts dir and asynchronously calls updateScripts
+    fs.readdir("userscripts/", updateScripts);
 };
-//parses files in utils/ for python/node scripts and sends list to front-end
+//parses files in userscripts/ for python/node scripts and sends list to front-end
 var updateScripts = function(err, files) {
     var scripts = [];
     var j = 0;
@@ -97,10 +97,15 @@ module.exports = {
     },
     updateControls: function(changedControlData) {
         switch (changedControlData.changedControl) {
-            // Run AVCONV when live video is toggled on. Log when the processed is killed (liveVideoServer.js).
+            // Run AVCONV when live video/audio is toggled on. Log when the processed is killed (liveMediaServer.js).
             case "liveVideoCheckbox":
                 if (changedControlData.newValue === true) {
-                    scriptCtrl.runavconv();
+                    scriptCtrl.runStream('videoStream');
+                }
+                break;
+            case "liveAudioCheckbox":
+                if (changedControlData.newValue === true) {
+                    scriptCtrl.runStream('audioStream');
                 }
                 break;
                 //Deactivate custom data update (by resetting the multiplier to -1) when custom data is toggle off.

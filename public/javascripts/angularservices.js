@@ -1,12 +1,19 @@
+//string filter. Returns 'On' if given boolean is true, 'Off' otherwise.
+app.filter('OnOff', function() {
+    return function(bool) {
+        return bool ? 'On' : 'Off';
+    }
+});
 //Sharing service for controllers to push and pull Profile data
 app.service('ProfileSrv', function() {
     this.profile = {};
 });
-//Websocket server (for livevideo and Socket.io) shared between controllers
+//Websocket server (for livevideo/audio and Socket.io) shared between controllers
 app.service('SocketSrv', function() {
     //open WebSocket
     this.socket = io.connect();
-    this.wsocket;
+    this.videowsocket;
+    this.wsPlayer;   
 });
 //Service with typical drawing methods shared between controllers
 app.service('DrawSrv', function() {

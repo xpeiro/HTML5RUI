@@ -2,7 +2,6 @@
 CODE ADAPTED TO ANGULARJS FROM ORIGINAL WORK by Dominic Szablewski - phoboslab.org, github.com/phoboslab:
 http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/ 
 */
-
 app.controller('LiveVideoController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
         var WSPORT = 3000;
@@ -15,8 +14,8 @@ app.controller('LiveVideoController', ['$scope', 'SocketSrv',
         // get URL
         var wsurl = 'ws'.concat(document.URL.slice(4, document.URL.lastIndexOf('/')).concat(':' + WSPORT + '/'));
         // Setup the WebSocket connection and start the player        
-        SocketSrv.wsocket = new WebSocket(wsurl);
-        var player = new jsmpeg(SocketSrv.wsocket, {
+        SocketSrv.videowsocket = new WebSocket(wsurl);
+        var player = new jsmpeg(SocketSrv.videowsocket, {
             canvas: videoCanvas
         });
     }

@@ -4,25 +4,27 @@
   Adapted to express, small modifications.
 */
 const app = require('../../app');
-const AVCONVPORT = app.AVCONVPORT;
+const VIDEOPORT = app.VIDEOPORT;
 const VIDEOWIDTH = app.VIDEOWIDTH;
 const VIDEOHEIGHT = app.VIDEOHEIGHT;
 const STREAM_MAGIC_BYTES = 'jsmp';
 const PASSWORD = "hrui1311"
 const process = require("child_process");
 
-module.exports = function(socketServer) {
+module.exports = function(socketServer, streamType, PORT) {
     socketServer.on('connection', function(socket) {
-        var streamHeader = new Buffer(8);
-        streamHeader.write(STREAM_MAGIC_BYTES);
-        streamHeader.writeUInt16BE(VIDEOWIDTH, 4);
-        streamHeader.writeUInt16BE(VIDEOHEIGHT, 6);
-        socket.send(streamHeader, {
-            binary: true
-        });
-        console.log('New LiveVideo WebSocket Connection (' + socketServer.clients.length + ' total)');
+        if (streamType == 'videoStream') {
+            var streamHeader = new Buffer(8);
+            streamHeader.write(STREAM_MAGIC_BYTES);
+            streamHeader.writeUInt16BE(VIDEOWIDTH, 4);
+            streamHeader.writeUInt16BE(VIDEOHEIGHT, 6);
+            socket.send(streamHeader, {
+                binary: true
+            });
+        };
+        console.log('New ' + streamType + ' WebSocket Connection (' + socketServer.clients.length + ' total)');
         socket.on('close', function(code, message) {
-            console.log('Disconnected LiveVideo WebSocket (' + socketServer.clients.length + ' total)');
+            console.log('Disconnected ' + streamType + ' WebSocket (' + socketServer.clients.length + ' total)');
             if (socketServer.clients.length == 0) {
                 process.exec("killall avconv", function(error, stdout, stderr) {
                     if (!!error) {
@@ -42,20 +44,12 @@ module.exports = function(socketServer) {
         }
     };
     var streamServer = require('http').createServer(function(request, response) {
-        var params = request.url.substr(1).split('/');
-        width = (params[1] || VIDEOWIDTH) | 0;
-        height = (params[2] || VIDEOHEIGHT) | 0;
-        if (params[0] == PASSWORD) {
-            console.log('Stream Connected: ' + request.socket.remoteAddress + ':' + request.socket.remotePort + ' size: ' + width + 'x' + height);
-            request.on('data', function(data) {
-                socketServer.broadcast(data, {
-                    binary: true
-                });
+        console.log('Stream Connected: ' + request.socket.remoteAddress + ':' + request.socket.remotePort);
+        request.on('data', function(data) {
+            socketServer.broadcast(data, {
+                binary: true
             });
-        } else {
-            console.log('Failed Stream Connection: ' + request.socket.remoteAddress + request.socket.remotePort + ' - wrong secret.');
-            response.end();
-        }
-    }).listen(AVCONVPORT);
+        });
+    }).listen(PORT);
 
 }
