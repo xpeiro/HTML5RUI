@@ -6,13 +6,10 @@
  aurora.js Framework : https://github.com/audiocogs/aurora.js
  flac.js FLAC JS Decoder: https://github.com/audiocogs/flac.js
 */
-
-
 app.controller('LiveAudioController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
     	var AUDIOWSPORT = 4000;
-        var wsurl = SocketSrv.constructWSUrl(document.URL, AUDIOWSPORT);
-        console.log(wsurl);
+        var wsurl = 'ws://' + location.hostname + ':' + AUDIOWSPORT;
         SocketSrv.wsPlayer = AV.Player.fromWebSocket(wsurl);
         SocketSrv.wsPlayer.play();
     }

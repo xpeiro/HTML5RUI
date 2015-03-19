@@ -12,9 +12,7 @@ app.controller('LiveVideoController', ['$scope', 'SocketSrv',
         ctx.fillStyle = '#444';
         ctx.fillText('Loading...', videoCanvas.width / 2 - 30, videoCanvas.height / 3);
         // get URL
-
-        var wsurl = SocketSrv.constructWSUrl(document.URL, VIDEOWSPORT);
-        console.log('output: ' + wsurl);
+        var wsurl = 'ws://' + location.hostname + ':' + VIDEOWSPORT;
         // Setup the WebSocket connection and start the player        
         SocketSrv.videowsocket = new WebSocket(wsurl);
         var player = new jsmpeg(SocketSrv.videowsocket, {
