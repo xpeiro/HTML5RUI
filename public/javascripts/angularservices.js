@@ -13,7 +13,18 @@ app.service('SocketSrv', function() {
     //open WebSocket
     this.socket = io.connect();
     this.videowsocket;
-    this.wsPlayer;   
+    this.wsPlayer;
+    this.constructWSUrl = function(url, PORT) {
+        var wsurl = url;
+        console.log('input: ' + wsurl);
+        wsurl = wsurl.replace('http://', 'ws://');
+        wsurl = wsurl.substring(0, wsurl.lastIndexOf('/'));
+        if (wsurl.lastIndexOf(':') > 4) {
+            wsurl = wsurl.substring(0, wsurl.lastIndexOf(':'));
+        };
+        wsurl = wsurl.concat(':' + PORT + '/');
+        return wsurl;
+    };
 });
 //Service with typical drawing methods shared between controllers
 app.service('DrawSrv', function() {

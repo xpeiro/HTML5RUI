@@ -11,7 +11,7 @@ const logger = require('morgan');
 const path = require('path');
 const monk = require('monk');
 //Set Parameters (change to appropriate values if necessary):
-const PORT = 80; //Set Web Server Port
+const PORT = 8080; //Set Web Server Port
 const AVCONV = 'avconv'; //Set command for avconv/ffmpeg
 //Set Video Streaming Parameters
 const VIDEOPORT = 8000; //Port where stream is received

@@ -11,7 +11,7 @@
 app.controller('LiveAudioController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
     	var AUDIOWSPORT = 4000;
-        var wsurl = 'ws'.concat(document.URL.slice(4, document.URL.lastIndexOf('/')).concat(':' + AUDIOWSPORT + '/'));
+        var wsurl = SocketSrv.constructWSUrl(document.URL, AUDIOWSPORT);
         console.log(wsurl);
         SocketSrv.wsPlayer = AV.Player.fromWebSocket(wsurl);
         SocketSrv.wsPlayer.play();
