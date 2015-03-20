@@ -1,36 +1,65 @@
-/*VIDEO STREAMING CODE by Dominic Szablewski - phoboslab.org, github.com/phoboslab:
-  http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/
+/*
+    HTML5 Robot User Interface Server
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
 
-  Adapted to express, small modifications.
+/*  Adapted from original code by Dominic Szablewski - phoboslab.org:
+    github.com/phoboslab
+    http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/  
+*/
+
+/*
+    Live Media Server:
+    Captures audio or video stream on a local port, broadcasts it to connected
+    websockets.
 */
 const app = require('../../app');
+const fs = require('fs');
+const scriptCtrl = require('../scriptController');
+//Construct MP3 header file with data necessary for AuroraJS decoder to function
+const AUDIOARGS = app.AUDIOARGS;
+var audioHeader;
+//use different header depending on number of channels in audio device
+if (AUDIOARGS.indexOf('-ac') + 1 == AUDIOARGS.indexOf('1')) {
+    audioHeader = fs.readFileSync("public/misc/audioheaderAC1", {});
+} else {
+    audioHeader = fs.readFileSync("public/misc/audioheaderAC2", {});
+};
+audioHeader = audioHeader.slice(0, 8 * 960);
+//Construct MPEG1 header file with data necessary for JSMPEG to function
 const VIDEOPORT = app.VIDEOPORT;
 const VIDEOWIDTH = app.VIDEOWIDTH;
 const VIDEOHEIGHT = app.VIDEOHEIGHT;
 const STREAM_MAGIC_BYTES = 'jsmp';
-const PASSWORD = "hrui1311"
-const process = require("child_process");
+var videoHeader = new Buffer(8);
+videoHeader.write(STREAM_MAGIC_BYTES);
+videoHeader.writeUInt16BE(VIDEOWIDTH, 4);
+videoHeader.writeUInt16BE(VIDEOHEIGHT, 6);
 
 module.exports = function(socketServer, streamType, PORT) {
     socketServer.on('connection', function(socket) {
-        if (streamType == 'videoStream') {
-            var streamHeader = new Buffer(8);
-            streamHeader.write(STREAM_MAGIC_BYTES);
-            streamHeader.writeUInt16BE(VIDEOWIDTH, 4);
-            streamHeader.writeUInt16BE(VIDEOHEIGHT, 6);
-            socket.send(streamHeader, {
-                binary: true
-            });
-        };
+        var streamHeader;
+        if (streamType == 'audioStream') {
+            scriptCtrl.killStream(streamType);
+            streamHeader = audioHeader;
+
+        } else {
+            streamHeader = videoHeader;
+        }
+        //send header to websocket
+        socket.send(streamHeader, {
+            binary: true
+        });
+        //start media stream (from now on sends media stream, see streamServer method)
+        scriptCtrl.runStream(streamType);
         console.log('New ' + streamType + ' WebSocket Connection (' + socketServer.clients.length + ' total)');
+        //when websocket closed, stop media stream
         socket.on('close', function(code, message) {
             console.log('Disconnected ' + streamType + ' WebSocket (' + socketServer.clients.length + ' total)');
             if (socketServer.clients.length == 0) {
-                process.exec("killall avconv", function(error, stdout, stderr) {
-                    if (!!error) {
-                        console.log("killall AVCONV Processes Failed");
-                    }
-                });
+                scriptCtrl.killStream(streamType);
             }
         });
     });
@@ -43,6 +72,7 @@ module.exports = function(socketServer, streamType, PORT) {
             }
         }
     };
+    //when a media stream connects, broadcast data to websocket
     var streamServer = require('http').createServer(function(request, response) {
         console.log('Stream Connected: ' + request.socket.remoteAddress + ':' + request.socket.remotePort);
         request.on('data', function(data) {

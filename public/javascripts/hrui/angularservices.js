@@ -1,9 +1,10 @@
-//string filter. Returns 'On' if given boolean is true, 'Off' otherwise.
-app.filter('OnOff', function() {
-    return function(bool) {
-        return bool ? 'On' : 'Off';
-    }
-});
+/*
+    HTML5 Robot User Interface Web Application
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
 //Sharing service for controllers to push and pull Profile data
 app.service('ProfileSrv', function() {
     this.profile = {};
@@ -12,8 +13,13 @@ app.service('ProfileSrv', function() {
 app.service('SocketSrv', function() {
     //open WebSocket
     this.socket = io.connect();
+    //streaming Params
+    this.VIDEOWSPORT = 3000;
+    this.AUDIOWSPORT = 4000;
+    this.VIDEODEVICE = 0;
     this.videowsocket;
     this.wsPlayer;
+
 });
 //Service with typical drawing methods shared between controllers
 app.service('DrawSrv', function() {
@@ -107,5 +113,13 @@ app.service('GeometrySrv', function() {
                 y: y
             };
         },
+    }
+});
+
+
+//string filter. Returns 'On' if given boolean is true, 'Off' otherwise.
+app.filter('OnOff', function() {
+    return function(bool) {
+        return bool ? 'On' : 'Off';
     }
 });

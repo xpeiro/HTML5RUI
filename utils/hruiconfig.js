@@ -1,3 +1,12 @@
+#!/usr/bin/env node
+
+/*
+    HTML5 Robot User Interface Server
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
 //HRUI MongoDB init script. Run: mongo path/to/hruiconfig.js to setup the database.
 //You may add/remove as many other entries as you like.
 

@@ -1,3 +1,10 @@
+/*
+    HTML5 Robot User Interface Web Application
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
 app.controller('GeolocationController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
         var geoMapball = {

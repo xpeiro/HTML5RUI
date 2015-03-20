@@ -1,3 +1,10 @@
+/*
+    HTML5 Robot User Interface Server
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
 //Require NodeJS Modules
 const express = require('express');
 const app = express();
@@ -10,38 +17,39 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const path = require('path');
 const monk = require('monk');
-//Set Parameters (change to appropriate values if necessary):
-const PORT = 8080; //Set Web Server Port
+/*  
+    Server Parameters. 
+    Can be configured to suit application needs.
+*/
+const PORT = 80; //Set Web Server Port
 const AVCONV = 'avconv'; //Set command for avconv/ffmpeg
-//Set Video Streaming Parameters
-const VIDEOPORT = 8000; //Port where stream is received
-const VIDEOWSPORT = 3000; //Port where stream is emitted
-const VIDEOWIDTH = 320;
-const VIDEOHEIGHT = 240;
-const VIDEODEVICE = "/dev/video0"; //source device
-// args passed to AVCONV/FFMPEG to stream video
+const VIDEOPORT = 8000; //Port where video stream is received
+const VIDEOWSPORT = 3000; //Port where video stream is emitted (sent to front-end)
+const VIDEOWIDTH = 640; //Must be a multiple of 2.
+const VIDEOHEIGHT = 480;
+const DEV = "/dev/"; //dev directory
+const VIDEODEVICE = "video0"; // initial video device
 const VIDEOARGS = ['-s',
     VIDEOWIDTH + 'x' + VIDEOHEIGHT,
     '-f', 'video4linux2',
-    '-i', VIDEODEVICE,
-    '-f', 'mpeg1video',
-    '-b', '200k',
-    '-r', '30',
+    '-i', DEV + VIDEODEVICE,
+    '-f', 'mpeg1video', //video format. Do not change (required by JSMPEG).
+    '-b', '32k', //video bitrate
+    '-r', '30', //video fps
     'http://localhost:' + VIDEOPORT
-];
-//for screen capture use args: "-f x11grab -s SCREENRESOLUTION -r 30 -i :0.0 -f mpeg1video -s 320x240 OUTPUT"
-//Set Audio Streaming Parameters (see Video Param comments)
-const AUDIOPORT = 1234;
-const AUDIOWSPORT = 4000;
-const AUDIODEVICE = 'hw:0,0';
+]; // args passed to AVCONV/FFMPEG to stream video
+const AUDIOPORT = 1234; //Port where audio stream is received
+const AUDIOWSPORT = 4000; //Port where audio stream is emitted (sent to front-end)
+const AUDIODEVICE = 'hw:0,0'; // initial audio device
 const AUDIOARGS = ['-f', 'alsa',
+    '-ac', '1', //Change to 1 if audio hardware has one channel.
     '-i', AUDIODEVICE,
-    '-acodec', 'flac',
-    '-re',
-    '-f', 'flac',
+    '-acodec', 'libmp3lame',
+    '-ab', '32k', //lower bitrate for poor connections -> 64k,32k,16k work fine.
+    '-f', 'mp3',
     'http://127.0.0.1:' + AUDIOPORT
-];
-//Set MongoDB Parameters
+]; // args passed to AVCONV/FFMPEG to stream audio (EXPERIMENTAL)
+//MongoDB Parameters
 const DB = monk('localhost:27017/hrui');
 const HRUIDATADB = DB.get('data');
 // Export Parameters (for use in all modules)
@@ -53,7 +61,10 @@ module.exports = {
     VIDEOWSPORT: VIDEOWSPORT,
     VIDEOWIDTH: VIDEOWIDTH,
     VIDEOHEIGHT: VIDEOHEIGHT,
+    DEV: DEV,
+    VIDEODEVICE: VIDEODEVICE,
     VIDEOARGS: VIDEOARGS,
+    AUDIODEVICE: AUDIODEVICE,
     AUDIOPORT: AUDIOPORT,
     AUDIOWSPORT: AUDIOWSPORT,
     AUDIOARGS: AUDIOARGS,

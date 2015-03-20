@@ -1,3 +1,9 @@
+<!--
+    HTML5 Robot User Interface Web Application
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015
+-->
 <!DOCTYPE html>
 <html data-ng-app="HRUI" data-ng-controller="HRUIController">
 
@@ -48,10 +54,16 @@
         </div>
         <br>
         <div id="videoFrame" class="frame" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn">
-            <canvas id="videoCanvas" class="canvas"></canvas>
+            <canvas id="videoCanvas" class="canvas">
+                Canvas not supported
+            </canvas>
+            <br>
+            <label for="videoDevice">Video Device:</label>
+            <input id="videoDevice" type="number" data-ng-model="videoDevice" data-ng-change="videoDeviceSelected(videoDevice)">
         </div>
         <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
-        <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn"></div>
+        <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn">
+            <h5>Note: Experimental Feature. Audio has a delay of approx. 2 seconds</h5></div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
             <canvas id="joystick" class="canvas" data-touch>
                 Canvas not supported
@@ -133,7 +145,6 @@
                 <br>
                 </span>
             <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
-
         </div>
         <div id="customInputFrame" class="frame" data-ng-controller="CustomInputController" data-ng-if="customInputOn">
             <form id="customInputSelectionForm" class="form" data-ng-if="!customInputSelectionSubmitted" data-ng-submit="customInputSelectionSubmit()">
@@ -207,37 +218,65 @@
                 <textarea id="stdout" class="smalltext" data-ng-show="stdoutOn" data-ng-model="stdout" readonly></textarea>
                 <textarea id="stderr" class="smalltext" data-ng-show="stderrOn" data-ng-model="stderr" readonly></textarea>
             </p>
-
         </div>
         <footer class="footer">
             <h6>
             <a href="http://www.aslab.upm.es"> <img src="images/aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
             <img src="images/HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
             <a href="http://github.com/xpeiro/HTML5RUI"><img src="images/githublogo.svg" width="24" height="24"></a>
-            An ASLab Project Developed By Daniel Peiró (except where credited in source)
+            An ASLab Project Developed By Daniel Peiró (using 
+            <a href="https://github.com/audiocogs/aurora.js">Aurora</a>, <a href="https://github.com/fsbdev/aurora-websocket">Aurora-WebSocket</a>, and 
+            <a href="https://github.com/phoboslab/jsmpeg">JSmpeg</a> under MIT License)
             </h6>
         </footer>
-        <script type="text/javascript" src="javascripts/socket.io.min.js"></script>
-        <script type="text/javascript" src="javascripts/angular.min.js"></script>
-        <script type="text/javascript" src="javascripts/angular-sanitize.min.js"></script>
-        <script type="text/javascript" src="javascripts/angularapp.js"></script>
-        <script type="text/javascript" src="javascripts/angularservices.js"></script>
-        <script type="text/javascript" src="javascripts/aurora.js"></script>
-        <script type="text/javascript" src="javascripts/aurora-websocket.js"></script>
-        <script type="text/javascript" src="javascripts/flac.js"></script>
-        <script type="text/javascript" src="javascripts/liveaudio.js"></script>
-        <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/joystick.js"></script>
-        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/datamonitor.js"></script>
+        <script type="text/javascript" src="javascripts/socket.io/socket.io.min.js"></script>
+        <script type="text/javascript" src="javascripts/angular/angular.min.js"></script>
+        <script type="text/javascript" src="javascripts/angular/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="javascripts/hrui/angularapp.js"></script>
+        <script type="text/javascript" src="javascripts/hrui/angularservices.js"></script>
+        <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/hrui/joystick.js"></script>
+        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/hrui/datamonitor.js"></script>
         <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
-        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpg.min.js"></script>
-        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/livevideo.js"></script>
-        <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=2">
+        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpeg/jsmpg.min.js"></script>
+        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/hrui/livevideo.js"></script>
+        <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?">
         </script>
-        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/geolocation.js"></script>
-        <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/customdata.js"></script>
-        <script data-ng-if="customInputOn" type="text/javascript" src="javascripts/custominput.js"></script>
-        <script data-ng-if="sshClientOn" type="text/javascript" src="javascripts/scriptexec.js"></script>
+        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/hrui/geolocation.js"></script>
+        <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/hrui/customdata.js"></script>
+        <script data-ng-if="customInputOn" type="text/javascript" src="javascripts/hrui/custominput.js"></script>
+        <script data-ng-if="sshClientOn" type="text/javascript" src="javascripts/hrui/scriptexec.js"></script>
+        <!--Aurora.js and Flac.js by Audiocogs: http://audiocogs.org/ -->
+        <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/aurora.js"></script>
+        <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/mp3.js"></script>
+        <!--Aurora.js Websocket Plugin by fsbdev: https://github.com/fsbdev/aurora-websocket -->
+        <script type="text/javascript" src="javascripts/aurora/aurora-websocket.js"></script>
+        <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/hrui/liveaudio.js"></script>
     </div>
 </body>
 
 </html>
+<!--
+jsmpg.js , aurora.js, aurora-websockets.js, flac.js all used under MIT License:
+
+jsmpeg.js Copyright (c) 2014 Dominic Szablewski http://www.phoboslab.org/
+aurora.js, flac.js Copyright (c) 2014 http://audiocogs.org/
+aurora-websockets.js Copyright (c) 2014 fabienbrooke@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->

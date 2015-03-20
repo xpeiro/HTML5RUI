@@ -1,3 +1,10 @@
+/*
+    HTML5 Robot User Interface Server
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
 var Service = require('node-windows').Service;
 var action = process.argv[2];
 var servicename = process.argv[3];

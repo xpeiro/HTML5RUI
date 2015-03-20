@@ -1,9 +1,0 @@
-#!/usr/bin/env node
-var debug = require('debug')('HRUI');
-var app = require('../app');
-
-
-
-
-
-

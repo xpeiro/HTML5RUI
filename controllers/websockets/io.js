@@ -1,12 +1,19 @@
-// Socket.IO Event Configuration
+/*
+    HTML5 Robot User Interface Server
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
+/* Socket.IO Event Configuration */
 var socket;
 // function to send an event with associated data to front end when called
 var sendData = function(event, data) {
     socket.emit(event, data);
 };
-// Export sendData function
-module.exports.sendData = sendData;
-// get updater module
+module.exports.sendData = sendData; // Export for transparent data sending in other modules
+// get required modules
+const app = require('../../app');
 const updaters = require('../updaters');
 const scriptCtrl = require('../scriptController');
 // Setup Event hooks to Handlers
@@ -17,10 +24,22 @@ module.exports = function(io) {
         // log user connect
         io.clients++;
         console.log('A User Connected. (' + io.clients + ' total)');
+        //Send App Parameters to front-end
+        sendData('initParams', {
+            VIDEOWSPORT: app.VIDEOWSPORT,
+            AUDIOWSPORT: app.AUDIOWSPORT,
+            VIDEODEVICE: parseInt(app.VIDEODEVICE.replace('video', '')),
+        });
         // log user disconnect
         socket.on('disconnect', function() {
             io.clients--;
             console.log('A User Disconnected. (' + io.clients + ' total)');
+            //if all clients disconnected, kill all running scripts/streams (safeguard, may be removed)
+            if (io.clients == 0) {
+                scriptCtrl.killAllScripts();
+                scriptCtrl.killStream('audioStream');
+                scriptCtrl.killStream('videoStream');
+            };
         });
         // update mongodb with joystick position
         socket.on('updateJoystick', function(data) {
@@ -57,6 +76,10 @@ module.exports = function(io) {
         //kill Script
         socket.on('killScript', function(data) {
             scriptCtrl.killScript(data);
+        });
+        //media Device Selected
+        socket.on('mediaDeviceSelected', function(data) {
+            scriptCtrl.changeMediaDevice(data);
         });
         // set off periodic data update
         updaters.periodicUpdate();

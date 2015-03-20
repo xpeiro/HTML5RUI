@@ -1,3 +1,10 @@
+/*
+    HTML5 Robot User Interface Web Application
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
 //app init
 var app = angular.module('HRUI', ['ngSanitize']);
 //set color constants
@@ -18,10 +25,17 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         scope.profileName = "";
         scope.profiles = {};
         scope.saveProfileClicked = false;
+        //Receive Initial Parameters
+        SocketSrv.socket.on('initParams', function(params) {
+            SocketSrv.VIDEOWSPORT = params.VIDEOWSPORT;
+            SocketSrv.AUDIOWSPORT = params.AUDIOWSPORT;
+            SocketSrv.VIDEODEVICE = params.VIDEODEVICE;            
+        });
         //initial profile fetch
         setTimeout(function() {
             SocketSrv.socket.emit('fetchProfiles');
         }, 500);
+
         //populate profiles array on profile list reception
         SocketSrv.socket.on('fetchedProfiles', function(profiles) {
             if (!!profiles) {
@@ -72,7 +86,8 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             if (changedControl == "liveVideoCheckbox" && newValue == false) {
                 SocketSrv.videowsocket.close();
             } else if (changedControl == "liveAudioCheckbox" && newValue == false) {
-                SocketSrv.wsPlayer.asset.source.socket.close();
+                SocketSrv.wsPlayer.stop();
+                SocketSrv.wsPlayer.asset.source.socket.close();                
             };
         };
         //load selected profile
@@ -108,4 +123,3 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         };
     }
 ]);
-

@@ -1,14 +1,19 @@
-HTML5 Robot User Interface
+HTML5 Robot User Interface Server
+An ASLab Project,
+Developed by Daniel Peiró
+ETSII, UPM 2014-2015    
 
-Quick Install Instructions (Detailed instructions follow):
+Quick Instructions (Detailed instructions follow):
 
 1.Install nodejs, npm.
 2.Install avconv (Optional, see below).
 3.Install MongoDB and start service.
-4.Run mongo utils/hruiconfig.js.
-4.Run npm install && npm start.
+4.Cd to HTML5RUI dir:
+	$ mongo utils/hruiconfig.js
+	$ npm install
+	$ npm start
 
-Installation (Debian/Ubuntu/Mint):
+Detailed Installation Instructions (Debian/Ubuntu/Mint):
 
 1. Install nodejs, npm:
 	$ sudo apt-get install nodejs npm
@@ -35,29 +40,39 @@ Installation (Debian/Ubuntu/Mint):
    To check if mongodb was installed correctly, run mongo:
 	$ mongo
 
-4. Configure MongoDB (required if you want to use Data Monitor Module and Geolocation out of the box):
+4.CD to HTML5RUI directory.
+
+5. Configure MongoDB (required if you want to use Data Monitor Module and Geolocation out of the box):
 	$ mongo utils/hruiconfig.js
 	(alternatively, backup/restore a working db with mongobackup and mongorestore)
 
-5. Install app and run:
-	Open HTML5RUI-master directory and run:
+6. Install app and run:
 	$ npm install
 	$ npm start	
 	
-6. (Optional) Use PM2 Service to monitor/manage server:
+7. (Optional) Use PM2 Service to monitor/manage server:
 	https://github.com/Unitech/pm2
 
-Note on using port 80:
-	The app is setup to use port 80 by default.
-	Using standard HTTP Port 80 requires root privileges.
-	If user is not root, an EACCES error will be thrown on app start (using sudo will work, but is a security risk).
+Notes on using port 80:
+	The app is setup to use port 80 by default (makes for a 'prettier' URL).
+	Using standard HTTP Port 80 (or any other port < 1024) requires root privileges.
+	If user is not root, an EACCES error will be thrown on app start (using sudo will work, but is a security risk, as it grants full rights and capabilities to node).
 	To use a different port (greater than 1024), Open app.js and modify the PORT Parameter (should not be the same as other XXXPORT Parameters),save changes and restart app if necessary.
 	The server can then be reached at:
 		http://localhost:XXXX/ 
-	where XXXX is the chosen PORT. (i.e. for PORT=8100; http://localhost:8100)
-
-	There are several ways to use or redirect Port 80 without root privileges:
+	where XXXX is the chosen PORT. (i.e. for PORT=8080; http://localhost:8080)
+	How to use port 80:
+		My preffered method uses libcap2-bin to grant node.js the capability to bind to port<1024:
+			$ sudo apt-get install libcap2-bin
+			$ sudo setcap cap_net_bind_service=+ep /usr/local/bin/node
+		To revert, simply:
+			$ sudo setcap cap_net_bind_service=-ep /usr/local/bin/node
+		This only gives node the ability to bind to ports < 1024, keeping all other restrictions intact.
+		There are several other ways to use or redirect Port 80 without root privileges:
 		http://stackoverflow.com/questions/413807/is-there-a-way-for-non-root-processes-to-bind-to-privileged-ports-1024-on-l
+
+
+
 
 Installation (Windows):
 

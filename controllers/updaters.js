@@ -1,3 +1,10 @@
+/*
+    HTML5 Robot User Interface Server
+    An ASLab Project,
+    Developed by Daniel Peiró
+    ETSII, UPM 2014-2015    
+*/
+
 //DataBase Controller
 const app = require('../app');
 const fs = require("fs");
@@ -72,9 +79,9 @@ var updateScripts = function(err, files) {
     var j = 0;
     for (var i = 0; i < files.length; i++) {
         if (files[i].indexOf(".py") > 0 || files[i].indexOf(".js") > 0) {
-            scripts[j]=files[i];
+            scripts[j] = files[i];
             j++;
-        };        
+        };
     };
     io.sendData('fetchedScripts', scripts);
 };
@@ -97,18 +104,7 @@ module.exports = {
     },
     updateControls: function(changedControlData) {
         switch (changedControlData.changedControl) {
-            // Run AVCONV when live video/audio is toggled on. Log when the processed is killed (liveMediaServer.js).
-            case "liveVideoCheckbox":
-                if (changedControlData.newValue === true) {
-                    scriptCtrl.runStream('videoStream');
-                }
-                break;
-            case "liveAudioCheckbox":
-                if (changedControlData.newValue === true) {
-                    scriptCtrl.runStream('audioStream');
-                }
-                break;
-                //Deactivate custom data update (by resetting the multiplier to -1) when custom data is toggle off.
+            //Deactivate custom data update (by resetting the multiplier to -1) when custom data is toggle off.
             case "customDataCheckbox":
                 if (changedControlData.newValue === false) {
                     customData = {
