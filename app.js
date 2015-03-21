@@ -28,7 +28,7 @@ const VIDEOWSPORT = 3000; //Port where video stream is emitted (sent to front-en
 const VIDEOWIDTH = 640; //Must be a multiple of 2.
 const VIDEOHEIGHT = 480;
 const DEV = "/dev/"; //dev directory
-const VIDEODEVICE = "video0"; // initial video device
+const VIDEODEVICE = "video0"; // initial video device (need access permission. User must be in video Group.)
 const VIDEOARGS = ['-s',
     VIDEOWIDTH + 'x' + VIDEOHEIGHT,
     '-f', 'video4linux2',
