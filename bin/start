@@ -21,6 +21,13 @@ domain.on('error', function(error) {
             'without required permissions. Either set a PORT > 1024 in app.js or see\n',
             "README 'Notes on using port 80' for ways to use PORT 80.\n",
             'SUDO should not be used for security reasons.');
+    } else if (error.message.indexOf('ENOENT') >= 0) {
+        if (error.message.indexOf('audioheader') > 0) {
+            console.log(' Error is caused by removal or renaming of audioheader files in\n',
+                'public/misc/ directory. audioheaderAC1 or audioheaderAC2 (depending on\n',
+                'number of channels of audio device) must be present.');
+            process.exit(0);
+        };        
     };
     console.log('Stack Trace: ', error.stack);
     process.exit(0);

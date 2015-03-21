@@ -40,15 +40,15 @@ const VIDEOARGS = ['-s',
 ]; // args passed to AVCONV/FFMPEG to stream video
 const AUDIOPORT = 1234; //Port where audio stream is received
 const AUDIOWSPORT = 4000; //Port where audio stream is emitted (sent to front-end)
-const AUDIODEVICE = 'hw:0,0'; // initial audio device
+const AUDIODEVICE = 'hw:1,0'; // audio device
 const AUDIOARGS = ['-f', 'alsa',
     '-ac', '1', //Change to 1 if audio hardware has one channel.
     '-i', AUDIODEVICE,
-    '-acodec', 'libmp3lame',
-    '-ab', '32k', //lower bitrate for poor connections -> 64k,32k,16k work fine.
+    '-acodec', 'libmp3lame', //mp3 encoding. Do not change without changing Aurora Decoder (e.g. to FLAC.js)
+    '-ab', '32k', //should not be changed without regenerating headers, though results may vary.
     '-f', 'mp3',
     'http://127.0.0.1:' + AUDIOPORT
-]; // args passed to AVCONV/FFMPEG to stream audio (EXPERIMENTAL)
+]; // args passed to AVCONV/FFMPEG to stream audio (EXPERIMENTAL FEATURE)
 //MongoDB Parameters
 const DB = monk('localhost:27017/hrui');
 const HRUIDATADB = DB.get('data');

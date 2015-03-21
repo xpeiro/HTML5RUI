@@ -77,12 +77,15 @@ var fetchScripts = function() {
 var updateScripts = function(err, files) {
     var scripts = [];
     var j = 0;
-    for (var i = 0; i < files.length; i++) {
-        if (files[i].indexOf(".py") > 0 || files[i].indexOf(".js") > 0) {
-            scripts[j] = files[i];
-            j++;
+    if (!!files) {
+        for (var i = 0; i < files.length; i++) {
+            if (files[i].indexOf(".py") > 0 || files[i].indexOf(".js") > 0) {
+                scripts[j] = files[i];
+                j++;
+            };
         };
-    };
+    }
+
     io.sendData('fetchedScripts', scripts);
 };
 //export methods to be accessed from other modules
