@@ -23,7 +23,7 @@ const monk = require('monk');
 */
 const PORT = 80; //Set Web Server Port
 const NODE = 'node'; //Set command for node script calls
-const PYTHON = 'python'; //Set command for python script calls
+const PYTHON = 'python2'; //Set command for python script calls
 const AVCONV = 'avconv'; //Set command for avconv/ffmpeg
 const VIDEOPORT = 8000; //Port where video stream is received
 const VIDEOWSPORT = 3000; //Port where video stream is emitted (sent to front-end)
