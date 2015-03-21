@@ -9,8 +9,13 @@
 const app = require('../app');
 const io = require('./websockets/io');
 const spawn = require("child_process").spawn;
+//get commands
+const NODE = app.NODE;
+const PYTHON = app.PYTHON;
 const AVCONV = app.AVCONV;
-const DEV = app.DEV;
+//get dev directory
+const DEV = app.DEV
+//get initial VIDEO and AUDIO avconv/ffmpeg arguments
 const VIDEOARGS = app.VIDEOARGS;
 const AUDIOARGS = app.AUDIOARGS;
 var scripts = {};
@@ -54,9 +59,11 @@ var killStream = function(streamType) {
 var runScript = function(scriptName) {
     //check for type of script (check for stuff like 'trickyscript.js.py')
     if (scriptName.lastIndexOf(".py") > scriptName.lastIndexOf(".js")) {
-        scripts[scriptName] = spawn('python', ["userscripts/" + scriptName]);
+        //spawn python script
+        scripts[scriptName] = spawn(PYTHON, ["userscripts/" + scriptName]);
     } else if (scriptName.lastIndexOf(".js") > scriptName.lastIndexOf(".py")) {
-        scripts[scriptName] = spawn('node', ["userscripts/" + scriptName]);
+        //spawn node script
+        scripts[scriptName] = spawn(NODE, ["userscripts/" + scriptName]);
     };
     //on script exit, notify front-end
     scripts[scriptName].on('close', function(code) {

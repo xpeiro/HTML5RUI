@@ -22,20 +22,29 @@ domain.on('error', function(error) {
             "README 'Notes on using port 80' for ways to use PORT 80.\n",
             'SUDO should not be used for security reasons.');
     } else if (error.message.indexOf('ENOENT') >= 0) {
-        if (error.message.indexOf('audioheader') > 0) {
+        if (error.message.indexOf('audioheader') >= 0) {
             console.log(' Error is caused by removal or renaming of audioheader files in\n',
                 'public/misc/ directory. audioheaderAC1 or audioheaderAC2 (depending on\n',
                 'number of channels of audio device) must be present.');            
-        } else if (error.message.indexOf('avconv') > 0) {
+        } else if (error.message.indexOf('avconv') >= 0) {
         	console.log(' Error is caused by failure to find avconv command. If your\n',
                 'system doesn\'t have avconv or you prefer to use ffmpeg, you can change\n',
                 'the AVCONV parameter in app.js to \'ffmpeg\'');   
-        };        
+        } else if (error.message.indexOf('python') >= 0) {
+        	console.log(' Error is caused by failure to find python command.\n',
+        		'Either make a link to your python (version < 3) binary called python\n',
+        		'in your PATH, or modify app.js parameter PYTHON to point to your binary');  
+        };
+        else if (error.message.indexOf('node') >= 0) {
+        	console.log(' Error is caused by failure to find node command.\n',
+        		'Either make a link to your node binary called node\n',
+        		'in your PATH, or modify app.js parameter NODE to point to your binary');  
+        };     
     };
     console.log('Stack Trace: ', error.stack);
     process.exit(0);
 });
-
+//Start main app
 domain.run(function() {
 var debug = require('debug')('HRUI');
 var app = require('../app');

@@ -22,6 +22,8 @@ const monk = require('monk');
     Can be configured to suit application needs.
 */
 const PORT = 80; //Set Web Server Port
+const NODE = 'node'; //Set command for node script calls
+const PYTHON = 'python'; //Set command for python script calls
 const AVCONV = 'avconv'; //Set command for avconv/ffmpeg
 const VIDEOPORT = 8000; //Port where video stream is received
 const VIDEOWSPORT = 3000; //Port where video stream is emitted (sent to front-end)
@@ -56,6 +58,8 @@ const HRUIDATADB = DB.get('data');
 module.exports = {
     app: app,
     PORT: PORT,
+    NODE: NODE,
+    PYTHON: PYTHON,
     AVCONV: AVCONV,
     VIDEOPORT: VIDEOPORT,
     VIDEOWSPORT: VIDEOWSPORT,
