@@ -25,8 +25,11 @@ domain.on('error', function(error) {
         if (error.message.indexOf('audioheader') > 0) {
             console.log(' Error is caused by removal or renaming of audioheader files in\n',
                 'public/misc/ directory. audioheaderAC1 or audioheaderAC2 (depending on\n',
-                'number of channels of audio device) must be present.');
-            process.exit(0);
+                'number of channels of audio device) must be present.');            
+        } else if (error.message.indexOf('avconv') > 0) {
+        	console.log(' Error is caused by failure to find avconv command. If your\n',
+                'system doesn\'t have avconv or you prefer to use ffmpeg, you can change\n',
+                'the AVCONV parameter in app.js to \'ffmpeg\'');   
         };        
     };
     console.log('Stack Trace: ', error.stack);
