@@ -21,13 +21,19 @@ const scriptCtrl = require('../scriptController');
 //Construct MP3 header file with data necessary for AuroraJS decoder to function
 const AUDIOARGS = app.AUDIOARGS;
 var audioHeader;
+var audioHeaderPath;
 //use different header depending on number of channels in audio device
-if (AUDIOARGS.indexOf('-ac') + 1 == AUDIOARGS.indexOf('1')) {
-    audioHeader = fs.readFileSync("public/misc/audioheaderAC1", {});
-} else {
-    audioHeader = fs.readFileSync("public/misc/audioheaderAC2", {});
+if (AUDIOARGS.indexOf('-ac') + 1 == AUDIOARGS.indexOf('1'))
+    audioHeaderPath = 'controllers/websockets/audioheaders/audioheaderAC1';
+else
+    audioHeaderPath = 'controllers/websockets/audioheaders/audioheaderAC2';
+audioHeader = fs.readFile(audioHeaderPath, function(err, data) {
+    audioHeaderRead(err, data);
+});
+var audioHeaderRead = function(err, data) {
+    if (err) throw err;
+    audioHeader = data.slice(0, 8 * 960);
 };
-audioHeader = audioHeader.slice(0, 8 * 960);
 //Construct MPEG1 header file with data necessary for JSMPEG to function
 const VIDEOPORT = app.VIDEOPORT;
 const VIDEOWIDTH = app.VIDEOWIDTH;

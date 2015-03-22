@@ -15,10 +15,15 @@
  flac.js FLAC JS Decoder: https://github.com/audiocogs/flac.js
  Aurora Websocket Plugin by fsbdev: https://github.com/fsbdev
 */
+
+/***EXPERIMENTAL FEATURE***/
 app.controller('LiveAudioController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
+    	//get url
         var wsurl = 'ws://' + location.hostname + ':' + SocketSrv.AUDIOWSPORT;
+        // connect player to websocket
         SocketSrv.wsPlayer = AV.Player.fromWebSocket(wsurl);
+        // start playing
         SocketSrv.wsPlayer.play();        
     }
 ]);
