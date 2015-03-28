@@ -74,7 +74,7 @@ module.exports = function(socketServer, streamType, PORT) {
             if (this.clients[i].readyState == 1) {
                 this.clients[i].send(data, opts);
             } else {
-                console.log('Error: Client (' + i + ') not connected.');
+                console.log(streamType + ': Client (' + i + ') not connected.');
             }
         }
     };
@@ -88,4 +88,4 @@ module.exports = function(socketServer, streamType, PORT) {
         });
     }).listen(PORT);
 
-}
+};
