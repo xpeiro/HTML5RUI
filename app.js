@@ -1,3 +1,4 @@
+
 /*
     HTML5 Robot User Interface Server
     An ASLab Project,
@@ -43,7 +44,7 @@ const VIDEOARGS = ['-s',
 ]; // args passed to AVCONV/FFMPEG to stream video
 const AUDIOPORT = 1234; //Port where audio stream is received
 const AUDIOWSPORT = 4000; //Port where audio stream is emitted (sent to front-end)
-const AUDIODEVICE = 'hw:0,0'; // audio device
+const AUDIODEVICE = 'hw:0,0'; // audio device (Need access permission ~ User must be in audio Group.)
 const AUDIOARGS = ['-f', 'alsa',
     '-ac', '2', //Change to '1' if audio hardware has one channel.
     '-i', AUDIODEVICE,

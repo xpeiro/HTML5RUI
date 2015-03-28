@@ -58,7 +58,7 @@ $ mongo
 ```shell
 $ mongo utils/hruiconfig.js
 ```
-Alternatively, backup/restore a working db with mongorestore (one is available in utils/)
+Alternatively, backup/restore a working db with [mongorestore](http://docs.mongodb.org/manual/reference/program/mongorestore/) (one is available in utils/)
 
 #####6. Install app and run:
 ```shell
@@ -105,7 +105,7 @@ There are [several other ways](http://stackoverflow.com/questions/413807/is-ther
 #####4. Install HTML5RUI:
   * Open cmd in HTML5RUI directory.
 	```shell
-	>npm install
+  >npm install
 	```
   * (Optional) Install app as windows service (daemonize and keep running):
     * Install node-windows (globally):
