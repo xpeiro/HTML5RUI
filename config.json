@@ -1,0 +1,21 @@
+{
+    "PORT": 80,
+    "NODE": "node",
+    "PYTHON": "python",
+    "AVCONV": "avconv",
+    "DEV": "/dev/",
+    "VIDEOPORT": 8000,
+    "VIDEOWSPORT": 3000,
+    "VIDEOWIDTH": 320,
+    "VIDEOHEIGHT": 240,
+    "VIDEODEVICE": "video0",
+    "AUDIOPORT": 1234,
+    "AUDIOWSPORT": 4000,
+    "AUDIODEVICE": "hw:0,0",
+    "AUDIOCHANNELS": 2,
+    "_DESCRIPTION": "HRUI Server parameter config file.",
+    "_DESCRIPTION": "See app.js/manual for parameter reference and advanced parameters",
+    "_DESCRIPTION": "Not necessary to include all params, will use defaults.",
+    "_DESCRIPTION": "All properties starting with underscore will be disregarded."
+
+}

@@ -12,7 +12,7 @@ const io = require('./websockets/io');
 const scriptCtrl = require('./scriptController');
 const INTERVALINCREMENT = 100;
 const GEOMULTIPLIER = 20;
-const hruiDataDB = app.HRUIDATADB;
+const hruiDataDB = app.PARAMS.HRUIDATADB;
 var geoMultiplier = -1;
 var customData = {
     item: "",

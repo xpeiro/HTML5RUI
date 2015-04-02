@@ -23,17 +23,17 @@ module.exports = function(io) {
         socket = newsocket;
         // log user connect
         io.clients++;
-        console.log('A User Connected. (' + io.clients + ' total)');
+        console.log('HRUI IO: A User Connected. (' + io.clients + ' concurrent)');
         //Send App Parameters to front-end
         sendData('initParams', {
-            VIDEOWSPORT: app.VIDEOWSPORT,
-            AUDIOWSPORT: app.AUDIOWSPORT,
-            VIDEODEVICE: parseInt(app.VIDEODEVICE.replace('video', '')),
+            VIDEOWSPORT: app.PARAMS.VIDEOWSPORT,
+            AUDIOWSPORT: app.PARAMS.AUDIOWSPORT,
+            VIDEODEVICE: parseInt(app.PARAMS.VIDEODEVICE.replace('video', '')),
         });
         // log user disconnect
         socket.on('disconnect', function() {
             io.clients--;
-            console.log('A User Disconnected. (' + io.clients + ' total)');
+            console.log('HRUI IO: A User Disconnected. (' + io.clients + ' concurrent)');
             //if all clients disconnected, kill all running scripts/streams (safeguard, may be removed)
             if (io.clients == 0) {
                 scriptCtrl.killAllScripts();

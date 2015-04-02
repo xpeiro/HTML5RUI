@@ -24,31 +24,26 @@ domain.on('error', function(error) {
     console.log('HRUI error: ', error.message);
     if (error.message == 'listen EACCES') {
         console.log(' Error is probably due to app trying to start on PORT < 1024\n',
-            'without required permissions. Either set a PORT > 1024 in app.js or see\n',
+            'without required permissions. Either set a PORT > 1024 in config.json or app.js or see\n',
             "README 'Notes on using port 80' for ways to use PORT 80.\n",
             'SUDO should not be used for security reasons.');
         console.log('Stack Trace: ', error.stack);
         process.exit(0);
     } else if (error.message.indexOf('ENOENT') >= 0) {
-        if (error.message.indexOf('audioheader') >= 0) {
-            console.log(' Error is caused by removal or renaming of audioheader files in\n',
-                'public/misc/ directory. audioheaderAC1 or audioheaderAC2 (depending on\n',
-                'number of channels of audio device) must be present.\n',
-                'The app will continue, but Live Audio will NOT Work.');            
-        } else if (error.message.indexOf(app.AVCONV) >= 0) {
+        if (error.message.indexOf(app.PARAMS.AVCONV) >= 0) {
         	console.log(' Error is caused by failure to find ' + app.AVCONV + ' command. If your\n',
                 'system doesn\'t have avconv or you prefer to use ffmpeg, you can change\n',
-                'the AVCONV parameter in app.js to \'ffmpeg\'.\n',
+                'the AVCONV parameter in config.json or app.js to \'ffmpeg\'.\n',
                 'The app will continue, but Live Media will NOT Work.');   
-        } else if (error.message.indexOf(app.PYTHON) >= 0) {
+        } else if (error.message.indexOf(app.PARAMS.PYTHON) >= 0) {
         	console.log(' Error is caused by failure to find ' + app.PYTHON + ' command.\n',
         		'Either make a link to your python binary called \'python\'\n',
-        		'in your PATH, or modify app.js parameter PYTHON to point to your binary.\n',
+        		'in your PATH, or modify config.json or app.js parameter PYTHON to point to your binary.\n',
                 'The app will continue, but Python scripts will NOT be executed.');  
-        } else if (error.message.indexOf(app.NODE) >= 0) {
+        } else if (error.message.indexOf(app.PARAMS.NODE) >= 0) {
         	console.log(' Error is caused by failure to find ' + app.NODE +' command.\n',
         		'Either make a link to your node binary called \'node\'\n',
-        		'in your PATH, or modify app.js parameter NODE to point to your binary.\n',
+        		'in your PATH, or modify config.json or app.js parameter NODE to point to your binary.\n',
                 'The app will continue, but Node scripts will NOT be executed.');  
         } else {
             console.log('Stack Trace: ', error.stack);

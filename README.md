@@ -30,7 +30,7 @@ Or
 ```shell
 $ sudo apt-get install ffmpeg
 ```
-If you wish to use ffmpeg instead of avconv, change parameter AVCONV in app.js to 'ffmpeg' so the app calls ffmpeg instead of avconv.
+If you wish to use ffmpeg instead of avconv, change parameter AVCONV in config.json or app.js to 'ffmpeg' so the app calls ffmpeg instead of avconv.
 
 #####3. Install [MongoDB](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/):
 Get software source (use method of your choice):
@@ -47,7 +47,7 @@ Install mongodb and start service:
 $ sudo apt-get install -y mongodb-org
 $ sudo service mongod start
 ```
-To check if mongodb was installed correctly, run mongo:
+To check if mongodb was installed correctly, run mongo shell:
 ```shell
 $ mongo
 ```
@@ -66,6 +66,12 @@ $ npm install
 $ npm start	
 ```
 #####Optional: Use [PM2](https://github.com/Unitech/pm2) to monitor/manage server (Recommended).
+```shell
+$ npm install pm2 -g
+$ pm2 start bin/start 
+$ pm2 logs/monit/stop 0/start 0/...(see PM2 documentation)
+```
+
 	
 
 #####Notes on using port 80: 

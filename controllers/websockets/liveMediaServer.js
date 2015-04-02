@@ -18,9 +18,9 @@
 const app = require('../../app');
 const scriptCtrl = require('../scriptController');
 //Construct MP3 header file with data necessary for AuroraJS decoder to function
-const audioHeader = constructAudioHeader(app.AUDIOARGS[app.AUDIOARGS.indexOf('-ac') + 1]);
+const audioHeader = constructAudioHeader(app.PARAMS.AUDIOARGS[app.PARAMS.AUDIOARGS.indexOf('-ac') + 1]);
 //Construct MPEG1 header file with data necessary for JSMPEG to function
-const videoHeader = constructVideoHeader(app.VIDEOWIDTH, app.VIDEOHEIGHT);
+const videoHeader = constructVideoHeader(app.PARAMS.VIDEOWIDTH, app.PARAMS.VIDEOHEIGHT);
 
 module.exports = function(socketServer, streamType, PORT) {
     socketServer.on('connection', function(socket) {
@@ -37,17 +37,17 @@ module.exports = function(socketServer, streamType, PORT) {
         });
         //start media stream (from now on sends media stream, see streamServer method)
         scriptCtrl.runStream(streamType);
-        console.log('New ' + streamType + ' WebSocket Connection (' + socketServer.clients.length + ' total)');
+        console.log('HRUI ' + streamType + ': Client connected (' + socketServer.clients.length + ' concurrent)');
         //when websocket closed, stop media stream
         socket.on('close', function(code, message) {
-            console.log('Disconnected ' + streamType + ' WebSocket (' + socketServer.clients.length + ' total)');
+            console.log('HRUI ' + streamType + ':  Client disconnected (' + socketServer.clients.length + ' concurrent)');
             if (socketServer.clients.length == 0) {
                 scriptCtrl.killStream(streamType);
                 scriptCtrl.changeMediaDevice({
                     streamType: streamType,
                     deviceNum: 'init',
                 });
-            }
+            };
         });
     });
     socketServer.broadcast = function(data, opts) {
@@ -55,13 +55,13 @@ module.exports = function(socketServer, streamType, PORT) {
             if (this.clients[i].readyState == 1) {
                 this.clients[i].send(data, opts);
             } else {
-                console.log(streamType + ': Client (' + i + ') not connected.');
+                console.log('HRUI ' + streamType + ': Client (' + i + ') not connected.');
             }
         }
     };
     //when a media stream connects, broadcast data to websocket
     var streamServer = require('http').createServer(function(request, response) {
-        console.log('Stream Connected: ' + request.socket.remoteAddress + ':' + request.socket.remotePort);
+        console.log('HRUI: Stream Connected on ' + request.socket.remoteAddress + ':' + request.socket.remotePort);
         request.on('data', function(data) {
             socketServer.broadcast(data, {
                 binary: true
@@ -98,4 +98,5 @@ function constructVideoHeader(VIDEOWIDTH, VIDEOHEIGHT) {
     videoHeader.write(STREAM_MAGIC_BYTES);
     videoHeader.writeUInt16BE(VIDEOWIDTH, 4);
     videoHeader.writeUInt16BE(VIDEOHEIGHT, 6);
+    return videoHeader;
 };

@@ -10,25 +10,22 @@ const app = require('../app');
 const io = require('./websockets/io');
 const spawn = require("child_process").spawn;
 //get commands
-const NODE = app.NODE;
-const PYTHON = app.PYTHON;
-const AVCONV = app.AVCONV;
+const NODE = app.PARAMS.NODE;
+const PYTHON = app.PARAMS.PYTHON;
+const AVCONV = app.PARAMS.AVCONV;
 //get dev directory
-const DEV = app.DEV;
+const DEV = app.PARAMS.DEV;
 //get initial video device
-const INITVIDDEV = DEV + app.VIDEODEVICE;
-//get initial VIDEO and AUDIO avconv/ffmpeg arguments
-const VIDEOARGS = app.VIDEOARGS;
-const AUDIOARGS = app.AUDIOARGS;
+const INITVIDDEV = DEV + app.PARAMS.VIDEODEVICE;
 //init objects holding the running scripts and streams.
 var scripts = {};
 var streams = {
     audioStream: {
-        ARGS: AUDIOARGS,
+        ARGS: app.PARAMS.AUDIOARGS,
         proc: null,
     },
     videoStream: {
-        ARGS: VIDEOARGS,
+        ARGS: app.PARAMS.VIDEOARGS,
         proc: null,
     },
 };
@@ -71,6 +68,7 @@ var runScript = function(scriptName) {
     //on script exit, notify front-end
     scripts[scriptName].on('close', function(code) {
         io.sendData('scriptError', scriptName);
+        scripts[scriptName] = null;
         console.log('Script exited: ' + scriptName);
     });
     //send stdout and stderr to front-end
