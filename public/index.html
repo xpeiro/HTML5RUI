@@ -59,7 +59,7 @@
             </canvas>
             <br>
             <label for="videoDevice">Video Device:</label>
-            <input id="videoDevice" type="number" data-ng-model="videoDevice" data-ng-change="videoDeviceSelected(videoDevice)">
+            <input id="videoDevice" type="number" data-ng-model="videoDevice" data-ng-change="videoDeviceSelected(videoDevice)" min="0">
         </div>
         <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
         <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn">

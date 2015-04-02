@@ -14,10 +14,13 @@ const NODE = app.NODE;
 const PYTHON = app.PYTHON;
 const AVCONV = app.AVCONV;
 //get dev directory
-const DEV = app.DEV
+const DEV = app.DEV;
+//get initial video device
+const INITVIDDEV = DEV + app.VIDEODEVICE;
 //get initial VIDEO and AUDIO avconv/ffmpeg arguments
 const VIDEOARGS = app.VIDEOARGS;
 const AUDIOARGS = app.AUDIOARGS;
+//init objects holding the running scripts and streams.
 var scripts = {};
 var streams = {
     audioStream: {
@@ -98,9 +101,13 @@ var changeMediaDevice = function(media) {
     killStream(media.streamType);
     var args = streams[media.streamType].ARGS;
     if (media.streamType == 'videoStream') {
-        args[args.indexOf('-i') + 1] = DEV + 'video' + media.deviceNum;
+        if (media.deviceNum != 'init') {
+            args[args.indexOf('-i') + 1] = DEV + 'video' + media.deviceNum;
+            runStream(media.streamType);
+        } else //if 'init' passed as device number, resets to initial video device (as per app.js params)
+            args[args.indexOf('-i') + 1] = INITVIDDEV;
     } //add 'else' for audio here, if needed. Modifications to liveaudio.js also required (see livevideo.js)
-    runStream(media.streamType);
+
 };
 //Convert Array Buffer to String Function (credit: Renato Mangini, 
 //http://updates.html5rocks.com/2012/06/How-to-convert-ArrayBuffer-to-and-from-String)

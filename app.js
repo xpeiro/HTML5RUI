@@ -32,7 +32,7 @@ const VIDEOPORT = 8000; //Port where video stream is received
 const VIDEOWSPORT = 3000; //Port where video stream is emitted (sent to front-end)
 const VIDEOWIDTH = 640; //Must be a multiple of 2.
 const VIDEOHEIGHT = 480;
-const VIDEODEVICE = "video0"; // initial video device (Need access permission ~ User must be in video Group.)
+const VIDEODEVICE = "video1"; // initial video device (Need access permission ~ User must be in video Group.)
 const VIDEOARGS = ['-s',
     VIDEOWIDTH + 'x' + VIDEOHEIGHT,
     '-f', 'video4linux2',
@@ -44,9 +44,9 @@ const VIDEOARGS = ['-s',
 ]; // args passed to AVCONV/FFMPEG to stream video
 const AUDIOPORT = 1234; //Port where audio stream is received
 const AUDIOWSPORT = 4000; //Port where audio stream is emitted (sent to front-end)
-const AUDIODEVICE = 'hw:0,0'; // audio device (Need access permission ~ User must be in audio Group.)
+const AUDIODEVICE = 'hw:1,0'; // audio device (Need access permission ~ User must be in audio Group.)
 const AUDIOARGS = ['-f', 'alsa',
-    '-ac', '2', //Change to '1' if audio hardware has one channel.
+    '-ac', '1', //Change to '1' if audio hardware has one channel.
     '-i', AUDIODEVICE,
     '-acodec', 'libmp3lame', //mp3 encoding. Do not change without changing Aurora Decoder (e.g. to FLAC.js)
     '-ab', '32k', //should not be changed without regenerating headers, though results may vary.
