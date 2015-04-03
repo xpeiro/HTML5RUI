@@ -10,10 +10,12 @@ const app = require('../app');
 const fs = require("fs");
 const io = require('./websockets/io');
 const scriptCtrl = require('./scriptController');
+const hruiDataDB = app.PARAMS.HRUIDATADB;
 const INTERVALINCREMENT = 100;
 const GEOMULTIPLIER = 20;
-const hruiDataDB = app.PARAMS.HRUIDATADB;
 var geoMultiplier = -1;
+var dataMonitorOn = false;
+var clientsAreConnected = false;
 var customData = {
     item: "",
     updateInterval: INTERVALINCREMENT,
@@ -21,9 +23,9 @@ var customData = {
     multiplier: -1,
 };
 //gets data from Database associated to given item
-//and calls io to fire an event to front-end with the requested data
-//using the callback funcion 'io.sendData' (in websockets/io.js)
-var update = function(item, eventname) {
+//and fires an event called eventname to front-end 
+//with the requested data using websockets/io.js
+var getAndSendAs = function(item, eventname) {
     hruiDataDB.findOne({
         "item": item
     }, function(err, data) {
@@ -32,28 +34,33 @@ var update = function(item, eventname) {
 };
 // fires updates for robot data periodically (in increments of INTERVALINCREMENT ms, defined with multipliers)
 var periodicUpdate = function() {
-    //get robot data
-    update("robotData", 'updateData');
-    //get custom data (if requested)
-    if (customData.multiplier == 0) {
-        update(customData.item, 'updateCustomdata');
-        customData.multiplier = customData.MULTIPLIER + 1;
-    };
-    //get geolocation data (when requested)
-    if (geoMultiplier == 0) {
-        update("robotGeolocation", 'updateGeolocation');
-        geoMultiplier = GEOMULTIPLIER + 1;
-    };
-    //fire periodic timeout
-    setTimeout(function() {
+    if (clientsAreConnected) {
+        //get robot data
+        if (dataMonitorOn) {
+            getAndSendAs("robotData", 'updateData');
+        };
+        //get custom data (if requested)
+        if (customData.multiplier == 0) {
+            getAndSendAs(customData.item, 'updateCustomdata');
+            customData.multiplier = customData.MULTIPLIER + 1;
+        };
+        //get geolocation data (when requested)
+        if (geoMultiplier == 0) {
+            getAndSendAs("robotGeolocation", 'updateGeolocation');
+            geoMultiplier = GEOMULTIPLIER + 1;
+        };
         if (customData.multiplier > 0) {
             customData.multiplier--;
         };
         if (geoMultiplier > 0) {
             geoMultiplier--;
         };
+    };
+    //fire periodic timeout
+    setTimeout(function() {
         periodicUpdate();
     }, INTERVALINCREMENT);
+
 };
 //setup customData requested item and requested interval
 var customDataSetup = function(recievedCustomdata) {
@@ -88,6 +95,9 @@ var updateScripts = function(err, files) {
 
     io.sendData('fetchedScripts', scripts);
 };
+
+//Start Periodic updates
+periodicUpdate();
 //export methods to be accessed from other modules
 module.exports = {
     //update MongoDB with joystick coordinates    
@@ -130,6 +140,10 @@ module.exports = {
                 if (changedControlData.newValue === false) {
                     scriptCtrl.killAllScripts();
                 };
+                break;
+            case "dataMonitorCheckbox":
+                dataMonitorOn = changedControlData.newValue;
+                break;
         };
     },
     updateCustomInput: function(customInput) {
@@ -143,7 +157,7 @@ module.exports = {
     },
     //get profiles from DB and fire event with data to front-end
     fetchProfiles: function() {
-        update('profiles', 'fetchedProfiles');
+        getAndSendAs('profiles', 'fetchedProfiles');
     },
     saveProfile: function(profile) {
         setObj = {
@@ -162,4 +176,7 @@ module.exports = {
     periodicUpdate: periodicUpdate,
     customDataSetup: customDataSetup,
     fetchScripts: fetchScripts,
+    setClientsAreConnected: function(newValue) {
+        clientsAreConnected = newValue;
+    },
 };

@@ -24,6 +24,7 @@ module.exports = function(io) {
         // log user connect
         io.clients++;
         console.log('HRUI IO: A User Connected. (' + io.clients + ' concurrent)');
+        updaters.setClientsAreConnected(true);
         //Send App Parameters to front-end
         sendData('initParams', {
             VIDEOWSPORT: app.PARAMS.VIDEOWSPORT,
@@ -34,11 +35,13 @@ module.exports = function(io) {
         socket.on('disconnect', function() {
             io.clients--;
             console.log('HRUI IO: A User Disconnected. (' + io.clients + ' concurrent)');
-            //if all clients disconnected, kill all running scripts/streams (safeguard, may be removed)
+            //if all clients disconnected, kill all running scripts/streams (safeguard, may be removed),
+            //and stop periodic updates
             if (io.clients == 0) {
                 scriptCtrl.killAllScripts();
                 scriptCtrl.killStream('audioStream');
                 scriptCtrl.killStream('videoStream');
+                updaters.setClientsAreConnected(false);
             };
         });
         // update mongodb with joystick position
@@ -81,7 +84,5 @@ module.exports = function(io) {
         socket.on('mediaDeviceSelected', function(data) {
             scriptCtrl.changeMediaDevice(data);
         });
-        // set off periodic data update
-        updaters.periodicUpdate();
     });
 };
