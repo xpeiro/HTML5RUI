@@ -81,7 +81,7 @@ try {
     PARAMS.VIDEOARGS[12] = 'http://localhost:' + PARAMS.VIDEOPORT;
     PARAMS.AUDIOARGS[3] = PARAMS.AUDIOCHANNELS;
     PARAMS.AUDIOARGS[5] = PARAMS.AUDIODEVICE;
-    PARAMS.AUDIOARGS[5] = 'http://localhost:' + PARAMS.AUDIOPORT;
+    PARAMS.AUDIOARGS[12] = 'http://localhost:' + PARAMS.AUDIOPORT;
 } catch (err) {
     if (!!err) {
         if (err.code == 'ENOENT') {
