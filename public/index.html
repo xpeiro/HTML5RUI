@@ -61,9 +61,12 @@
             <label for="videoDevice">Video Device:</label>
             <input id="videoDevice" type="number" data-ng-model="videoDevice" data-ng-change="videoDeviceSelected(videoDevice)" min="0">
         </div>
-        <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn"></div>
+        <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn">
+        </div>
         <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn">
-            <h5>Note: Experimental Feature. Audio has a delay of approx. 2 seconds</h5></div>
+            <h3>Live Audio On</h3>
+            <h5>Note: Experimental Feature. Audio has a delay of approx. 2 seconds</h5>
+        </div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
             <canvas id="joystick" class="canvas" data-touch>
                 Canvas not supported
@@ -100,7 +103,21 @@
             </form>
         </div>
         <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
-            <canvas id="mapcanvas" class="canvas"></canvas>
+            <input name="Map On" type="checkbox" data-ng-model="mapOn" data-ng-change="toggleMap(mapOn)"> Map {{ mapOn | OnOff}}
+            <br>
+            <canvas id="mapcanvas" class="canvas" data-ng-show="mapOn"></canvas>
+            <p data-ng-show="mapOn">
+                Map Mode:
+                <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="server" data-ng-change="setMapMode(mapMode)">Server
+                <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="upload" data-ng-change="setMapMode(mapMode)">Upload
+                <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="draw" data-ng-change="setMapMode(mapMode)">Draw
+                <br>
+                <button id="uploadMap" data-ng-file-select data-ng-file-change="upload($files)" data-ng-accept="'*.png,*jpg'" data-ng-show="mapMode=='upload'">Upload Map (.PNG)...</button>
+                <button id="clearMap" data-ng-show="mapOn && mapMode != 'server'" data-ng-click="clearMap()">Clear Map</button>
+                <br data-ng-show="mapMode=='upload'">
+                <label for="mapsize">Map Size(px):</label>
+                <input id="mapsize" type="number" data-ng-model="size">
+            </p>
             <table id="dataTable" class="table">
                 <tr class="smalltext">
                     <th>Position</th>
@@ -127,8 +144,6 @@
                     <td>&gamma;&#775;: {{angularSpeed.dGamma.toFixed(3)}}</td>
                 </tr>
             </table>
-            <label for="mapscale">Map Scale:</label>
-            <input id="mapscale" type="number" data-ng-model="scale">
         </div>
         <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
             <form id="customDataForm" class="form" data-ng-if="!customDataFormSubmitted">
@@ -236,6 +251,7 @@
         <script type="text/javascript" src="javascripts/hrui/angularservices.js"></script>
         <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/hrui/joystick.js"></script>
         <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/hrui/datamonitor.js"></script>
+        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/angular/angular-file-upload.min.js"></script>
         <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpeg/jsmpg.min.js"></script>
         <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/hrui/livevideo.js"></script>

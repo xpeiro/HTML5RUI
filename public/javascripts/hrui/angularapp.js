@@ -6,7 +6,7 @@
 */
 
 //app init
-var app = angular.module('HRUI', ['ngSanitize']);
+var app = angular.module('HRUI', ['ngSanitize', 'angularFileUpload']);
 //set color constants
 var BACKGROUND_COLOR = "#8BA987";
 var FOREGROUND_COLOR = "grey";
@@ -29,7 +29,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         SocketSrv.socket.on('initParams', function(params) {
             SocketSrv.VIDEOWSPORT = params.VIDEOWSPORT;
             SocketSrv.AUDIOWSPORT = params.AUDIOWSPORT;
-            SocketSrv.VIDEODEVICE = params.VIDEODEVICE;            
+            SocketSrv.VIDEODEVICE = params.VIDEODEVICE;
         });
         //initial profile fetch
         setTimeout(function() {
@@ -69,26 +69,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             //fetch new list of profiles
             setTimeout(function() {
                 SocketSrv.socket.emit('fetchProfiles');
-            }, 500);
-        };
-        //extract updated control from event, and notify back-end of selected controls
-        scope.updateControls = function(control, newValue) {
-            var changedControl = control.target.attributes.id.value;
-            scope.sendControl(changedControl, newValue);
-        };
-        //notify back-end of selected controls
-        scope.sendControl = function(changedControl, newValue) {
-            SocketSrv.socket.emit('updateControls', {
-                changedControl: changedControl,
-                newValue: newValue,
-            });
-            //if live video is turned off, close the websocket
-            if (changedControl == "liveVideoCheckbox" && newValue == false) {
-                SocketSrv.videowsocket.close();
-            } else if (changedControl == "liveAudioCheckbox" && newValue == false) {
-                SocketSrv.wsPlayer.stop();
-                SocketSrv.wsPlayer.asset.source.socket.close();                
-            };
+            }, 200);
         };
         //load selected profile
         scope.profileSelected = function() {
@@ -121,5 +102,25 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             }, 1);
 
         };
+        //extract updated control from event, and notify back-end of selected controls
+        scope.updateControls = function(control, newValue) {
+            var changedControl = control.target.attributes.id.value;
+            scope.sendControl(changedControl, newValue);
+        };
+        //notify back-end of selected controls
+        scope.sendControl = function(changedControl, newValue) {
+            SocketSrv.socket.emit('updateControls', {
+                changedControl: changedControl,
+                newValue: newValue,
+            });
+            //if live video is turned off, close the websocket
+            if (changedControl == "liveVideoCheckbox" && newValue == false) {
+                SocketSrv.videowsocket.close();
+            } else if (changedControl == "liveAudioCheckbox" && newValue == false) {
+                SocketSrv.wsPlayer.stop();
+                SocketSrv.wsPlayer.asset.source.socket.close();
+            };
+        };
+
     }
 ]);

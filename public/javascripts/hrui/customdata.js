@@ -43,7 +43,8 @@ app.controller('CustomDataController', ['$scope', 'SocketSrv', 'ProfileSrv',
             scope.customDataTable = customDataTable;
             scope.$apply();
         });
-        generateTable = function(data, customDataTable) {
+
+        function generateTable(data, customDataTable) {
             if (data == null) {
                 return 'No Data Recieved';
             };

@@ -8,13 +8,15 @@
     "start": "node ./bin/start"
   },
   "dependencies": {
+    "busboy": "^0.2.9",
     "compression": "*",
+    "connect-busboy": "0.0.2",
     "debug": "*",
     "express": "^5.0.0-alpha.1",
-    "jade": "*",
     "mongodb": "~1.4.0",
     "monk": "*",
     "morgan": "*",
+    "pngjs": "^0.4.0",
     "serve-favicon": "*",
     "socket.io": "*",
     "ws": "*"

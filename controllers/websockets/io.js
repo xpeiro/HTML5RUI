@@ -8,7 +8,7 @@
 /* Socket.IO Event Configuration */
 var socket;
 // function to send an event with associated data to front end when called
-var sendData = function(event, data) {
+function sendData(event, data) {
     socket.emit(event, data);
 };
 module.exports.sendData = sendData; // Export for transparent data sending in other modules
@@ -83,6 +83,10 @@ module.exports = function(io) {
         //media Device Selected
         socket.on('mediaDeviceSelected', function(data) {
             scriptCtrl.changeMediaDevice(data);
+        });
+        //set new Map Mode
+        socket.on('setMapMode', function(data) {
+            updaters.setMapMode(data);
         });
     });
 };

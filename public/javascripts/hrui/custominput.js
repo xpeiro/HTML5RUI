@@ -69,7 +69,7 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
         };
         //generate the markup required (stored in a string, customInputTable)
         //for inputs, by concatenating strings of HTML.
-        generateInputTable = function(inputList, customInputTable) {
+        function generateInputTable(inputList, customInputTable) {
             var inputTableHeader;
             var inputTableCell;
             //begin row
@@ -116,7 +116,7 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
             customInputTable = customInputTable.concat("</tr>");
             return customInputTable;
         };
-        dataIsValid = function() {
+        function dataIsValid() {
             for (var keyI in scope.customInputList) {
                 //check for symbols (name will not exist
                 //because ng-pattern directive filters it with regex pattern)

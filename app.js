@@ -122,30 +122,29 @@ liveAudio(new(ws.Server)({
 /*
     Web Server Setup
 */
-// compression setup (compress all requests)
+// Setup request compression (compress all)
 app.use(compression());
-// set favicon
-app.use(favicon(__dirname + '/public/images/favicon.ico'));
-// setup HTTP Request Logger (morgan) with 'dev' style
-app.use(logger('dev'));
-// set static route directory
+// Set favicon
+app.use(favicon(__dirname + '/public/images/favicon.svg'));
+// Setup HTTP Request Logger (morgan): 'dev' style, log errors only
+app.use(logger('dev', {
+    skip: function(req, res) {
+        return res.statusCode < 400
+    }
+}));
+// Set static route directory to ./public
 app.use(express.static(path.join(__dirname, 'public')));
-// view engine setup (jade)
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-// catch 404 and forward to error handler
+//Setup 404 error handler (if no handler before this is called, url not found)
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-// error handler
+// Display error in html.
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: err
-    });
+    res.send('<h1>Error: ' + err.status + '<br>' + err.message + '</h1>' +
+        '<h3>Description: ' + req.url + ' was not found.</h3>');
 });
 // start server
 http.listen(PARAMS.PORT, function() {

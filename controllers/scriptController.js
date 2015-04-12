@@ -30,7 +30,7 @@ var streams = {
     },
 };
 // Run AVCONV when live video/audio is toggled on. Log when the processed is killed.
-var runStream = function(streamType) {
+function runStream(streamType) {
     //stream from audio/video device.
     if (!streams[streamType].proc) {
         streams[streamType].proc = spawn(AVCONV, streams[streamType].ARGS);
@@ -50,13 +50,15 @@ var runStream = function(streamType) {
     };
 
 };
-var killStream = function(streamType) {
+
+function killStream(streamType) {
     if (!!streams[streamType].proc) {
         streams[streamType].proc.kill('SIGINT');
         streams[streamType].proc = null;
     };
 };
-var runScript = function(scriptName) {
+
+function runScript(scriptName) {
     //check for type of script (check for stuff like 'trickyscript.js.py')
     if (scriptName.lastIndexOf(".py") > scriptName.lastIndexOf(".js")) {
         //spawn python script
@@ -82,20 +84,22 @@ var runScript = function(scriptName) {
     io.sendData('scriptRunning', scriptName);
     console.log('Script spawned: ' + scriptName);
 };
-var killScript = function(scriptName) {
+
+function killScript(scriptName) {
     if (!!scripts[scriptName]) {
         scripts[scriptName].kill('SIGINT');
         console.log('Script killed: ' + scriptName);
     };
 };
-var killAllScripts = function() {
+
+function killAllScripts() {
     for (var scriptName in scripts) {
         killScript(scriptName);
     };
 };
 //Rewrite arguments passed to avconv when user selects new video device
 //Note: can be used to implement same feature in audio stream, deemed unnecessary.
-var changeMediaDevice = function(media) {
+function changeMediaDevice(media) {
     killStream(media.streamType);
     var args = streams[media.streamType].ARGS;
     if (media.streamType == 'videoStream') {
