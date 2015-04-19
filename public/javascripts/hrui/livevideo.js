@@ -9,9 +9,9 @@
 CODE ADAPTED TO ANGULARJS FROM ORIGINAL WORK by Dominic Szablewski - phoboslab.org, github.com/phoboslab:
 http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets/ 
 */
-app.controller('LiveVideoController', ['$scope', 'SocketSrv',
-    function(scope, SocketSrv) {
-        var videoCanvas = document.getElementById('videoCanvas');
+app.controller('LiveVideoController', ['$scope', '$element', 'SocketSrv',
+    function(scope, element, SocketSrv) {
+        var videoCanvas = element[0].children[0];
         var ctx = videoCanvas.getContext('2d');
         scope.videoDevice = SocketSrv.VIDEODEVICE;
         videoCanvas.width = 320;

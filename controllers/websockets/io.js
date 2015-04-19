@@ -88,5 +88,9 @@ module.exports = function(io) {
         socket.on('setMapMode', function(data) {
             updaters.setMapMode(data);
         });
+        //receive Map drawing
+        socket.on('updateMapDrawing', function(data) {
+            updaters.updateMapDrawing(data);
+        });
     });
 };

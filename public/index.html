@@ -1,10 +1,10 @@
+<!DOCTYPE html>
 <!--
     HTML5 Robot User Interface Web Application
     An ASLab Project,
     Developed by Daniel Peiró
     ETSII, UPM 2014-2015
 -->
-<!DOCTYPE html>
 <html data-ng-app="HRUI" data-ng-controller="HRUIController">
 
 <head>
@@ -22,6 +22,8 @@
             <span>
                 <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
                 <label for="joystickCheckbox">Joystick {{ joystickOn | OnOff}}</label>
+                <input id="dualJoystickCheckbox" type="checkbox" data-ng-model="dualJoystickOn" data-ng-click="updateControls($event, dualJoystickOn)" data-ng-show="joystickOn">
+                <label for="dualJoystickCheckbox" data-ng-show="joystickOn">Dual Joysticks {{ dualJoystickOn | OnOff}}</label>
                 <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
                 <label for="dataMonitorCheckbox">Data Monitor {{ dataMonitorOn | OnOff}}</label>
             </span>
@@ -68,10 +70,45 @@
             <h5>Note: Experimental Feature. Audio has a delay of approx. 2 seconds</h5>
         </div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
-            <canvas id="joystick" class="canvas" data-touch>
+            <canvas id="joystick" class="canvas joystick" data-touch>
                 Canvas not supported
             </canvas>
-            <canvas id="vector" class="canvas" data-ng-show="showVector">
+            <canvas id="vector" class="canvas vector" data-ng-show="showVector">
+                Canvas not supported
+            </canvas>
+            <br>
+            <span class="coord">X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
+            <br>
+            <form class="form">
+                <table>
+                    <tr>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="fullAnalog">Full Analog
+                        </td>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock8ways">8-Way
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock4ways">4-Way
+                        </td>
+                        <td>
+                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock2ways">2-Way
+                        </td>
+                    </tr>
+                </table>
+                <input name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()"> Lock Joystick in Position
+                <br>
+                <input name="Display Vector" type="checkbox" data-ng-model="showVector"> Display Vector
+                <br>
+            </form>
+        </div>
+        <div id="joystickFrame2" class="frame" data-ng-controller="JoystickController" data-ng-if="dualJoystickOn && joystickOn">
+            <canvas id="joystick2" class="canvas joystick" data-touch>
+                Canvas not supported
+            </canvas>
+            <canvas id="vector2" class="canvas vector" data-ng-show="showVector">
                 Canvas not supported
             </canvas>
             <br>
@@ -103,19 +140,26 @@
             </form>
         </div>
         <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
-            <input name="Map On" type="checkbox" data-ng-model="mapOn" data-ng-change="toggleMap(mapOn)"> Map {{ mapOn | OnOff}}
+            <input id="mapOnCheckbox" name="Map On" type="checkbox" data-ng-model="mapOn" data-ng-change="toggleMap(mapOn)">
+            <label for="mapOnCheckbox">Map {{ mapOn | OnOff}}</label>
             <br>
-            <canvas id="mapcanvas" class="canvas" data-ng-show="mapOn"></canvas>
+            <canvas id="mapcanvas" class="canvas" data-ng-show="mapOn" data-touch></canvas>
             <p data-ng-show="mapOn">
-                Map Mode:
+                <span class="coord">Approx Coord: X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
+                <br>Map Mode:
                 <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="server" data-ng-change="setMapMode(mapMode)">Server
                 <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="upload" data-ng-change="setMapMode(mapMode)">Upload
                 <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="draw" data-ng-change="setMapMode(mapMode)">Draw
                 <br>
                 <button id="uploadMap" data-ng-file-select data-ng-file-change="upload($files)" data-ng-accept="'*.png,*jpg'" data-ng-show="mapMode=='upload'">Upload Map (.PNG)...</button>
                 <button id="clearMap" data-ng-show="mapOn && mapMode != 'server'" data-ng-click="clearMap()">Clear Map</button>
-                <br data-ng-show="mapMode=='upload'">
-                <label for="mapsize">Map Size(px):</label>
+                <span data-ng-show="mapMode=='server'">
+                Positioning:
+                <input name="Rel/Abs Coord" type="radio" data-ng-model="relCoord" data-ng-value="true">Relative
+                <input name="Rel/Abs Coord" type="radio" data-ng-model="relCoord" data-ng-value="false">Absolute
+                </span>
+                <br data-ng-show="mapMode!='draw'">
+                <label for="mapsize">Map Size (in data units):</label>
                 <input id="mapsize" type="number" data-ng-model="size">
             </p>
             <table id="dataTable" class="table">
@@ -206,10 +250,11 @@
                 <tr>
                     <th>Name</th>
                     <th>Status</th>
+                    <th></th>
                 </tr>
                 <tr data-ng-repeat="script in scripts">
                     <td>{{script.name}}</td>
-                    <td class="tdimg"><img data-ng-src="images/{{script.status}}.svg" width="12px" height="12px">
+                    <td class="tdimg"><img data-ng-src="images/{{script.status}}.svg" src="images/standby.svg" width="12" height="12" alt="status">
                     </td>
                     <td>
                         <button data-ng-click="runScript(script)" data-ng-show="script.showRun">Run </button>
@@ -217,9 +262,9 @@
                     </td>
                 </tr>
             </table>
-            <span class="smalltext"><img data-ng-src="images/standby.svg" width="12px" height="12px"> Standby</span>
-            <span class="smalltext"><img data-ng-src="images/running.svg" width="12px" height="12px"> Running</span>
-            <span class="smalltext"><img data-ng-src="images/killed.svg" width="12px" height="12px"> Not Running</span>
+            <span class="smalltext"><img src="images/standby.svg" width="12" height="12" alt="Standby"> Standby</span>
+            <span class="smalltext"><img src="images/running.svg" width="12" height="12" alt="Running"> Running</span>
+            <span class="smalltext"><img src="images/killed.svg"  width="12" height="12" alt="Not Running"> Not Running</span>
             <br>
             <span class="smalltext">Deactivating 'Run Scripts' will kill all running scripts.</span>
             <br>
@@ -238,7 +283,7 @@
             <h6>
             <a href="http://www.aslab.upm.es"> <img src="images/aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
             <img src="images/HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
-            <a href="http://github.com/xpeiro/HTML5RUI"><img src="images/githublogo.svg" width="24" height="24"></a>
+            <a href="http://github.com/xpeiro/HTML5RUI"><img src="images/githublogo.svg" width="24" height="24" alt="GitHub Repo" title="GitHub Logo"></a>
             An ASLab Project Developed By Daniel Peiró (using 
             <a href="https://github.com/audiocogs/aurora.js">Aurora</a>, <a href="https://github.com/fsbdev/aurora-websocket">Aurora-WebSocket</a>, and 
             <a href="https://github.com/phoboslab/jsmpeg">JSmpeg</a> under MIT License)

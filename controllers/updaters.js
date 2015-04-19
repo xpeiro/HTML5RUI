@@ -24,11 +24,14 @@ const GEOMULTIPLIER = 20;
 const MAPDATAMULTIPLIER = 5;
 const MAPWIDTH = 300;
 const MAPHEIGHT = 300;
+var binMatrix = new Array(MAPWIDTH);
+for (var i = 0; i < binMatrix.length; i++) {
+    binMatrix[i] = new Array(MAPHEIGHT);
+};
 var geoMultiplier = -1;
 var mapDataMultiplier = -1;
 var dataMonitorOn = false;
 var clientsAreConnected = false;
-var allwhite = false;
 var customData = {
     item: "",
     updateInterval: INTERVALINCREMENT,
@@ -81,7 +84,12 @@ function periodicUpdate() {
                 hruiDataDB.findOne({
                     "item": "mapData"
                 }, function(err, data) {
-                    buildMap(err, data);
+                    if (!!data) {
+                        buildMap(data);
+                    } else {
+                        console.log("HRUI: Could not retrieve map data from DB." +
+                            " Check that item = mapData, and binary matrix is stored in \"map\" property");
+                    };
                 });
                 mapDataMultiplier = MAPDATAMULTIPLIER;
             } else if (mapDataMultiplier > 0) {
@@ -142,8 +150,8 @@ function updateScripts(err, files) {
     io.sendData('fetchedScripts', scripts);
 };
 //generate PNG map from binary matrix and send to front end
-function buildMap(err, data) {
-    var array = JSON.parse(data.map);
+function buildMap(data) {
+    binMatrix = JSON.parse(data.map);
     var mapPNG = new PNG({
         width: MAPWIDTH,
         height: MAPHEIGHT,
@@ -151,17 +159,16 @@ function buildMap(err, data) {
     for (var j = 0; j < mapPNG.height; j++) {
         for (var i = 0; i < mapPNG.width; i++) {
             var idx = (mapPNG.width * j + i) << 2;
-            if (array[i][j] == 1 && !allwhite) {
+            if (binMatrix[i][j] == 1) {
                 mapPNG.data[idx] = 0;
                 mapPNG.data[idx + 1] = 0;
                 mapPNG.data[idx + 2] = 0;
-                mapPNG.data[idx + 3] = 255;
             } else {
                 mapPNG.data[idx] = 255;
                 mapPNG.data[idx + 1] = 255;
                 mapPNG.data[idx + 2] = 255;
-                mapPNG.data[idx + 3] = 255;
             }
+            mapPNG.data[idx + 3] = 255;
         };
     };
     const mapStream = fs.createWriteStream('./public/images/map.png');
@@ -169,15 +176,48 @@ function buildMap(err, data) {
         io.sendData('updateMap');
     });
     mapPNG.pack().pipe(mapStream);
-    allwhite = !allwhite;
+};
+
+function updateMapDrawing(mapDataUri) {
+    mapDataUri = mapDataUri.replace(/^data:image\/png;base64,/, "");
+    fs.writeFile("./public/images/map.png", mapDataUri, 'base64', function(err) {
+        if (err) {
+            throw err;
+        };
+        fs.createReadStream('./public/images/map.png')
+            .pipe(new PNG({
+                filterType: -1
+            }))
+            .on('parsed', function() {
+                for (var j = 0; j < this.height; j++) {
+                    for (var i = 0; i < this.width; i++) {
+                        var idx = (this.width * j + i) << 2;
+                        //check for black pixel
+                        if (this.data[idx] == 0 && this.data[idx + 1] == 0 && this.data[idx + 2] == 0) {
+                            binMatrix[i][j] = 1;
+                        } else {
+                            binMatrix[i][j] = 0;
+                        }
+                    }
+                }
+            });
+        hruiDataDB.update({
+            item: "mapData"
+        }, {
+            $set: {
+                map: JSON.stringify(binMatrix),
+            }
+        }, {
+            upsert: true
+        });
+    });
 };
 //update MongoDB with joystick coordinates    
 function updateJoystick(joystickData) {
     hruiDataDB.update({
-        item: "joystick"
+        item: joystickData.joystickItem
     }, {
         $set: {
-            _id: 0,
             x: joystickData.x,
             y: joystickData.y,
             mode: joystickData.mode,
@@ -294,4 +334,5 @@ module.exports = {
     fetchScripts: fetchScripts,
     setClientsAreConnected: setClientsAreConnected,
     setMapMode: setMapMode,
+    updateMapDrawing: updateMapDrawing,
 };

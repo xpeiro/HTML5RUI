@@ -5,8 +5,8 @@
     ETSII, UPM 2014-2015    
 */
 
-app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'GeometrySrv', 'ProfileSrv',
-    function(scope, SocketSrv, DrawSrv, GeometrySrv, ProfileSrv) {
+app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSrv', 'GeometrySrv', 'ProfileSrv',
+    function(scope, element, SocketSrv, DrawSrv, GeometrySrv, ProfileSrv) {
         scope.lockJoystick = false;
         scope.lockMode = 'lock4ways';
         scope.showVector = true;
@@ -14,9 +14,9 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
             x: 0,
             y: 0,
         };
-        var joystick = document.getElementById('joystick');
+        var joystick = element[0].children[0];
         var joystickctx = joystick.getContext('2d');
-        var vector = document.getElementById('vector');
+        var vector = element[0].children[1];
         var vectorctx = vector.getContext('2d');
         joystick.width = 300;
         joystick.height = joystick.width;
@@ -41,24 +41,24 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
         });
         //sets left click flag UP and calls mouseMove handler
         scope.mouseDown = function($event) {
-                evt = $event;
-                leftClick = 1;
-                scope.mouseMove(evt);
-            }
-            //overrides touch event handler
+            evt = $event;
+            leftClick = 1;
+            scope.mouseMove(evt);
+        };
+        //overrides touch event handler
         scope.touchMove = function(evt) {
-                evt.preventDefault();
-                leftClick = 1;
-                scope.mouseMove(evt);
-            }
-            //sets left click flag DOWN and resets both canvas to initial state (unless position lock is ON)
+            evt.preventDefault();
+            leftClick = 1;
+            scope.mouseMove(evt);
+        };
+        //sets left click flag DOWN and resets both canvas to initial state (unless position lock is ON)
         scope.mouseUp = function() {
-                leftClick = 0;
-                if (!scope.lockJoystick) {
-                    scope.resetAll();
-                }
+            leftClick = 0;
+            if (!scope.lockJoystick) {
+                scope.resetAll();
             }
-            //handles mouse or touch movement on joystick
+        };
+        //handles mouse or touch movement on joystick
         scope.mouseMove = function(evt) {
             if (leftClick == 1) { //check if left mouse button down or touch
                 //erases previous joystick position
@@ -67,8 +67,14 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
                 resetVector();
                 // get cursor or touch coordinates, saved in point object.
                 if (evt.type == 'touchstart' || evt.type == 'touchmove') {
-                    scope.point.x = evt.touches[0].pageX - joystick.offsetLeft;
-                    scope.point.y = evt.touches[0].pageY - joystick.offsetTop;
+                    for (var touch in evt.touches) {
+                        if (!!evt.touches[touch].target) {
+                            if (evt.touches[touch].target.id == joystick.id) {
+                                scope.point.x = evt.touches[touch].pageX - joystick.offsetLeft;
+                                scope.point.y = evt.touches[touch].pageY - joystick.offsetTop;
+                            };
+                        };
+                    };
                 } else {
                     scope.point.x = evt.pageX - joystick.offsetLeft - 3;
                     scope.point.y = evt.pageY - joystick.offsetTop - 3;
@@ -94,7 +100,7 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
                 //send coordinates back to server (websocket)
                 updateJoystick(scope.point, scope.lockMode);
             };
-        }
+        };
         scope.resetAll = function() {
             leftClick = 0;
             drawAll();
@@ -128,31 +134,9 @@ app.controller('JoystickController', ['$scope', 'SocketSrv', 'DrawSrv', 'Geometr
             SocketSrv.socket.emit('updateJoystick', {
                 x: point.x.toFixed(2),
                 y: point.y.toFixed(2),
-                mode: lockMode
+                mode: lockMode,
+                joystickItem: element[0].children[0].id,
             });
         }
     }
 ]);
-//directive to override default touch controls on joystick and link touch events to handler functions
-app.directive('touch', function() {
-    return {
-        link: function(scope, element, attrs) {
-            element.on('touchmove', function(event) {
-                scope.touchMove(event);
-                scope.$apply();
-            });
-            element.on('touchdown mousedown', function(event) {
-                scope.mouseDown(event);
-                scope.$apply();
-            });
-            element.on('mousemove', function(event) {
-                scope.mouseMove(event);
-                scope.$apply();
-            });
-            element.on('mouseup touchend', function(event) {
-                scope.mouseUp(event);
-                scope.$apply();
-            });
-        }
-    }
-});

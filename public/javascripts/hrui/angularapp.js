@@ -14,6 +14,7 @@ var FOREGROUND_COLOR = "grey";
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
         scope.joystickOn = false;
+        scope.dualJoystickOn = false;
         scope.dataMonitorOn = false;
         scope.liveVideoOn = false;
         scope.liveAudioOn = false;
@@ -48,6 +49,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         //share profile data to profile service (to send it to backend)
         scope.$on('getProfile', function() {
             ProfileSrv.profile.joystickOn = scope.joystickOn;
+            ProfileSrv.profile.dualJoystickOn = scope.dualJoystickOn;
             ProfileSrv.profile.dataMonitorOn = scope.dataMonitorOn;
             ProfileSrv.profile.liveVideoOn = scope.liveVideoOn;
             ProfileSrv.profile.geolocationOn = scope.geolocationOn;
@@ -77,6 +79,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             ProfileSrv.profile = scope.selectedProfile;
             //load selected profile 
             scope.joystickOn = scope.selectedProfile.joystickOn;
+            scope.dualJoystickOn = scope.selectedProfile.dualJoystickOn;
             scope.dataMonitorOn = scope.selectedProfile.dataMonitorOn;
             scope.geolocationOn = scope.selectedProfile.geolocationOn;
             scope.customDataOn = scope.selectedProfile.customDataOn;

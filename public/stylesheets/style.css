@@ -92,12 +92,19 @@ body {
     display: inline-block;
     float: left;
 }
-#joystick {
+#joystickFrame2 {
+    display: inline-block;
+    float: right;
+}
+#mapcanvas {
+    cursor: crosshair;
+}
+.joystick {
     vertical-align: top;
     float: left;
     cursor: crosshair;
 }
-#vector {
+.vector {
     border: none;
 }
 #videoCanvas {
@@ -143,7 +150,7 @@ body {
     #toolbar > label, input {
         margin-left: 0px;        
     }
-    #joystick {
+    .joystick, #mapcanvas {
         text-align: center;
         width:  100%;
     }
