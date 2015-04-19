@@ -1,5 +1,5 @@
 ###User Scripts directory
-####Any javascript and python scripts present in this directory will be
+####Any javascript/python scripts present in this directory will be
 ####available from the Script Execution module in HRUI.
 ####Make sure all scripts are have correct extensions .py or .js.
 ####Files with no instance of .py or .js in their filename will be ignored.

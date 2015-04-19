@@ -141,3 +141,6 @@ There are [several other ways](http://stackoverflow.com/questions/413807/is-ther
   * **npm error when trying to install (missing folder npm)**: Create folder manually (normally in AppData/Roaming/npm).
   * **MongoDB error (missing data/db/)**: Create folder manually where the database will be stored (use of MongoDB installation folder recommended).
   * **npm, node, mongod and mongo should be in your PATH if you don't want to specify it each time you use them.**
+
+##Usage
+####See [User Manual](http://xpeiro.github.io/hrui/)
