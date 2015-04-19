@@ -34,7 +34,6 @@ _$*
 node_modules
 daemon
 npm-debug.log
-userscripts
 config.json
 map.png
 uploadmap
