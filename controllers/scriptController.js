@@ -39,10 +39,10 @@ function runStream(streamType) {
             if (!!code) {
                 switch (code) {
                     case 255:
-                        console.log(streamType + ': Process Killed');
+                        console.log('HRUI Media: ' + streamType + ' process Killed');
                         break;
                     case 1:
-                        console.log(streamType + ': Device Not Found or Already Streaming');
+                        console.log('HRUI Media: ' + streamType + ' device Not Found or Already Streaming');
                         break;
                 };
             };
@@ -71,7 +71,7 @@ function runScript(scriptName) {
     scripts[scriptName].on('close', function(code) {
         io.sendData('scriptError', scriptName);
         scripts[scriptName] = null;
-        console.log('Script exited: ' + scriptName);
+        console.log('HRUI Scripts: ' + scriptName + ' exited');
     });
     //send stdout and stderr to front-end
     scripts[scriptName].stdout.on('data', function(data) {
@@ -82,13 +82,13 @@ function runScript(scriptName) {
     });
     //notify front-end of script running
     io.sendData('scriptRunning', scriptName);
-    console.log('Script spawned: ' + scriptName);
+    console.log('HRUI Scripts: ' + scriptName + ' spawned');
 };
 
 function killScript(scriptName) {
     if (!!scripts[scriptName]) {
         scripts[scriptName].kill('SIGINT');
-        console.log('Script killed: ' + scriptName);
+        console.log('HRUI Scripts: ' + scriptName + ' killed');
     };
 };
 

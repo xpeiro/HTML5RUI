@@ -92,5 +92,9 @@ module.exports = function(io) {
         socket.on('updateMapDrawing', function(data) {
             updaters.updateMapDrawing(data);
         });
+        //update Client Device Motion/Orientation
+        socket.on('updateDeviceOrientation', function(data) {
+            updaters.updateDeviceOrientation(data);
+        });
     });
 };

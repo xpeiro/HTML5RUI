@@ -66,14 +66,10 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
                 // erases previous vector
                 resetVector();
                 // get cursor or touch coordinates, saved in point object.
-                if (evt.type == 'touchstart' || evt.type == 'touchmove') {
-                    for (var touch in evt.touches) {
-                        if (!!evt.touches[touch].target) {
-                            if (evt.touches[touch].target.id == joystick.id) {
-                                scope.point.x = evt.touches[touch].pageX - joystick.offsetLeft;
-                                scope.point.y = evt.touches[touch].pageY - joystick.offsetTop;
-                            };
-                        };
+                if (evt.type == 'touchstart' || evt.type == 'touchmove') {                    
+                    if (evt.targetTouches[0].target.id == joystick.id) {
+                        scope.point.x = evt.targetTouches[0].pageX - joystick.offsetLeft;
+                        scope.point.y = evt.targetTouches[0].pageY - joystick.offsetTop;
                     };
                 } else {
                     scope.point.x = evt.pageX - joystick.offsetLeft - 3;

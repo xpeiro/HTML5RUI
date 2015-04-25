@@ -15,6 +15,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
     function(rootScope, scope, SocketSrv, ProfileSrv) {
         scope.joystickOn = false;
         scope.dualJoystickOn = false;
+        scope.devOrientOn = false;
         scope.dataMonitorOn = false;
         scope.liveVideoOn = false;
         scope.liveAudioOn = false;
@@ -57,6 +58,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             ProfileSrv.profile.customInputOn = scope.customInputOn;
             ProfileSrv.profile.scriptExecOn = scope.scriptExecOn;
             ProfileSrv.profile.liveAudioOn = scope.liveAudioOn;
+            ProfileSrv.profile.devOrientOn = scope.devOrientOn;
         });
         //save current profile and send it to backend
         scope.saveProfile = function() {
@@ -98,11 +100,10 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             //notify all controllers to set selected profile from service (delay to allow script loading)
             setTimeout(function() {
                 rootScope.$broadcast('setProfile');
-            }, 1);
-            //trigger visual refresh (digest new scope values)
-            setTimeout(function() {
+                //trigger visual refresh (digest new scope values)
                 rootScope.$apply();
-            }, 1);
+            }, 10);
+            
 
         };
         //extract updated control from event, and notify back-end of selected controls

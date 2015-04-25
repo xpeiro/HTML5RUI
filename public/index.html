@@ -19,32 +19,52 @@
 <body>
     <div id="body">
         <div id="toolbar" class="frame">
-            <span>
-                <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
-                <label for="joystickCheckbox">Joystick {{ joystickOn | OnOff}}</label>
-                <input id="dualJoystickCheckbox" type="checkbox" data-ng-model="dualJoystickOn" data-ng-click="updateControls($event, dualJoystickOn)" data-ng-show="joystickOn">
-                <label for="dualJoystickCheckbox" data-ng-show="joystickOn">Dual Joysticks {{ dualJoystickOn | OnOff}}</label>
-                <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
-                <label for="dataMonitorCheckbox">Data Monitor {{ dataMonitorOn | OnOff}}</label>
-            </span>
-            <span>
-                <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
-                <label for="customDataCheckbox">Custom Data {{ customDataOn | OnOff}}</label>
-                <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)">
-                <label for="customInputCheckbox">Custom Input {{ customInputOn | OnOff}}</label>
-            </span>
-            <span>
-                <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
-                <label for="liveVideoCheckbox">Live Video {{ liveVideoOn | OnOff}}</label>
-                <input id="liveAudioCheckbox" type="checkbox" data-ng-model="liveAudioOn" data-ng-click="updateControls($event, liveAudioOn)">
-                <label for="liveAudioCheckbox">Live Audio {{ liveAudioOn | OnOff}}</label>
-            </span>
-            <span>
-                <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
-                <label for="geolocationCheckbox">Geolocation {{ geolocationOn | OnOff}}</label>
-                <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
-                <label for="scriptExecCheckbox">Run Scripts {{ scriptExecOn | OnOff}}</label>                
-            </span>
+            <ul class="toolbarList">
+                <li>
+                    <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
+                    <label for="joystickCheckbox">Turn Joystick {{ !joystickOn | OnOff}}</label>
+                    <span data-ng-show="joystickOn">
+                    <input id="dualJoystickCheckbox" type="checkbox" data-ng-model="dualJoystickOn" data-ng-click="updateControls($event, dualJoystickOn)" data-ng-show="joystickOn">
+                    <label for="dualJoystickCheckbox" data-ng-show="joystickOn">Dual Joysticks {{ !dualJoystickOn | OnOff}}</label>
+                    </span>
+                </li>
+                <li>
+                    <input id="deviceOrientationCheckbox" type="checkbox" data-ng-model="devOrientOn" data-ng-click="updateControls($event, devOrientOn)">
+                    <label for="deviceOrientationCheckbox">Turn Device Orientation {{ !devOrientOn | OnOff}}</label>
+                </li>
+                <li>
+                    <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)">
+                    <label for="customInputCheckbox">Turn Custom Input {{ !customInputOn | OnOff}}</label>
+                </li>
+            </ul>
+            <ul class="toolbarList">
+                <li>
+                    <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
+                    <label for="dataMonitorCheckbox">Turn Data Monitor {{ !dataMonitorOn | OnOff}}</label>
+                </li>
+                <li>
+                    <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
+                    <label for="customDataCheckbox">Turn Custom Data {{ !customDataOn | OnOff}}</label>
+                </li>
+                <li>
+                    <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
+                    <label for="scriptExecCheckbox">Turn Run Scripts {{ !scriptExecOn | OnOff}}</label>
+                </li>
+            </ul>
+            <ul class="toolbarList">
+                <li>
+                    <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
+                    <label for="liveVideoCheckbox">Turn Live Video {{ !liveVideoOn | OnOff}}</label>
+                </li>
+                <li>
+                    <input id="liveAudioCheckbox" type="checkbox" data-ng-model="liveAudioOn" data-ng-click="updateControls($event, liveAudioOn)">
+                    <label for="liveAudioCheckbox">Turn Live Audio {{ !liveAudioOn | OnOff}}</label>
+                </li>
+                <li>
+                    <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
+                    <label for="geolocationCheckbox">Turn Geolocation {{ !geolocationOn | OnOff}}</label>
+                </li>
+            </ul>
             <select id="profilesList" class="profileSection" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
                 <option value="" disabled selected>Load Profile...</option>
             </select>
@@ -67,7 +87,7 @@
         </div>
         <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn">
             <h3>Live Audio On</h3>
-            <h5>Note: Experimental Feature. Audio has a delay of approx. 2 seconds</h5>
+            <h5>Note: Experimental Feature (does not work on iOS).<br> Audio has a delay of approx. 2 seconds.</h5>
         </div>
         <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
             <canvas id="joystick" class="canvas joystick" data-touch>
@@ -138,6 +158,44 @@
                 <input name="Display Vector" type="checkbox" data-ng-model="showVector"> Display Vector
                 <br>
             </form>
+        </div>
+        <div id="devOrientFrame" class="frame" data-ng-controller="DeviceOrientationController" data-ng-if="devOrientOn">
+            <h3>Device Orientation</h3>
+            <table id="devOrientTable" class="table">
+                <tr>
+                    <th rowspan="3" colspan="2">Device Orientation</th>
+                    <td rowspan="3" data-ng-show="devOrientationUnsupported"> Not Supported</td>
+                    <td data-ng-show="!devOrientationUnsupported">&alpha;: {{deviceData.devOrientation.alpha.toFixed(2)}}</td>
+                </tr>
+                <tr data-ng-show="!devOrientationUnsupported">
+                    <td>&beta;: {{deviceData.devOrientation.beta.toFixed(2)}}</td>
+                </tr>
+                <tr data-ng-show="!devOrientationUnsupported">
+                    <td>&gamma;: {{deviceData.devOrientation.gamma.toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <th rowspan="6">Device Motion</th>
+                    <td rowspan="6" data-ng-show="devMotionUnsupported"> Not Supported</td>
+                    <td rowspan="3" data-ng-show="!devMotionUnsupported">Rotation Rate</td>
+                    <td data-ng-show="devMotion">&alpha;&#775;: {{deviceData.devMotion.rotationRate.alpha.toFixed(2)}}</td>
+                </tr>
+                <tr data-ng-show="!devMotionUnsupported">
+                    <td>&beta;&#775;: {{deviceData.devMotion.rotationRate.beta.toFixed(2)}}</td>
+                </tr>
+                <tr data-ng-show="!devMotionUnsupported">
+                    <td>&gamma;&#775;: {{deviceData.devMotion.rotationRate.gamma.toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td rowspan="3" data-ng-show="!devMotionUnsupported">Acceleration</td>
+                    <td data-ng-show="!devMotionUnsupported">X: {{deviceData.devMotion.acceleration.x.toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td data-ng-show="!devMotionUnsupported">Y: {{deviceData.devMotion.acceleration.y.toFixed(2)}}</td>
+                </tr>
+                <tr>
+                    <td data-ng-show="!devMotionUnsupported">Z: {{deviceData.devMotion.acceleration.z.toFixed(2)}}</td>
+                </tr>
+            </table>
         </div>
         <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
             <input id="mapOnCheckbox" name="Map On" type="checkbox" data-ng-model="mapOn" data-ng-change="toggleMap(mapOn)">
@@ -295,6 +353,7 @@
         <script type="text/javascript" src="javascripts/hrui/angularapp.js"></script>
         <script type="text/javascript" src="javascripts/hrui/angularservices.js"></script>
         <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/hrui/joystick.js"></script>
+        <script data-ng-if="devOrientOn" type="text/javascript" src="javascripts/hrui/deviceorientation.js"></script>
         <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/hrui/datamonitor.js"></script>
         <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/angular/angular-file-upload.min.js"></script>
         <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->

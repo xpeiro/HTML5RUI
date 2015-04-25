@@ -9,35 +9,45 @@ input[type="number"] {
     width: 50px;
     text-align: right;
 }
-input[type="submit"], button {
+
+input[type="submit"],
+button {
     border-radius: 3px;
     font-size: 65%;
     box-shadow: 1px 1px 1px #3D3242;
     background: inherit;
     color: inherit;
 }
-select, input[type="text"], input[type="number"] {
+
+select,
+input[type="text"],
+input[type="number"] {
     border-radius: 3px;
     border-width: 1px;
     border-style: solid;
     background: inherit;
     color: inherit;
 }
+
 footer > h6 > img {
     margin: 5px;
 }
+
 body {
     background: #8BA987;
     color: #545454;
 }
+
 .form {
     white-space: nowrap;
     display: inline-block;
 }
+
 .form > input[type="text"] {
     width: 111px;
     text-align: center;
 }
+
 .canvas {
     float: left;
     border-radius: inherit;
@@ -45,12 +55,14 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+
 .coord {
     font-family: monospace;
     margin-left: 5px;
     white-space: nowrap;
     display: inline;
 }
+
 .frame {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -60,77 +72,100 @@ body {
     background: inherit;
     color: inherit;
     float: left;
-
 }
-.table td, .table th {
+
+.table td,
+.table th {
     border: 1px solid black;
     white-space: nowrap;
     margin-right: 1px;
 }
+
 .footer {
     clear: both;
     margin: auto;
     text-align: center;
 }
+
 .smalltext {
     font-size: 70%;
 }
+
 #toolbar {
     clear: both;
     width: 98%;
     text-align: center;
 }
-#toolbar > label, input {
-    margin-left: 2.5%;
-}
+
 #body {
     display: block;
     max-width: 100%;
 }
+
 #joystickFrame {
     clear: left;
     display: inline-block;
     float: left;
 }
+
 #joystickFrame2 {
     display: inline-block;
     float: right;
 }
+
 #mapcanvas {
     cursor: crosshair;
 }
+
 .joystick {
     vertical-align: top;
     float: left;
     cursor: crosshair;
 }
+
 .vector {
     border: none;
 }
+
 #videoCanvas {
     clear: none;
     width: 480px;
     height: 360px;
 }
+
 #geolocationFrame {
     width: 480px;
     height: 330px;
 }
+
 #dataFrame > * {
     clear: both;
 }
+
 #customInputSelectionForm > input[type="number"] {
     margin-left: 34px;
     width: 35px;
 }
+
 .profileSection {
     float: right;
-    clear: both;
-    margin-left: 6px;
+    display: inline-block;
 }
+
 .tdimg {
     text-align: center;
 }
+
+.toolbarList {
+    text-align: left;
+    display: inline-block;
+    list-style-type: none;
+}
+
+.toolbarList > li {
+    margin: 5px;
+}
+
 @media only screen and (max-width: 480px) {
     #videoCanvas {
         width: 98%;
@@ -143,16 +178,23 @@ body {
     .frame {
         width: 98%;
     }
-    #toolbar > span {
+    .toolbarList {
+        text-align: left;
         float: left;
-        display: block;
+        display: inline;        
+        list-style-type: none;
+        margin: 0px;
+        width: 80%;
     }
-    #toolbar > label, input {
-        margin-left: 0px;        
+    .toolbarList > li {
+        margin: 0px;
+        display: inline;
+        float: left;
     }
-    .joystick, #mapcanvas {
+    .joystick,
+    #mapcanvas {
         text-align: center;
-        width:  100%;
+        width: 100%;
     }
     #dataTable {
         width: 80% !important;

@@ -49,12 +49,12 @@ app.app.post('/mapupload', function(req, res) {
     var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function(fieldname, file, filename) {
-        console.log("Uploading: " + filename + ' to public/images/uploadmap');
+        console.log("HRUI: Uploading " + filename + ' to public/images/uploadmap');
         fstream = fs.createWriteStream(__dirname + '/../public/images/uploadmap');
         file.pipe(fstream);
         fstream.on('close', function() {
             res.send('Uploaded');
-            console.log("Uploaded: " + filename + ' succesfully');
+            console.log("HRUI: Uploaded " + filename + ' succesfully');
             io.sendData('mapUploaded');
         });
     });
@@ -87,7 +87,7 @@ function periodicUpdate() {
                     if (!!data) {
                         buildMap(data);
                     } else {
-                        console.log("HRUI: Could not retrieve map data from DB." +
+                        console.log("HRUI Error: Could not retrieve map data from DB." +
                             " Check that item = mapData, and binary matrix is stored in \"map\" property");
                     };
                 });
@@ -152,30 +152,33 @@ function updateScripts(err, files) {
 //generate PNG map from binary matrix and send to front end
 function buildMap(data) {
     binMatrix = JSON.parse(data.map);
-    var mapPNG = new PNG({
-        width: MAPWIDTH,
-        height: MAPHEIGHT,
-    });
-    for (var j = 0; j < mapPNG.height; j++) {
-        for (var i = 0; i < mapPNG.width; i++) {
-            var idx = (mapPNG.width * j + i) << 2;
-            if (binMatrix[i][j] == 1) {
-                mapPNG.data[idx] = 0;
-                mapPNG.data[idx + 1] = 0;
-                mapPNG.data[idx + 2] = 0;
-            } else {
-                mapPNG.data[idx] = 255;
-                mapPNG.data[idx + 1] = 255;
-                mapPNG.data[idx + 2] = 255;
-            }
-            mapPNG.data[idx + 3] = 255;
+    if (binMatrix.length == MAPHEIGHT && binMatrix[binMatrix.length - 1].length == MAPWIDTH) {
+        var mapPNG = new PNG({
+            width: MAPWIDTH,
+            height: MAPHEIGHT,
+        });
+        for (var j = 0; j < mapPNG.height; j++) {
+            for (var i = 0; i < mapPNG.width; i++) {
+                var idx = (mapPNG.width * j + i) << 2;
+                if (binMatrix[i][j] != 0) {
+                    mapPNG.data[idx] = 0;
+                    mapPNG.data[idx + 1] = 0;
+                    mapPNG.data[idx + 2] = 0;
+                } else {
+                    mapPNG.data[idx] = 255;
+                    mapPNG.data[idx + 1] = 255;
+                    mapPNG.data[idx + 2] = 255;
+                }
+                mapPNG.data[idx + 3] = 255;
+            };
         };
-    };
-    const mapStream = fs.createWriteStream('./public/images/map.png');
-    mapStream.on('finish', function() {
-        io.sendData('updateMap');
-    });
-    mapPNG.pack().pipe(mapStream);
+        const mapStream = fs.createWriteStream('./public/images/map.png');
+        mapStream.on('finish', function() {
+            io.sendData('updateMap');
+        });
+        mapPNG.pack().pipe(mapStream);
+    } else
+        console.log('HRUI Error: Map Data must be 300x300 matrix, where 0 is white and any other value is black');
 };
 
 function updateMapDrawing(mapDataUri) {
@@ -261,7 +264,7 @@ function updateControls(changedControlData) {
             break;
     };
     //log changes
-    process.stdout.write('HRUI: ' + changedControlData.changedControl.replace(/([a-z])([A-Z])/g, '$1 $2').replace('Checkbox', ''));
+    process.stdout.write('HRUI IO: ' + changedControlData.changedControl.replace(/([a-z])([A-Z])/g, '$1 $2').replace('Checkbox', ''));
     if (changedControlData.newValue) {
         process.stdout.write('turned On\n');
     } else {
@@ -285,6 +288,7 @@ function fetchProfiles() {
 };
 //save new profile to DB
 function saveProfile(profile) {
+    console.log('HRUI IO: Saving Profile ' + profile.name);
     setObj = {
         $set: {
 
@@ -295,6 +299,16 @@ function saveProfile(profile) {
     hruiDataDB.update({
         item: "profiles"
     }, setObj, {
+        upsert: true
+    });
+};
+//update MongoDB with device orientation data
+function updateDeviceOrientation(deviceData) {
+    hruiDataDB.update({
+        item: "deviceData"
+    }, {
+        $set: deviceData,
+    }, {
         upsert: true
     });
 };
@@ -312,7 +326,7 @@ function setClientsAreConnected(newValue) {
         };
     };
 };
-
+//start generating map when front end 'server' map mode enabled.
 function setMapMode(newMapMode) {
     if (newMapMode == 'server') {
         mapDataMultiplier = MAPDATAMULTIPLIER;
@@ -332,6 +346,7 @@ module.exports = {
     periodicUpdate: periodicUpdate,
     customDataSetup: customDataSetup,
     fetchScripts: fetchScripts,
+    updateDeviceOrientation: updateDeviceOrientation,
     setClientsAreConnected: setClientsAreConnected,
     setMapMode: setMapMode,
     updateMapDrawing: updateMapDrawing,

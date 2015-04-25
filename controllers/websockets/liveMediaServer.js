@@ -40,7 +40,7 @@ module.exports = function(socketServer, streamType, PORT) {
         console.log('HRUI ' + streamType + ': Client connected (' + socketServer.clients.length + ' concurrent)');
         //when websocket closed, stop media stream
         socket.on('close', function(code, message) {
-            console.log('HRUI ' + streamType + ':  Client disconnected (' + socketServer.clients.length + ' concurrent)');
+            console.log('HRUI Media: ' + streamType + ' Client disconnected (' + socketServer.clients.length + ' concurrent)');
             if (socketServer.clients.length == 0) {
                 scriptCtrl.killStream(streamType);
                 scriptCtrl.changeMediaDevice({
@@ -55,13 +55,13 @@ module.exports = function(socketServer, streamType, PORT) {
             if (this.clients[i].readyState == 1) {
                 this.clients[i].send(data, opts);
             } else {
-                console.log('HRUI ' + streamType + ': Client (' + i + ') not connected.');
+                console.log('HRUI Media Error: ' + streamType + ' Client (' + i + ') not connected.');
             }
         }
     };
     //when a media stream connects, broadcast data to websocket
     var streamServer = require('http').createServer(function(request, response) {
-        console.log('HRUI: Stream Connected on ' + request.socket.remoteAddress + ':' + request.socket.remotePort);
+        console.log('HRUI Media: Stream Connected on ' + request.socket.remoteAddress + ':' + request.socket.remotePort);
         request.on('data', function(data) {
             socketServer.broadcast(data, {
                 binary: true
