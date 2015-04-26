@@ -14,12 +14,39 @@
     <meta name="author" content="Daniel Peiró">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+    <script type="text/javascript" src="javascripts/socket.io/socket.io.min.js"></script>
+    <script type="text/javascript" src="javascripts/angular/angular.min.js"></script>
+    <script type="text/javascript" src="javascripts/angular/angular-animate.min.js"></script>
+    <script type="text/javascript" src="javascripts/angular/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="javascripts/hrui/angularapp.js"></script>
+    <script type="text/javascript" src="javascripts/hrui/angularservices.js"></script>
+    <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/hrui/joystick.js"></script>
+    <script data-ng-if="devOrientOn" type="text/javascript" src="javascripts/hrui/deviceorientation.js"></script>
+    <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/hrui/datamonitor.js"></script>
+    <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/angular/angular-file-upload.min.js">
+    </script>
+    <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
+    <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpeg/jsmpg.min.js"></script>
+    <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/hrui/livevideo.js"></script>
+    <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?">
+    </script>
+    <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/hrui/geolocation.js"></script>
+    <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/hrui/customdata.js"></script>
+    <script data-ng-if="customInputOn" type="text/javascript" src="javascripts/hrui/custominput.js"></script>
+    <script data-ng-if="sshClientOn" type="text/javascript" src="javascripts/hrui/scriptexec.js"></script>
+    <!--Aurora.js and MP3.js by Audiocogs: http://audiocogs.org/ -->
+    <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/aurora.js"></script>
+    <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/mp3.js"></script>
+    <!--Aurora.js Websocket Plugin by fsbdev: https://github.com/fsbdev/aurora-websocket -->
+    <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/aurora-websocket.js"></script>
+    <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/hrui/liveaudio.js"></script>
 </head>
 
 <body>
     <div id="body">
+        <h3>HTML5 Robot User Interface</h3>
         <div id="toolbar" class="frame">
-            <ul class="toolbarList">
+            <ul class="toolbarList left">
                 <li>
                     <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
                     <label for="joystickCheckbox">Turn Joystick {{ !joystickOn | OnOff}}</label>
@@ -29,29 +56,15 @@
                     </span>
                 </li>
                 <li>
-                    <input id="deviceOrientationCheckbox" type="checkbox" data-ng-model="devOrientOn" data-ng-click="updateControls($event, devOrientOn)">
-                    <label for="deviceOrientationCheckbox">Turn Device Orientation {{ !devOrientOn | OnOff}}</label>
-                </li>
-                <li>
                     <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)">
                     <label for="customInputCheckbox">Turn Custom Input {{ !customInputOn | OnOff}}</label>
                 </li>
-            </ul>
-            <ul class="toolbarList">
                 <li>
-                    <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
-                    <label for="dataMonitorCheckbox">Turn Data Monitor {{ !dataMonitorOn | OnOff}}</label>
-                </li>
-                <li>
-                    <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
-                    <label for="customDataCheckbox">Turn Custom Data {{ !customDataOn | OnOff}}</label>
-                </li>
-                <li>
-                    <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
-                    <label for="scriptExecCheckbox">Turn Run Scripts {{ !scriptExecOn | OnOff}}</label>
+                    <input id="deviceOrientationCheckbox" type="checkbox" data-ng-model="devOrientOn" data-ng-click="updateControls($event, devOrientOn)">
+                    <label for="deviceOrientationCheckbox">Turn Device Orientation {{ !devOrientOn | OnOff}}</label>
                 </li>
             </ul>
-            <ul class="toolbarList">
+            <ul class="toolbarList center">
                 <li>
                     <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
                     <label for="liveVideoCheckbox">Turn Live Video {{ !liveVideoOn | OnOff}}</label>
@@ -65,7 +78,22 @@
                     <label for="geolocationCheckbox">Turn Geolocation {{ !geolocationOn | OnOff}}</label>
                 </li>
             </ul>
-            <select id="profilesList" class="profileSection" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
+            <ul class="toolbarList right">
+                <li>
+                    <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
+                    <label for="dataMonitorCheckbox">Turn Data Monitor {{ !dataMonitorOn | OnOff}}</label>
+                </li>
+                <li>
+                    <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
+                    <label for="customDataCheckbox">Turn Custom Data {{ !customDataOn | OnOff}}</label>
+                </li>
+                <li>
+                    <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
+                    <label for="scriptExecCheckbox">Turn Run Scripts {{ !scriptExecOn | OnOff}}</label>
+                </li>
+            </ul>
+            <br>
+            <select id="profilesList" class="profileSection right" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
                 <option value="" disabled selected>Load Profile...</option>
             </select>
             <button id="saveProfile" class="profileSection" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
@@ -75,269 +103,292 @@
             </form>
         </div>
         <br>
-        <div id="videoFrame" class="frame" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn">
-            <canvas id="videoCanvas" class="canvas">
-                Canvas not supported
-            </canvas>
-            <br>
-            <label for="videoDevice">Video Device:</label>
-            <input id="videoDevice" type="number" data-ng-model="videoDevice" data-ng-change="videoDeviceSelected(videoDevice)" min="0">
-        </div>
-        <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn">
-        </div>
-        <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn">
-            <h3>Live Audio On</h3>
-            <h5>Note: Experimental Feature (does not work on iOS).<br> Audio has a delay of approx. 2 seconds.</h5>
-        </div>
-        <div id="joystickFrame" class="frame" data-ng-controller="JoystickController" data-ng-if="joystickOn">
-            <canvas id="joystick" class="canvas joystick" data-touch>
-                Canvas not supported
-            </canvas>
-            <canvas id="vector" class="canvas vector" data-ng-show="showVector">
-                Canvas not supported
-            </canvas>
-            <br>
-            <span class="coord">X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
-            <br>
-            <form class="form">
-                <table>
-                    <tr>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="fullAnalog">Full Analog
-                        </td>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock8ways">8-Way
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock4ways">4-Way
-                        </td>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock2ways">2-Way
-                        </td>
-                    </tr>
-                </table>
-                <input name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()"> Lock Joystick in Position
+        <div id="leftColumn">
+            <div id="joystickFrame" class="frame animate" data-ng-controller="JoystickController" data-ng-if="joystickOn">
+                <canvas id="joystick" class="canvas joystick" data-touch>
+                    Canvas not supported
+                </canvas>
+                <canvas id="vector" class="canvas vector" data-ng-show="showVector">
+                    Canvas not supported
+                </canvas>
                 <br>
-                <input name="Display Vector" type="checkbox" data-ng-model="showVector"> Display Vector
+                <span class="coord">X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
                 <br>
-            </form>
-        </div>
-        <div id="joystickFrame2" class="frame" data-ng-controller="JoystickController" data-ng-if="dualJoystickOn && joystickOn">
-            <canvas id="joystick2" class="canvas joystick" data-touch>
-                Canvas not supported
-            </canvas>
-            <canvas id="vector2" class="canvas vector" data-ng-show="showVector">
-                Canvas not supported
-            </canvas>
-            <br>
-            <span class="coord">X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
-            <br>
-            <form class="form">
-                <table>
-                    <tr>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="fullAnalog">Full Analog
-                        </td>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock8ways">8-Way
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock4ways">4-Way
-                        </td>
-                        <td>
-                            <input name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock2ways">2-Way
-                        </td>
-                    </tr>
-                </table>
-                <input name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()"> Lock Joystick in Position
-                <br>
-                <input name="Display Vector" type="checkbox" data-ng-model="showVector"> Display Vector
-                <br>
-            </form>
-        </div>
-        <div id="devOrientFrame" class="frame" data-ng-controller="DeviceOrientationController" data-ng-if="devOrientOn">
-            <h3>Device Orientation</h3>
-            <table id="devOrientTable" class="table">
-                <tr>
-                    <th rowspan="3" colspan="2">Device Orientation</th>
-                    <td rowspan="3" data-ng-show="devOrientationUnsupported"> Not Supported</td>
-                    <td data-ng-show="!devOrientationUnsupported">&alpha;: {{deviceData.devOrientation.alpha.toFixed(2)}}</td>
-                </tr>
-                <tr data-ng-show="!devOrientationUnsupported">
-                    <td>&beta;: {{deviceData.devOrientation.beta.toFixed(2)}}</td>
-                </tr>
-                <tr data-ng-show="!devOrientationUnsupported">
-                    <td>&gamma;: {{deviceData.devOrientation.gamma.toFixed(2)}}</td>
-                </tr>
-                <tr>
-                    <th rowspan="6">Device Motion</th>
-                    <td rowspan="6" data-ng-show="devMotionUnsupported"> Not Supported</td>
-                    <td rowspan="3" data-ng-show="!devMotionUnsupported">Rotation Rate</td>
-                    <td data-ng-show="devMotion">&alpha;&#775;: {{deviceData.devMotion.rotationRate.alpha.toFixed(2)}}</td>
-                </tr>
-                <tr data-ng-show="!devMotionUnsupported">
-                    <td>&beta;&#775;: {{deviceData.devMotion.rotationRate.beta.toFixed(2)}}</td>
-                </tr>
-                <tr data-ng-show="!devMotionUnsupported">
-                    <td>&gamma;&#775;: {{deviceData.devMotion.rotationRate.gamma.toFixed(2)}}</td>
-                </tr>
-                <tr>
-                    <td rowspan="3" data-ng-show="!devMotionUnsupported">Acceleration</td>
-                    <td data-ng-show="!devMotionUnsupported">X: {{deviceData.devMotion.acceleration.x.toFixed(2)}}</td>
-                </tr>
-                <tr>
-                    <td data-ng-show="!devMotionUnsupported">Y: {{deviceData.devMotion.acceleration.y.toFixed(2)}}</td>
-                </tr>
-                <tr>
-                    <td data-ng-show="!devMotionUnsupported">Z: {{deviceData.devMotion.acceleration.z.toFixed(2)}}</td>
-                </tr>
-            </table>
-        </div>
-        <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
-            <input id="mapOnCheckbox" name="Map On" type="checkbox" data-ng-model="mapOn" data-ng-change="toggleMap(mapOn)">
-            <label for="mapOnCheckbox">Map {{ mapOn | OnOff}}</label>
-            <br>
-            <canvas id="mapcanvas" class="canvas" data-ng-show="mapOn" data-touch></canvas>
-            <p data-ng-show="mapOn">
-                <span class="coord">Approx Coord: X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
-                <br>Map Mode:
-                <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="server" data-ng-change="setMapMode(mapMode)">Server
-                <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="upload" data-ng-change="setMapMode(mapMode)">Upload
-                <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="draw" data-ng-change="setMapMode(mapMode)">Draw
-                <br>
-                <button id="uploadMap" data-ng-file-select data-ng-file-change="upload($files)" data-ng-accept="'*.png,*jpg'" data-ng-show="mapMode=='upload'">Upload Map (.PNG)...</button>
-                <button id="clearMap" data-ng-show="mapOn && mapMode != 'server'" data-ng-click="clearMap()">Clear Map</button>
-                <span data-ng-show="mapMode=='server'">
-                Positioning:
-                <input name="Rel/Abs Coord" type="radio" data-ng-model="relCoord" data-ng-value="true">Relative
-                <input name="Rel/Abs Coord" type="radio" data-ng-model="relCoord" data-ng-value="false">Absolute
-                </span>
-                <br data-ng-show="mapMode!='draw'">
-                <label for="mapsize">Map Size (in data units):</label>
-                <input id="mapsize" type="number" data-ng-model="size">
-            </p>
-            <table id="dataTable" class="table">
-                <tr class="smalltext">
-                    <th>Position</th>
-                    <th>Orientation</th>
-                    <th>Speed</th>
-                    <th>Angular Speed</th>
-                </tr>
-                <tr>
-                    <td>x: {{position.x.toFixed(3)}}</td>
-                    <td>&alpha;: {{orientation.alpha.toFixed(3)}}</td>
-                    <td>v<sub>x</sub>: {{speed.vx.toFixed(3)}}</td>
-                    <td>&alpha;&#775;: {{angularSpeed.dAlpha.toFixed(3)}}</td>
-                </tr>
-                <tr>
-                    <td>y: {{position.y.toFixed(3)}}</td>
-                    <td>&beta;: {{orientation.beta.toFixed(3)}}</td>
-                    <td>v<sub>y</sub>: {{speed.vy.toFixed(3)}}</td>
-                    <td>&beta;&#775;: {{angularSpeed.dBeta.toFixed(3)}}</td>
-                </tr>
-                <tr>
-                    <td>z: {{position.z.toFixed(3)}}</td>
-                    <td>&gamma;: {{orientation.gamma.toFixed(3)}}</td>
-                    <td>v<sub>z</sub>: {{speed.vz.toFixed(3)}}</td>
-                    <td>&gamma;&#775;: {{angularSpeed.dGamma.toFixed(3)}}</td>
-                </tr>
-            </table>
-        </div>
-        <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
-            <form id="customDataForm" class="form" data-ng-if="!customDataFormSubmitted">
-                Item Name:
-                <input type="text" data-ng-model="customDataRequest.item">
-                <br> Update interval (ms):
-                <input type="number" data-ng-model="customDataRequest.updateInterval">
-                <br>
-                <input type="submit" value="Submit" data-ng-click="customDataFormSubmit()">
-            </form>
-            <span data-ng-if="customDataFormSubmitted">
-                Requested item: {{customDataRequest.item}}
-                <br> Requested interval: {{customDataRequest.updateInterval}}ms (rounded to 100ms)
-                <br>
-                </span>
-            <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
-        </div>
-        <div id="customInputFrame" class="frame" data-ng-controller="CustomInputController" data-ng-if="customInputOn">
-            <form id="customInputSelectionForm" class="form" data-ng-if="!customInputSelectionSubmitted" data-ng-submit="customInputSelectionSubmit()">
-                Item Name:
-                <input type="text" data-ng-model="customInputRequest.item" required>
-                <br> Number of Inputs:
-                <input type="number" data-ng-model="customInputRequest.numberOfInputs" min="1" max="50" required>
-                <br>
-                <input type="submit" value="Submit">
-            </form>
-            <form id="customInputForm" data-ng-if="customInputSelectionSubmitted && !customInputFormSubmitted" data-ng-submit="customInputFormSubmit()">
-                Input item: {{customInputRequest.item}}
-                <br>
-                <p data-ng-if="customInputSelectionSubmitted" data-ng-repeat="input in customInputList">Input {{$index+1}} Name:
-                    <input type="text" data-ng-model="input.name" data-ng-pattern="/^[a-zA-Z0-9-_]*$/" required> Type:
-                    <select data-ng-model="input.type" required>
-                        <option value="">Select...</option>
-                        <option value="text">Text</option>
-                        <option value="range">Slider</option>
-                        <option value="number">Number</option>
-                        <option value="checkbox">Checkbox</option>
-                    </select>
-                    <span data-ng-if="input.type=='range' || input.type=='number'">
-                        Min:<input type="number" data-ng-model="input.min" data-ng-required="input.type=='range'">
-                        Max:<input type="number" data-ng-model="input.max" data-ng-required="input.type=='range'">
-                    </span>
-                </p>
-                <input type="submit" value="Submit">
-                <span class="smalltext" data-ng-show="!dataIsValid">Valid Names: Start with letter or _. No Symbols (except _) or Spaces. Unique; Ranges Min &lt; Max.</span>
-            </form>
-            <span data-ng-if="customInputFormSubmitted">
+                <form class="form">
+                    <table>
+                        <tr>
+                            <td>
+                                <input id="fullAnalog" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="fullAnalog">
+                                <label for="fullAnalog">Full Analog</label>
+                            </td>
+                            <td>
+                                <input id="lock8ways" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock8ways">
+                                <label for="lock8ways">8-Way</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="lock4ways" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock4ways">
+                                <label for="lock4ways">4-Way</label>
+                            </td>
+                            <td>
+                                <input id="lock2ways" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock2ways">
+                                <label for="lock2ways">2-Way</label>
+                            </td>
+                        </tr>
+                    </table>
+                    <input id="lockJoystick" name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()">
+                    <label for="lockJoystick">Lock Joystick in Position</label>
+                    <br>
+                    <input id="displayVector" name="Display Vector" type="checkbox" data-ng-model="showVector">
+                    <label for="displayVector">Display Vector</label>
+                    <br>
+                </form>
+            </div>
+            <div id="customInputFrame" class="frame" data-ng-controller="CustomInputController" data-ng-if="customInputOn">
+                <form id="customInputSelectionForm" class="form" data-ng-if="!customInputSelectionSubmitted" data-ng-submit="customInputSelectionSubmit()">
+                    <p>
+                        <label for="customInputRequestItem">Item Name:</label>
+                        <input id="customInputRequestItem" type="text" data-ng-model="customInputRequest.item" required>
+                    </p>
+                    <p>
+                        <label for="customInputRequestNoOfInputs">Number of Inputs:</label>
+                        <input id="customInputRequestNoOfInputs" type="number" data-ng-model="customInputRequest.numberOfInputs" min="1" max="50" required>
+                    </p>
+                    <input type="submit" value="Submit">
+                </form>
+                <form id="customInputForm" data-ng-if="customInputSelectionSubmitted && !customInputFormSubmitted" data-ng-submit="customInputFormSubmit()">
+                    Input item: {{customInputRequest.item}}
+                    <br>
+                    <p data-ng-if="customInputSelectionSubmitted" data-ng-repeat="input in customInputList">Input {{$index+1}} Name:
+                        <input type="text" data-ng-model="input.name" data-ng-pattern="/^[a-zA-Z0-9-_]*$/" required>
+                        <select data-ng-model="input.type" required>
+                            <option value="">Select...</option>
+                            <option value="text">Text</option>
+                            <option value="range">Slider</option>
+                            <option value="number">Number</option>
+                            <option value="checkbox">Checkbox</option>
+                        </select>
+                        <span data-ng-if="input.type=='range' || input.type=='number'">
+                            Min:<input type="number" data-ng-model="input.min" data-ng-required="input.type=='range'">
+                            Max:<input type="number" data-ng-model="input.max" data-ng-required="input.type=='range'">
+                        </span>
+                    </p>
+                    <input type="submit" value="Submit">
+                    <span class="smalltext" data-ng-show="!dataIsValid">Valid Names: Start with letter or _. No Symbols (except _) or Spaces. Unique; Ranges Min &lt; Max.</span>
+                </form>
+                <span data-ng-if="customInputFormSubmitted">
                 Input item: {{customInputRequest.item}}
                 <br>
             </span>
-            <table id="customInputTable" class="table" data-compile="customInputTable" data-ng-if="customInputFormSubmitted"></table>
-            <span data-ng-show="customInputFormSubmitted">
+                <table id="customInputTable" class="table" data-compile="customInputTable" data-ng-if="customInputFormSubmitted"></table>
+                <span data-ng-show="customInputFormSubmitted">
             <input id="autoUpdate" type="checkbox" data-ng-model="autoUpdateOn" >Auto Send All on change {{ autoUpdateOn | OnOff}}
             <br>
             <button data-ng-click="inputChanged($event)">Send Input</button>
             </span>
+            </div>
+            <div id="devOrientFrame" class="frame floatright" data-ng-controller="DeviceOrientationController" data-ng-if="devOrientOn">
+                <table id="devOrientTable" class="table">
+                    <tr>
+                        <th rowspan="3" colspan="2">Device Orientation</th>
+                        <td rowspan="3" data-ng-show="devOrientationUnsupported"> Not Supported</td>
+                        <td data-ng-show="!devOrientationUnsupported">&alpha;: {{deviceData.devOrientation.alpha.toFixed(2)}}</td>
+                    </tr>
+                    <tr data-ng-show="!devOrientationUnsupported">
+                        <td>&beta;: {{deviceData.devOrientation.beta.toFixed(2)}}</td>
+                    </tr>
+                    <tr data-ng-show="!devOrientationUnsupported">
+                        <td>&gamma;: {{deviceData.devOrientation.gamma.toFixed(2)}}</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="6">Device Motion</th>
+                        <td rowspan="6" data-ng-show="devMotionUnsupported"> Not Supported</td>
+                        <td rowspan="3" data-ng-show="!devMotionUnsupported">Rotation Rate</td>
+                        <td data-ng-show="devMotion">&alpha;&#775;: {{deviceData.devMotion.rotationRate.alpha.toFixed(2)}}</td>
+                    </tr>
+                    <tr data-ng-show="!devMotionUnsupported">
+                        <td>&beta;&#775;: {{deviceData.devMotion.rotationRate.beta.toFixed(2)}}</td>
+                    </tr>
+                    <tr data-ng-show="!devMotionUnsupported">
+                        <td>&gamma;&#775;: {{deviceData.devMotion.rotationRate.gamma.toFixed(2)}}</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3" data-ng-show="!devMotionUnsupported">Acceleration</td>
+                        <td data-ng-show="!devMotionUnsupported">X: {{deviceData.devMotion.acceleration.x.toFixed(2)}}</td>
+                    </tr>
+                    <tr>
+                        <td data-ng-show="!devMotionUnsupported">Y: {{deviceData.devMotion.acceleration.y.toFixed(2)}}</td>
+                    </tr>
+                    <tr>
+                        <td data-ng-show="!devMotionUnsupported">Z: {{deviceData.devMotion.acceleration.z.toFixed(2)}}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div id="scriptExecFrame" class="frame" data-ng-controller="ScriptExecController" data-ng-if="scriptExecOn">
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-                <tr data-ng-repeat="script in scripts">
-                    <td>{{script.name}}</td>
-                    <td class="tdimg"><img data-ng-src="images/{{script.status}}.svg" src="images/standby.svg" width="12" height="12" alt="status">
-                    </td>
-                    <td>
-                        <button data-ng-click="runScript(script)" data-ng-show="script.showRun">Run </button>
-                        <button data-ng-click="killScript(script)" data-ng-show="!script.showRun">Kill</button>
-                    </td>
-                </tr>
-            </table>
-            <span class="smalltext"><img src="images/standby.svg" width="12" height="12" alt="Standby"> Standby</span>
-            <span class="smalltext"><img src="images/running.svg" width="12" height="12" alt="Running"> Running</span>
-            <span class="smalltext"><img src="images/killed.svg"  width="12" height="12" alt="Not Running"> Not Running</span>
-            <br>
-            <span class="smalltext">Deactivating 'Run Scripts' will kill all running scripts.</span>
-            <br>
-            <span class="smalltext">Streams Update on script exit (or buffer size exceded)</span>
-            <br>
-            <input id="stdoutCheckbox" type="checkbox" data-ng-model="stdoutOn">
-            <label for="stdoutCheckbox">Show stdout</label>
-            <input id="stderrCheckbox" type="checkbox" data-ng-model="stderrOn">
-            <label for="stderrCheckbox">Show stderr</label>
-            <p>
-                <textarea id="stdout" class="smalltext" data-ng-show="stdoutOn" data-ng-model="stdout" readonly></textarea>
-                <textarea id="stderr" class="smalltext" data-ng-show="stderrOn" data-ng-model="stderr" readonly></textarea>
-            </p>
+        <div id="centerColumn">
+            <div id="videoFrame" class="frame" data-ng-controller="LiveVideoController" data-ng-if="liveVideoOn">
+                <canvas id="videoCanvas" class="canvas">
+                    Canvas not supported
+                </canvas>
+                <br>
+                <label for="videoDevice">Video Device:</label>
+                <input id="videoDevice" type="number" data-ng-model="videoDevice" data-ng-change="videoDeviceSelected(videoDevice)" min="0">
+            </div>
+            <div id="audioFrame" class="frame" data-ng-controller="LiveAudioController" data-ng-if="liveAudioOn">
+                <h3>Live Audio On</h3>
+                <h5>Note: Experimental Feature (does not work on iOS).<br> Audio has a delay of approx. 2 seconds.</h5>
+            </div>
+            <div id="geolocationFrame" class="frame" data-ng-controller="GeolocationController" data-ng-if="geolocationOn">
+            </div>
         </div>
-        <footer class="footer">
+        <div id="rightColumn">
+            <div id="joystickFrame2" class="frame" data-ng-controller="JoystickController" data-ng-if="dualJoystickOn && joystickOn">
+                <canvas id="joystick2" class="canvas joystick" data-touch>
+                    Canvas not supported
+                </canvas>
+                <canvas id="vector2" class="canvas vector" data-ng-show="showVector">
+                    Canvas not supported
+                </canvas>
+                <br>
+                <span class="coord">X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
+                <br>
+                <form class="form">
+                    <table>
+                        <tr>
+                            <td>
+                                <input id="fullAnalog2" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="fullAnalog">
+                                <label for="fullAnalog2">Full Analog</label>
+                            </td>
+                            <td>
+                                <input id="lock8ways2" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock8ways">
+                                <label for="lock8ways2">8-Way</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="lock4ways2" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock4ways">
+                                <label for="lock4ways2">4-Way</label>
+                            </td>
+                            <td>
+                                <input id="lock2ways2" name="Lock Mode" type="radio" data-ng-model="lockMode" data-value="lock2ways">
+                                <label for="lock2ways2">2-Way</label>
+                            </td>
+                        </tr>
+                    </table>
+                    <input id="lockJoystick2" name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()">
+                    <label for="lockJoystick2">Lock Joystick in Position</label>
+                    <br>
+                    <input id="displayVector2" name="Display Vector" type="checkbox" data-ng-model="showVector">
+                    <label for="displayVector2">Display Vector</label>
+                    <br>
+                </form>
+            </div>
+            <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
+                <input id="mapOnCheckbox" name="Map On" type="checkbox" data-ng-model="mapOn" data-ng-change="toggleMap(mapOn)">
+                <label for="mapOnCheckbox">Map {{ mapOn | OnOff}}</label>
+                <br>
+                <canvas id="mapcanvas" class="canvas" data-ng-show="mapOn" data-touch></canvas>
+                <p data-ng-show="mapOn">
+                    <span class="coord">Approx Coord: X:{{point.x.toFixed(2)}} Y:{{point.y.toFixed(2)}}</span>
+                    <br>Map Mode:
+                    <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="server" data-ng-change="setMapMode(mapMode)">Server
+                    <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="upload" data-ng-change="setMapMode(mapMode)">Upload
+                    <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="draw" data-ng-change="setMapMode(mapMode)">Draw
+                    <br>
+                    <button id="uploadMap" data-ng-file-select data-ng-file-change="upload($files)" data-ng-accept="'*.png,*jpg'" data-ng-show="mapMode=='upload'">Upload Map (.PNG)...</button>
+                    <button id="clearMap" data-ng-show="mapOn && mapMode != 'server'" data-ng-click="clearMap()">Clear Map</button>
+                    <span data-ng-show="mapMode=='server'">
+                Positioning:
+                <input name="Rel/Abs Coord" type="radio" data-ng-model="relCoord" data-ng-value="true">Relative
+                <input name="Rel/Abs Coord" type="radio" data-ng-model="relCoord" data-ng-value="false">Absolute
+                </span>
+                    <br data-ng-show="mapMode!='draw'">
+                    <label for="mapsize">Map Size (in data units):</label>
+                    <input id="mapsize" type="number" data-ng-model="size">
+                </p>
+                <table id="dataTable" class="table">
+                    <tr class="smalltext">
+                        <th>Position</th>
+                        <th>Orientation</th>
+                        <th>Speed</th>
+                        <th>Angular Speed</th>
+                    </tr>
+                    <tr>
+                        <td>x: {{position.x.toFixed(3)}}</td>
+                        <td>&alpha;: {{orientation.alpha.toFixed(3)}}</td>
+                        <td>v<sub>x</sub>: {{speed.vx.toFixed(3)}}</td>
+                        <td>&alpha;&#775;: {{angularSpeed.dAlpha.toFixed(3)}}</td>
+                    </tr>
+                    <tr>
+                        <td>y: {{position.y.toFixed(3)}}</td>
+                        <td>&beta;: {{orientation.beta.toFixed(3)}}</td>
+                        <td>v<sub>y</sub>: {{speed.vy.toFixed(3)}}</td>
+                        <td>&beta;&#775;: {{angularSpeed.dBeta.toFixed(3)}}</td>
+                    </tr>
+                    <tr>
+                        <td>z: {{position.z.toFixed(3)}}</td>
+                        <td>&gamma;: {{orientation.gamma.toFixed(3)}}</td>
+                        <td>v<sub>z</sub>: {{speed.vz.toFixed(3)}}</td>
+                        <td>&gamma;&#775;: {{angularSpeed.dGamma.toFixed(3)}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="customDataFrame" class="frame" data-ng-controller="CustomDataController" data-ng-if="customDataOn">
+                <form id="customDataForm" class="form" data-ng-if="!customDataFormSubmitted">
+                    <p>
+                        <label for="customDataRequestItem">Item Name:</label>
+                        <input id="customDataRequestItem" type="text" data-ng-model="customDataRequest.item">
+                    </p>
+                    <p>
+                        <label for="customDataRequestInterval">Update interval (ms):</label>
+                        <input id="customDataRequestInterval" type="number" data-ng-model="customDataRequest.updateInterval">
+                    </p>
+                    <input type="submit" value="Submit" data-ng-click="customDataFormSubmit()">
+                </form>
+                <span data-ng-if="customDataFormSubmitted">
+                Requested item: {{customDataRequest.item}}
+                <br> Requested interval: {{customDataRequest.updateInterval}}ms (rounded to 100ms)
+                <br>
+                </span>
+                <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
+            </div>
+            <div id="scriptExecFrame" class="frame" data-ng-controller="ScriptExecController" data-ng-if="scriptExecOn">
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    <tr data-ng-repeat="script in scripts">
+                        <td>{{script.name}}</td>
+                        <td class="tdimg"><img data-ng-src="images/{{script.status}}.svg" src="images/standby.svg" width="12" height="12" alt="status">
+                        </td>
+                        <td>
+                            <button data-ng-click="runScript(script)" data-ng-show="script.showRun">Run </button>
+                            <button data-ng-click="killScript(script)" data-ng-show="!script.showRun">Kill</button>
+                        </td>
+                    </tr>
+                </table>
+                <span class="smalltext"><img src="images/standby.svg" width="12" height="12" alt="Standby"> Standby</span>
+                <span class="smalltext"><img src="images/running.svg" width="12" height="12" alt="Running"> Running</span>
+                <span class="smalltext"><img src="images/killed.svg"  width="12" height="12" alt="Not Running"> Not Running</span>
+                <br>
+                <span class="smalltext">Deactivating 'Run Scripts' will kill all running scripts.</span>
+                <br>
+                <span class="smalltext">Streams Update on script exit (or buffer size exceded)</span>
+                <br>
+                <input id="stdoutCheckbox" type="checkbox" data-ng-model="stdoutOn">
+                <label for="stdoutCheckbox">Show stdout</label>
+                <input id="stderrCheckbox" type="checkbox" data-ng-model="stderrOn">
+                <label for="stderrCheckbox">Show stderr</label>
+                <p>
+                    <textarea id="stdout" class="smalltext" data-ng-show="stdoutOn" data-ng-model="stdout" readonly></textarea>
+                    <textarea id="stderr" class="smalltext" data-ng-show="stderrOn" data-ng-model="stderr" readonly></textarea>
+                </p>
+            </div>
+        </div>
+        <footer class="footer frame">
             <h6>
             <a href="http://www.aslab.upm.es"> <img src="images/aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
             <img src="images/HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
@@ -347,30 +398,6 @@
             <a href="https://github.com/phoboslab/jsmpeg">JSmpeg</a> under MIT License)
             </h6>
         </footer>
-        <script type="text/javascript" src="javascripts/socket.io/socket.io.min.js"></script>
-        <script type="text/javascript" src="javascripts/angular/angular.min.js"></script>
-        <script type="text/javascript" src="javascripts/angular/angular-sanitize.min.js"></script>
-        <script type="text/javascript" src="javascripts/hrui/angularapp.js"></script>
-        <script type="text/javascript" src="javascripts/hrui/angularservices.js"></script>
-        <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/hrui/joystick.js"></script>
-        <script data-ng-if="devOrientOn" type="text/javascript" src="javascripts/hrui/deviceorientation.js"></script>
-        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/hrui/datamonitor.js"></script>
-        <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/angular/angular-file-upload.min.js"></script>
-        <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
-        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpeg/jsmpg.min.js"></script>
-        <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/hrui/livevideo.js"></script>
-        <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?">
-        </script>
-        <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/hrui/geolocation.js"></script>
-        <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/hrui/customdata.js"></script>
-        <script data-ng-if="customInputOn" type="text/javascript" src="javascripts/hrui/custominput.js"></script>
-        <script data-ng-if="sshClientOn" type="text/javascript" src="javascripts/hrui/scriptexec.js"></script>
-        <!--Aurora.js and MP3.js by Audiocogs: http://audiocogs.org/ -->
-        <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/aurora.js"></script>
-        <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/mp3.js"></script>
-        <!--Aurora.js Websocket Plugin by fsbdev: https://github.com/fsbdev/aurora-websocket -->
-        <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/aurora-websocket.js"></script>
-        <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/hrui/liveaudio.js"></script>
     </div>
 </body>
 

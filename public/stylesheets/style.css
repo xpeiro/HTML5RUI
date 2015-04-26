@@ -5,9 +5,12 @@
     ETSII, UPM 2014-2015    
 */
 
-input[type="number"] {
-    width: 50px;
-    text-align: right;
+h3 {
+    color: #363a3a;
+    font: 20px Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 0px 1px black;
+    text-align: center;
 }
 
 input[type="submit"],
@@ -26,7 +29,7 @@ input[type="number"] {
     border-width: 1px;
     border-style: solid;
     background: inherit;
-    color: inherit;
+    border-color: #363a3a;
 }
 
 footer > h6 > img {
@@ -34,18 +37,16 @@ footer > h6 > img {
 }
 
 body {
-    background: #8BA987;
-    color: #545454;
+    background: #a8aaaa;
+    color: #363a3a;
+    font: Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
 }
 
 .form {
     white-space: nowrap;
     display: inline-block;
-}
-
-.form > input[type="text"] {
-    width: 111px;
-    text-align: center;
 }
 
 .canvas {
@@ -68,10 +69,32 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     padding: 1%;
-    border: 2px solid black;
+    border-radius: 5px 5px 10px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border: 3px groove #a3a5a4;
     background: inherit;
     color: inherit;
     float: left;
+}
+
+.ng-enter,
+.ng-leave {
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+    transition: all 0.7s ease-in-out;
+}
+
+.ng-enter,
+.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
+.ng-leave,
+.ng-enter.ng-enter-active {
+    opacity: 1;
 }
 
 .table td,
@@ -84,37 +107,14 @@ body {
 .footer {
     clear: both;
     margin: auto;
+    width: 100%;
+    padding: 0px;
+    float: left;
     text-align: center;
 }
 
 .smalltext {
     font-size: 70%;
-}
-
-#toolbar {
-    clear: both;
-    width: 98%;
-    text-align: center;
-}
-
-#body {
-    display: block;
-    max-width: 100%;
-}
-
-#joystickFrame {
-    clear: left;
-    display: inline-block;
-    float: left;
-}
-
-#joystickFrame2 {
-    display: inline-block;
-    float: right;
-}
-
-#mapcanvas {
-    cursor: crosshair;
 }
 
 .joystick {
@@ -127,24 +127,10 @@ body {
     border: none;
 }
 
-#videoCanvas {
-    clear: none;
-    width: 480px;
-    height: 360px;
-}
-
-#geolocationFrame {
-    width: 480px;
-    height: 330px;
-}
-
-#dataFrame > * {
-    clear: both;
-}
-
-#customInputSelectionForm > input[type="number"] {
-    margin-left: 34px;
-    width: 35px;
+.toolbarList {
+    text-align: left;
+    display: inline-block;
+    list-style-type: none;
 }
 
 .profileSection {
@@ -156,32 +142,154 @@ body {
     text-align: center;
 }
 
-.toolbarList {
-    text-align: left;
-    display: inline-block;
-    list-style-type: none;
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.center {
+    text-align: center;
 }
 
 .toolbarList > li {
     margin: 5px;
+    text-align: left;
+}
+
+#toolbar {
+    clear: both;
+    width: 98%;
+    text-align: center;
+    float: left;
+    margin-bottom: 10px;
+}
+
+#body {
+    display: block;
+    max-width: 100%;
+    text-align: center;
+}
+
+#mapcanvas {
+    cursor: crosshair;
+}
+
+#leftColumn {
+    float: left;
+    clear: left;
+    width: 25%;
+}
+
+#centerColumn {
+    float: none;
+    text-align: center;
+    display: inline-block;
+    width: 33%;
+}
+
+#audioFrame {
+    width: 484px;
+}
+
+#videoCanvas {
+    clear: none;
+    width: 480px;
+    height: 360px;
+}
+
+#geolocationFrame {
+    width: 484px;
+    height: 360px;
+    float: left;
+}
+
+#rightColumn {
+    float: right;
+    clear: right;
+    margin-right: 7px;
+    width: 25%;
+}
+
+#dataFrame > * {
+    clear: both;
+}
+
+#customInputSelectionForm > p > input {
+    float: right;
+    text-align: left;
+    width: 50%;
+}
+
+#customInputSelectionForm > p > input[type="number"] {
+    width: 15%;
+    text-align: right;
+}
+
+#customInputSelectionForm > input[type="submit"] {
+    float: left;
+}
+
+#customInputForm > p > span > input[type="number"] {
+    width: 15%;
+    text-align: right;
+}
+
+#customDataForm > p > input {
+    float: right;
+    width: 40%;
+    text-align: left;
+}
+
+#customDataForm > p > input[type="number"] {
+    width: 25%;
+    text-align: right;
+}
+
+#customDataForm > input[type="submit"] {
+    float: left;
+}
+
+#customDataTable, #stdout, #stderr {
+    width: 98%;
+    max-width: 98%;
+}
+
+#leftColumn > div {
+    float: left;
+    clear: left;
+    width: 100%;
+    text-align: left;
+}
+
+#rightColumn > div,
+#dataFrame > table {
+    float: left;
+    width: 100%;
+    text-align: left;
 }
 
 @media only screen and (max-width: 480px) {
     #videoCanvas {
-        width: 98%;
+        width: 100%;
         height: 240px;
     }
     #geolocationFrame {
-        width: 98%;
+        width: 100%;
         height: 210px;
     }
+    #audioFrame {
+        width: 100%;        
+    }
     .frame {
-        width: 98%;
+        width: 100%;
     }
     .toolbarList {
         text-align: left;
         float: left;
-        display: inline;        
+        display: inline;
         list-style-type: none;
         margin: 0px;
         width: 80%;
@@ -196,10 +304,26 @@ body {
         text-align: center;
         width: 100%;
     }
-    #dataTable {
-        width: 80% !important;
+    #dataTable,
+    #devOrientTable {
+        width: 98%;
     }
     #body {
         width: 100%;
+    }
+    #rightColumn {
+        float: left;
+        clear: both;
+        width: 98%;
+    }
+    #centerColumn {
+        float: left;
+        clear: both;
+        width: 98%;
+    }
+    #leftColumn {
+        float: left;
+        clear: both;
+        width: 98%;
     }
 }

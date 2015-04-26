@@ -6,10 +6,10 @@
 */
 
 //app init
-var app = angular.module('HRUI', ['ngSanitize', 'angularFileUpload']);
+var app = angular.module('HRUI', ['ngSanitize', 'ngAnimate', 'angularFileUpload']);
 //set color constants
-var BACKGROUND_COLOR = "#8BA987";
-var FOREGROUND_COLOR = "grey";
+var BACKGROUND_COLOR = "#a8aaaa";
+var FOREGROUND_COLOR = "#717679";
 //main app controller. manages active modules, profiles and notifies back-end of change in controls when necessary.
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
@@ -103,7 +103,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
                 //trigger visual refresh (digest new scope values)
                 rootScope.$apply();
             }, 10);
-            
+
 
         };
         //extract updated control from event, and notify back-end of selected controls
