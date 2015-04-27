@@ -37,16 +37,16 @@ footer > h6 > img {
 }
 
 body {
-    background: #a8aaaa;
+    background-image: -webkit-gradient( linear, left top, right bottom, color-stop(0, #FFFFFF), color-stop(1, #A8AAAA));
+    background-image: -o-linear-gradient(right bottom, #FFFFFF 0%, #A8AAAA 100%);
+    background-image: -moz-linear-gradient(right bottom, #FFFFFF 0%, #A8AAAA 100%);
+    background-image: -webkit-linear-gradient(right bottom, #FFFFFF 0%, #A8AAAA 100%);
+    background-image: -ms-linear-gradient(right bottom, #FFFFFF 0%, #A8AAAA 100%);
+    background-image: linear-gradient(to right bottom, #FFFFFF 0%, #A8AAAA 100%);
     color: #363a3a;
     font: Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-align: center;
-}
-
-.form {
-    white-space: nowrap;
-    display: inline-block;
 }
 
 .canvas {
@@ -69,11 +69,20 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     padding: 1%;
-    border-radius: 5px 5px 10px 5px;
-    -moz-border-radius: 5px 5px 5px 5px;
-    -webkit-border-radius: 5px 5px 5px 5px;
-    border: 3px groove #a3a5a4;
-    background: inherit;
+    margin: 1%;
+    border: 1px solid black;
+    border-radius: 8px 8px 5px 8px;
+    -moz-border-radius: 8px 8px 8px 8px;
+    -webkit-border-radius: 8px 8px 8px 8px;
+    -moz-box-shadow: 0px 0px 11px #000000;
+    -webkit-box-shadow: 0px 0px 11px #000000;
+    box-shadow: 0px 0px 11px #000000;
+    background-image: -webkit-gradient( linear, left top, right bottom, color-stop(0, #CFD1D1), color-stop(1, #EDEDED));
+    background-image: -o-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+    background-image: -moz-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+    background-image: -webkit-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+    background-image: -ms-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+    background-image: linear-gradient(to right bottom, #CFD1D1 0%, #EDEDED 100%);
     color: inherit;
     float: left;
 }
@@ -99,6 +108,9 @@ body {
 
 .table td,
 .table th {
+    border-radius: 4px 4px 4px 4px;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
     border: 1px solid black;
     white-space: nowrap;
     margin-right: 1px;
@@ -106,9 +118,10 @@ body {
 
 .footer {
     clear: both;
-    margin: auto;
     width: 100%;
     padding: 0px;
+    margin: 0px;
+    margin-top: 1%;
     float: left;
     text-align: center;
 }
@@ -154,6 +167,32 @@ body {
     text-align: center;
 }
 
+.form {
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.form > p > input {
+    float: right;
+    width: 45%;
+    text-align: left;
+}
+
+.form > p > input[type="number"] {
+    width: 25%;
+    text-align: right;
+}
+
+.form > input[type="submit"] {
+    float: right;
+}
+
+#customInputForm > p > span > input[type="number"] {
+    width: 15%;
+    text-align: right;
+}
+
 .toolbarList > li {
     margin: 5px;
     text-align: left;
@@ -164,7 +203,8 @@ body {
     width: 98%;
     text-align: center;
     float: left;
-    margin-bottom: 10px;
+    margin: 0px;
+    margin-bottom: 1%;
 }
 
 #body {
@@ -213,46 +253,20 @@ body {
     width: 25%;
 }
 
+#dataFrame,
+#joystickFrame,
+#joystickFrame2 {
+    background-image: none;
+    background-color: #CCCCCC;
+}
+
 #dataFrame > * {
     clear: both;
 }
 
-#customInputSelectionForm > p > input {
-    float: right;
-    text-align: left;
-    width: 50%;
-}
-
-#customInputSelectionForm > p > input[type="number"] {
-    width: 15%;
-    text-align: right;
-}
-
-#customInputSelectionForm > input[type="submit"] {
-    float: left;
-}
-
-#customInputForm > p > span > input[type="number"] {
-    width: 15%;
-    text-align: right;
-}
-
-#customDataForm > p > input {
-    float: right;
-    width: 40%;
-    text-align: left;
-}
-
-#customDataForm > p > input[type="number"] {
-    width: 25%;
-    text-align: right;
-}
-
-#customDataForm > input[type="submit"] {
-    float: left;
-}
-
-#customDataTable, #stdout, #stderr {
+#customDataTable,
+#stdout,
+#stderr {
     width: 98%;
     max-width: 98%;
 }
@@ -281,7 +295,7 @@ body {
         height: 210px;
     }
     #audioFrame {
-        width: 100%;        
+        width: 100%;
     }
     .frame {
         width: 100%;

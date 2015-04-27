@@ -8,8 +8,8 @@
 //app init
 var app = angular.module('HRUI', ['ngSanitize', 'ngAnimate', 'angularFileUpload']);
 //set color constants
-var BACKGROUND_COLOR = "#a8aaaa";
-var FOREGROUND_COLOR = "#717679";
+var BACKGROUND_COLOR = "#CCCCCC";
+var FOREGROUND_COLOR = "#A8AAAA";
 //main app controller. manages active modules, profiles and notifies back-end of change in controls when necessary.
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
