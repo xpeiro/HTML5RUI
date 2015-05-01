@@ -58,7 +58,7 @@ $ mongo
 ```shell
 $ mongo utils/hruiconfig.js
 ```
-Alternatively, backup/restore a working db with [mongorestore](http://docs.mongodb.org/manual/reference/program/mongorestore/) (one is available in utils/)
+Alternatively, backup/restore a working db with [mongorestore](http://docs.mongodb.org/manual/reference/program/mongorestore/).
 
 #####6. Install app and run:
 ```shell
