@@ -29,6 +29,9 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
         var leftClick = 0;
         //draw canvas in initial state
         drawAll();
+        //start rendering animation
+        renderLoop();
+
         scope.$on('getProfile', function() {
             ProfileSrv.profile.lockJoystick = scope.lockJoystick;
             ProfileSrv.profile.lockMode = scope.lockMode;
@@ -61,16 +64,10 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
         //handles mouse or touch movement on joystick
         scope.mouseMove = function(evt) {
             if (leftClick == 1) { //check if left mouse button down or touch
-                //erases previous joystick position
-                resetJoystick();
-                // erases previous vector
-                resetVector();
                 // get cursor or touch coordinates, saved in point object.
-                if (evt.type == 'touchstart' || evt.type == 'touchmove') {                    
-                    if (evt.targetTouches[0].target.id == joystick.id) {
-                        scope.point.x = evt.targetTouches[0].pageX - joystick.offsetLeft;
-                        scope.point.y = evt.targetTouches[0].pageY - joystick.offsetTop;
-                    };
+                if (evt.type == 'touchstart' || evt.type == 'touchmove') {
+                    scope.point.x = evt.targetTouches[0].pageX - joystick.offsetLeft;
+                    scope.point.y = evt.targetTouches[0].pageY - joystick.offsetTop;
                 } else {
                     scope.point.x = evt.pageX - joystick.offsetLeft - 3;
                     scope.point.y = evt.pageY - joystick.offsetTop - 3;
@@ -80,37 +77,50 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
                 //if Directional Lock is ON, enforce
                 if (scope.lockMode != "fullAnalog") {
                     scope.point = GeometrySrv.forceDirectionLock(scope.point.x, scope.point.y, scope.lockMode);
-                }
+                };
                 // force coordinates into maxRadius
                 if (!GeometrySrv.isInsideCircle(scope.point.x, scope.point.y, maxRadius)) {
                     scope.point = GeometrySrv.forceIntoCircle(scope.point.x, scope.point.y, maxRadius);
-                }
-                //change coordinates back to absolute reference
-                scope.point = GeometrySrv.canvasCoord(scope.point, joystick);
-                DrawSrv.drawLineFromCenter(joystickctx, scope.point.x, scope.point.y);
-                DrawSrv.drawLineFromCenter(vectorctx, scope.point.x * vector.width / joystick.width, scope.point.y * vector.width / joystick.width);
-                //redraw joystick position
-                DrawSrv.drawCircle(joystickctx, scope.point.x, scope.point.y, radius, maxRadiusBGColor);
-                //set relative coordinates
-                scope.point = GeometrySrv.centerCoord(scope.point, joystick);
-                //send coordinates back to server (websocket)
-                updateJoystick(scope.point, scope.lockMode);
+                };
+
             };
         };
+        
+        function renderLoop() {
+            //call renderLoop every 15ms (60fps)
+            requestAnimationFrame(renderLoop);
+            //erases previous joystick position
+            resetJoystick();
+            // erases previous vector
+            resetVector();
+            //change coordinates to canvas reference
+            scope.point = GeometrySrv.canvasCoord(scope.point, joystick);
+            DrawSrv.drawLineFromCenter(joystickctx, scope.point.x, scope.point.y);
+            if (scope.showVector) {
+                DrawSrv.drawLineFromCenter(vectorctx, scope.point.x * vector.width / joystick.width, scope.point.y * vector.width / joystick.width);
+            };
+            //redraw joystick position
+            DrawSrv.drawCircle(joystickctx, scope.point.x, scope.point.y, radius, maxRadiusBGColor);
+            //change back to relative coordinates
+            scope.point = GeometrySrv.centerCoord(scope.point, joystick);
+            //send coordinates back to server (websocket)
+            updateJoystick(scope.point, scope.lockMode);
+        };
+
         scope.resetAll = function() {
             leftClick = 0;
             drawAll();
             scope.point.x = 0;
             scope.point.y = 0;
             updateJoystick(scope.point, scope.lockMode);
-        }
+        };
 
         function resetJoystick() {
             joystickctx.fillStyle = backgroundColor;
             joystickctx.fillRect(0, 0, joystick.width, joystick.height);
             joystickctx.fillStyle = "black";
             DrawSrv.drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, maxRadius, maxRadiusBGColor);
-        }
+        };
 
         function resetVector() {
             vectorctx.fillStyle = backgroundColor;
@@ -118,13 +128,13 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
             vectorctx.fillStyle = "black";
             vectorctx.fillRect(vector.width / 2 - 2, vector.height / 2 - 2, 4, 4);
             DrawSrv.drawCircle(vectorctx, vector.width / 2, vector.height / 2, vector.width * maxRadius / joystick.width);
-        }
+        };
 
         function drawAll() {
             resetJoystick();
             resetVector();
             DrawSrv.drawCircle(joystickctx, joystick.width / 2, joystick.height / 2, radius, maxRadiusBGColor);
-        }
+        };
 
         function updateJoystick(point, lockMode) {
             SocketSrv.socket.emit('updateJoystick', {
@@ -133,6 +143,6 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
                 mode: lockMode,
                 joystickItem: element[0].children[0].id,
             });
-        }
-    }
+        };
+    },
 ]);
