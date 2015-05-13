@@ -4,23 +4,23 @@
     Developed by Daniel Peiró
     ETSII, UPM 2014-2015    
 */
-/*
-    App Modules Setup
-*/
-const express = require('express');
-const app = express();
-const fs = require('fs');
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const ws = require('ws');
-const compression = require('compression');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const path = require('path');
-const monk = require('monk');
-/* MongoDB Parameters Setup. Change only if required. */
-const DB = monk('localhost:27017/hrui');
-const HRUIDATADB = DB.get('data');
+
+/*  App Modules Setup   */
+const
+    express = require('express'),
+    app = express(),
+    fs = require('fs'),
+    http = require('http').Server(app),
+    io = require('socket.io')(http),
+    ws = require('ws'),
+    compression = require('compression'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    path = require('path'),
+    monk = require('monk'),
+    /* MongoDB Parameters Setup. Change only if required. */
+    DB = monk('localhost:27017/hrui'),
+    HRUIDATADB = DB.get('data');
 /*  
     Server Parameters Setup.
     Can be configured through config.json file (or directly here in app.js)
@@ -67,9 +67,12 @@ var PARAMS = DEFAULTPARAMS;
 try {
     fs.statSync('config.json');
     console.log('HRUI: Parsing parameters from config.json ...');
+    //parse from config.json
     var parsedparams = JSON.parse(fs.readFileSync('config.json', 'utf8'));
     for (var param in parsedparams) {
+        //check parameter exists, disregard all params with prepended '_'
         if (!!parsedparams[param] && param[0] != '_') {
+            //assign param
             PARAMS[param] = parsedparams[param];
             console.log('HRUI: Set ' + param + ' = ' + PARAMS[param]);
         };
@@ -104,11 +107,12 @@ module.exports = {
     Controllers Setup
 */
 // Require controller modules
-const ioCtrl = require('./controllers/websockets/io');
-const updaters = require('./controllers/updaters');
-const scriptCtrl = require('./controllers/scriptController');
-const liveVideo = require('./controllers/websockets/liveMediaServer');
-const liveAudio = require('./controllers/websockets/liveMediaServer');
+const
+    ioCtrl = require('./controllers/websockets/io'),
+    updaters = require('./controllers/updaters'),
+    scriptCtrl = require('./controllers/scriptController'),
+    liveVideo = require('./controllers/websockets/liveMediaServer'),
+    liveAudio = require('./controllers/websockets/liveMediaServer');
 // Socket.io event handlers Setup
 ioCtrl(io);
 // Live Video Server Setup
@@ -126,8 +130,9 @@ liveAudio(new(ws.Server)({
 app.use(compression());
 // Set favicon
 app.use(favicon(__dirname + '/public/images/favicon.svg'));
-// Setup HTTP Request Logger (morgan): 'dev' style, log errors only
+// Setup HTTP Request Logger (morgan).
 app.use(logger('dev', {
+    //do not log succesfull requests, only errors.
     skip: function(req, res) {
         return res.statusCode < 400
     }

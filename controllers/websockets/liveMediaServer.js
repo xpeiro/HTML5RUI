@@ -15,12 +15,45 @@
     Captures audio or video stream on a local port, broadcasts it to connected
     websockets.
 */
-const app = require('../../app');
-const scriptCtrl = require('../scriptController');
-//Construct MP3 header file with data necessary for AuroraJS decoder to function
-const audioHeader = constructAudioHeader(app.PARAMS.AUDIOARGS[app.PARAMS.AUDIOARGS.indexOf('-ac') + 1]);
-//Construct MPEG1 header file with data necessary for JSMPEG to function
-const videoHeader = constructVideoHeader(app.PARAMS.VIDEOWIDTH, app.PARAMS.VIDEOHEIGHT);
+const
+    app = require('../../app'),
+    scriptCtrl = require('../scriptController'),
+    //Construct MP3 header file with data necessary for AuroraJS decoder to function
+    audioHeader = constructAudioHeader(app.PARAMS.AUDIOARGS[app.PARAMS.AUDIOARGS.indexOf('-ac') + 1]),
+    //Construct MPEG1 header file with data necessary for JSMPEG to function
+    videoHeader = constructVideoHeader(app.PARAMS.VIDEOWIDTH, app.PARAMS.VIDEOHEIGHT);
+
+
+function constructAudioHeader(noOfChannels) {
+    const zeroes = new Buffer(['0x00']);
+    var mp3frame;
+    var audioHeader = new Buffer([]);
+    //different frame header for single channel source device
+    if (noOfChannels == '1') {
+        mp3frame = new Buffer(['0xff', '0xfb', '0x14', '0xc4']);
+    } else { //assumes 2 channels
+        mp3frame = new Buffer(['0xff', '0xfb', '0x14', '0x64']);
+    };
+    //pad out mp3 frame with zeroes
+    for (var i = 4; i < 96; i++) {
+        mp3frame = Buffer.concat([mp3frame, zeroes]);
+    };
+    //construct a header with 40 frames
+    for (var i = 0; i < 40; i++) {
+        audioHeader = Buffer.concat([audioHeader, mp3frame]);
+    };
+    return audioHeader;
+};
+
+function constructVideoHeader(VIDEOWIDTH, VIDEOHEIGHT) {
+    const STREAM_MAGIC_BYTES = 'jsmp';
+    var videoHeader = new Buffer(8);
+    videoHeader.write(STREAM_MAGIC_BYTES);
+    videoHeader.writeUInt16BE(VIDEOWIDTH, 4);
+    videoHeader.writeUInt16BE(VIDEOHEIGHT, 6);
+    return videoHeader;
+};
+
 
 module.exports = function(socketServer, streamType, PORT) {
     socketServer.on('connection', function(socket) {
@@ -69,34 +102,4 @@ module.exports = function(socketServer, streamType, PORT) {
         });
     }).listen(PORT);
 
-};
-
-function constructAudioHeader(noOfChannels) {
-    const zeroes = new Buffer(['0x00']);
-    var mp3frame;
-    var audioHeader = new Buffer([]);
-    //different frame header for single channel source device
-    if (noOfChannels == '1') {
-        mp3frame = new Buffer(['0xff', '0xfb', '0x14', '0xc4']);
-    } else { //assumes 2 channels
-        mp3frame = new Buffer(['0xff', '0xfb', '0x14', '0x64']);
-    };
-    //pad out mp3 frame with zeroes
-    for (var i = 4; i < 96; i++) {
-        mp3frame = Buffer.concat([mp3frame, zeroes]);
-    };
-    //construct a header with 40 frames
-    for (var i = 0; i < 40; i++) {
-        audioHeader = Buffer.concat([audioHeader, mp3frame]);
-    };
-    return audioHeader;
-};
-
-function constructVideoHeader(VIDEOWIDTH, VIDEOHEIGHT) {
-    const STREAM_MAGIC_BYTES = 'jsmp';
-    var videoHeader = new Buffer(8);
-    videoHeader.write(STREAM_MAGIC_BYTES);
-    videoHeader.writeUInt16BE(VIDEOWIDTH, 4);
-    videoHeader.writeUInt16BE(VIDEOHEIGHT, 6);
-    return videoHeader;
 };

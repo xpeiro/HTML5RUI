@@ -270,7 +270,8 @@ table {
 
 #customDataTable,
 #stdout,
-#stderr {
+#stderr,
+#transcript {
     width: 98%;
     max-width: 98%;
 }

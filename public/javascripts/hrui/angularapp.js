@@ -16,6 +16,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         scope.joystickOn = false;
         scope.dualJoystickOn = false;
         scope.devOrientOn = false;
+        scope.voiceCommOn = false;
         scope.dataMonitorOn = false;
         scope.liveVideoOn = false;
         scope.liveAudioOn = false;
@@ -59,6 +60,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             ProfileSrv.profile.scriptExecOn = scope.scriptExecOn;
             ProfileSrv.profile.liveAudioOn = scope.liveAudioOn;
             ProfileSrv.profile.devOrientOn = scope.devOrientOn;
+            ProfileSrv.profile.voiceCommOn = scope.voiceCommOn;
         });
         //save current profile and send it to backend
         scope.saveProfile = function() {
@@ -87,6 +89,8 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             scope.customDataOn = scope.selectedProfile.customDataOn;
             scope.customInputOn = scope.selectedProfile.customInputOn;
             scope.scriptExecOn = scope.selectedProfile.scriptExecOn;
+            scope.devOrientOn = scope.selectedProfile.devOrientOn;
+            scope.voiceCommOn = scope.selectedProfile.voiceCommOn;
             //notify backend of new selected controls (only required for video/audio and location)
             if (scope.liveVideoOn != scope.selectedProfile.liveVideoOn) {
                 scope.liveVideoOn = scope.selectedProfile.liveVideoOn;
@@ -121,14 +125,12 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             if (changedControl == "liveVideoCheckbox" && newValue == false) {
                 SocketSrv.videowsocket.close();
             } else if (changedControl == "liveAudioCheckbox" && newValue == false) {
-                SocketSrv.wsPlayer.stop();
-                SocketSrv.wsPlayer.asset.source.socket.close();
+                SocketSrv.wsAudioPlayer.stop();
+                SocketSrv.wsAudioPlayer.asset.source.socket.close();
             };
         };
-
         /* 
            requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-
            Used under MIT license
         */
         (function() {
@@ -158,3 +160,34 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         }());
     },
 ]);
+
+//directive to override default touch controls on canvas and link touch events to handler functions
+app.directive('touch', function() {
+    return {
+        link: function(scope, element, attrs) {
+            element.on('touchmove', function(event) {
+                scope.touchMove(event);
+                scope.$apply();
+            });
+            element.on('touchdown mousedown', function(event) {
+                scope.mouseDown(event);
+                scope.$apply();
+            });
+            element.on('mousemove', function(event) {
+                scope.mouseMove(event);
+                scope.$apply();
+            });
+            element.on('mouseup touchend', function(event) {
+                scope.mouseUp(event);
+                scope.$apply();
+            });
+        }
+    }
+});
+
+//string filter. Returns 'On' if given boolean is true, 'Off' otherwise.
+app.filter('OnOff', function() {
+    return function(bool) {
+        return bool ? 'On' : 'Off';
+    }
+});

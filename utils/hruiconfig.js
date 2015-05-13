@@ -95,7 +95,7 @@ db.data.insert({
 db.data.insert({
     "_id": 6,
     "item": "deviceData",
-    "deviceMotion": {
+    "devMotion": {
         "rotationRate": {
             "alpha": 0,
             "beta": 0,
@@ -107,10 +107,25 @@ db.data.insert({
             "z": 0,
         }
     },
-    "deviceOrientation": {
+    "devOrientation": {
         "absolute": null,
         "alpha": 0,
         "beta": 0,
         "gamma": 0,
     }
+});
+//  joystick 2, for dual joystick control
+//  (can be removed, front-end automatically generates entry. Kept for reference)
+db.data.insert({
+    "_id": 7,
+    "item": "joystick2",
+    "x": "0.00",
+    "y": "0.00",
+    "mode": "lock4ways"
+});
+//Voice Command. (can be removed, front-end automatically generates entry. Kept for reference)
+db.data.insert({
+    "_id": 8,
+    "item": "voiceCommand",
+    "value": "",
 });

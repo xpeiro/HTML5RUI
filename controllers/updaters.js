@@ -11,32 +11,34 @@ Handles database queries and updates
 on request from front end.
 Manages userscripts file list.
 */
-const app = require('../app');
-const path = require('path');
-const fs = require("fs");
-const busboy = require('connect-busboy');
-const io = require('./websockets/io');
-const scriptCtrl = require('./scriptController');
-const PNG = require('pngjs').PNG;
-const hruiDataDB = app.PARAMS.HRUIDATADB;
-const INTERVALINCREMENT = 100;
-const GEOMULTIPLIER = 20;
-const MAPDATAMULTIPLIER = 5;
-const MAPWIDTH = 300;
-const MAPHEIGHT = 300;
-var binMatrix = new Array(MAPWIDTH);
+const
+    app = require('../app'),
+    path = require('path'),
+    fs = require("fs"),
+    busboy = require('connect-busboy'),
+    io = require('./websockets/io'),
+    scriptCtrl = require('./scriptController'),
+    PNG = require('pngjs').PNG,
+    hruiDataDB = app.PARAMS.HRUIDATADB,
+    INTERVALINCREMENT = 100,
+    GEOMULTIPLIER = 20,
+    MAPDATAMULTIPLIER = 5,
+    MAPWIDTH = 300,
+    MAPHEIGHT = 300;
+var
+    geoMultiplier = -1,
+    mapDataMultiplier = -1,
+    dataMonitorOn = false,
+    clientsAreConnected = false,
+    binMatrix = new Array(MAPWIDTH),
+    customData = {
+        item: "",
+        updateInterval: INTERVALINCREMENT,
+        MULTIPLIER: -1,
+        multiplier: -1,
+    };
 for (var i = 0; i < binMatrix.length; i++) {
     binMatrix[i] = new Array(MAPHEIGHT);
-};
-var geoMultiplier = -1;
-var mapDataMultiplier = -1;
-var dataMonitorOn = false;
-var clientsAreConnected = false;
-var customData = {
-    item: "",
-    updateInterval: INTERVALINCREMENT,
-    MULTIPLIER: -1,
-    multiplier: -1,
 };
 //Setup http get request for map, so that browser doesn't cache every png it gets.
 app.app.get('/images/map.png', function(req, res) {
@@ -46,6 +48,22 @@ app.app.get('/images/map.png', function(req, res) {
 //Setup map upload http response
 app.app.use(busboy());
 app.app.post('/mapupload', function(req, res) {
+    var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function(fieldname, file, filename) {
+        console.log("HRUI: Uploading " + filename + ' to public/images/uploadmap');
+        fstream = fs.createWriteStream(__dirname + '/../public/images/uploadmap');
+        file.pipe(fstream);
+        fstream.on('close', function() {
+            res.send('Uploaded');
+            console.log("HRUI: Uploaded " + filename + ' succesfully');
+            io.sendData('mapUploaded');
+        });
+    });
+});
+//Setup audio upload http response
+app.app.use(busboy());
+app.app.post('/audioupload', function(req, res) {
     var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function(fieldname, file, filename) {
@@ -336,6 +354,18 @@ function setMapMode(newMapMode) {
 
 };
 
+function updateVoiceCommand(newValue) {
+    hruiDataDB.update({
+        item: "voiceCommand"
+    }, {
+        $set: {
+            value: newValue,
+        }
+    }, {
+        upsert: true
+    });
+}
+
 //export methods to be accessed from other modules
 module.exports = {
     updateJoystick: updateJoystick,
@@ -350,4 +380,5 @@ module.exports = {
     setClientsAreConnected: setClientsAreConnected,
     setMapMode: setMapMode,
     updateMapDrawing: updateMapDrawing,
+    updateVoiceCommand: updateVoiceCommand,
 };

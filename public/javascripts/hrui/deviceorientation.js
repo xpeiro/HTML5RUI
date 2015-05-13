@@ -13,7 +13,6 @@ app.controller('DeviceOrientationController', ['$scope', '$window', 'SocketSrv',
     function(scope, $window, SocketSrv) {
         scope.devOrientationUnsupported = false;
         scope.devMotionUnsupported = false;
-        scope.devValuesNull = false;
         scope.deviceData = {
             devOrientation: {
                 absolute: null,
@@ -37,9 +36,6 @@ app.controller('DeviceOrientationController', ['$scope', '$window', 'SocketSrv',
         //check for browser support, add listener if supported.
         if ($window.DeviceOrientationEvent) {
             angular.element($window).on('deviceorientation', function(eventData) {
-                if (eventData.absolute == null) {
-                    scope.devValuesNull = true;
-                };
                 //if reference is earth, then true.
                 scope.deviceData.devOrientation.absolute = eventData.absolute;
                 // gamma is the left-to-right tilt in degrees, where right is positive

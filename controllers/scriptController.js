@@ -6,29 +6,31 @@
 */
 
 // Backend Script Controller: Spawns and kills child processes on client request.
-const app = require('../app');
-const io = require('./websockets/io');
-const spawn = require("child_process").spawn;
-//get commands
-const NODE = app.PARAMS.NODE;
-const PYTHON = app.PARAMS.PYTHON;
-const AVCONV = app.PARAMS.AVCONV;
-//get dev directory
-const DEV = app.PARAMS.DEV;
-//get initial video device
-const INITVIDDEV = DEV + app.PARAMS.VIDEODEVICE;
+const
+    app = require('../app'),
+    io = require('./websockets/io'),
+    spawn = require("child_process").spawn,
+    //get commands
+    NODE = app.PARAMS.NODE,
+    PYTHON = app.PARAMS.PYTHON,
+    AVCONV = app.PARAMS.AVCONV,
+    //get dev directory
+    DEV = app.PARAMS.DEV,
+    //get initial video device
+    INITVIDDEV = DEV + app.PARAMS.VIDEODEVICE;
 //init objects holding the running scripts and streams.
-var scripts = {};
-var streams = {
-    audioStream: {
-        ARGS: app.PARAMS.AUDIOARGS,
-        proc: null,
-    },
-    videoStream: {
-        ARGS: app.PARAMS.VIDEOARGS,
-        proc: null,
-    },
-};
+var
+    scripts = {},
+    streams = {
+        audioStream: {
+            ARGS: app.PARAMS.AUDIOARGS,
+            proc: null,
+        },
+        videoStream: {
+            ARGS: app.PARAMS.VIDEOARGS,
+            proc: null,
+        },
+    };
 // Run AVCONV when live video/audio is toggled on. Log when the processed is killed.
 function runStream(streamType) {
     //stream from audio/video device.
@@ -62,10 +64,14 @@ function runScript(scriptName) {
     //check for type of script (check for stuff like 'trickyscript.js.py')
     if (scriptName.lastIndexOf(".py") > scriptName.lastIndexOf(".js")) {
         //spawn python script
-        scripts[scriptName] = spawn(PYTHON, ["userscripts/" + scriptName]);
+        scripts[scriptName] = spawn(PYTHON, [scriptName], {
+            cwd: "userscripts/"
+        });
     } else if (scriptName.lastIndexOf(".js") > scriptName.lastIndexOf(".py")) {
         //spawn node script
-        scripts[scriptName] = spawn(NODE, ["userscripts/" + scriptName]);
+        scripts[scriptName] = spawn(NODE, [scriptName], {
+            cwd: "userscripts/"
+        });
     };
     //on script exit, notify front-end
     scripts[scriptName].on('close', function(code) {

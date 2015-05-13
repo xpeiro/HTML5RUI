@@ -18,7 +18,7 @@ app.service('SocketSrv', function() {
     this.AUDIOWSPORT = 4000;
     this.VIDEODEVICE = 0;
     this.videowsocket;
-    this.wsPlayer;
+    this.wsAudioPlayer;
 
 });
 //Service with typical drawing methods shared between controllers
@@ -113,36 +113,5 @@ app.service('GeometrySrv', function() {
                 y: y
             };
         },
-    }
-});
-
-//directive to override default touch controls on canvas and link touch events to handler functions
-app.directive('touch', function() {
-    return {
-        link: function(scope, element, attrs) {
-            element.on('touchmove', function(event) {
-                scope.touchMove(event);
-                scope.$apply();
-            });
-            element.on('touchdown mousedown', function(event) {
-                scope.mouseDown(event);
-                scope.$apply();
-            });
-            element.on('mousemove', function(event) {
-                scope.mouseMove(event);
-                scope.$apply();
-            });
-            element.on('mouseup touchend', function(event) {
-                scope.mouseUp(event);
-                scope.$apply();
-            });
-        }
-    }
-});
-
-//string filter. Returns 'On' if given boolean is true, 'Off' otherwise.
-app.filter('OnOff', function() {
-    return function(bool) {
-        return bool ? 'On' : 'Off';
     }
 });

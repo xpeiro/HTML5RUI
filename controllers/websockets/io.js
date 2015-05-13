@@ -13,9 +13,11 @@ function sendData(event, data) {
 };
 module.exports.sendData = sendData; // Export for transparent data sending in other modules
 // get required modules
-const app = require('../../app');
-const updaters = require('../updaters');
-const scriptCtrl = require('../scriptController');
+const
+    app = require('../../app'),
+    updaters = require('../updaters'),
+    scriptCtrl = require('../scriptController');
+
 // Setup Event hooks to Handlers
 module.exports = function(io) {
     io.clients = 0;
@@ -95,6 +97,10 @@ module.exports = function(io) {
         //update Client Device Motion/Orientation
         socket.on('updateDeviceOrientation', function(data) {
             updaters.updateDeviceOrientation(data);
+        });
+        //receive Voice Command
+        socket.on('voiceCommand', function(data) {
+            updaters.updateVoiceCommand(data);
         });
     });
 };

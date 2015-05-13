@@ -22,8 +22,8 @@ app.controller('LiveAudioController', ['$scope', 'SocketSrv',
     	//get url
         var wsurl = 'ws://' + location.hostname + ':' + SocketSrv.AUDIOWSPORT;
         // connect player to websocket
-        SocketSrv.wsPlayer = AV.Player.fromWebSocket(wsurl);
+        SocketSrv.wsAudioPlayer = AV.Player.fromWebSocket(wsurl);
         // start playing
-        SocketSrv.wsPlayer.play();        
+        SocketSrv.wsAudioPlayer.play();        
     }
 ]);
