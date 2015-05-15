@@ -190,9 +190,9 @@ app.controller('DataController', ['$scope', '$element', '$upload', 'SocketSrv', 
 
         function periodicSendDrawing() {
             SocketSrv.socket.emit('updateMapDrawing', map.toDataURL());
-            if (scope.mapMode == 'draw') {
+            if (scope.mapMode == 'draw' && !!element.scope()) {
                 setTimeout(function() {
-                    periodicSendDrawing();
+                    periodicSendDrawing();                    
                 }, 500);
             };
         };

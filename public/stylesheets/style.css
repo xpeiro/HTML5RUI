@@ -269,11 +269,12 @@ table {
 }
 
 #customDataTable,
+#devOrientTable,
 #stdout,
 #stderr,
 #transcript {
     width: 98%;
-    max-width: 98%;
+    max-width: 98%;    
 }
 
 #leftColumn > div {
@@ -325,6 +326,7 @@ table {
     #dataTable,
     #devOrientTable {
         width: 98%;
+        min-width: 97%;
     }
     #body {
         width: 100%;

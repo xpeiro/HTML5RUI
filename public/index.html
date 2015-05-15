@@ -203,34 +203,61 @@
                         <th rowspan="3" colspan="2">Device Orientation</th>
                         <td rowspan="3" data-ng-show="devOrientationUnsupported"> Not Supported</td>
                         <td data-ng-show="!devOrientationUnsupported">&alpha;: {{deviceData.devOrientation.alpha.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devOrientation.alpha">
+                        </td>
                     </tr>
                     <tr data-ng-show="!devOrientationUnsupported">
                         <td>&beta;: {{deviceData.devOrientation.beta.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devOrientation.beta">
+                        </td>
                     </tr>
                     <tr data-ng-show="!devOrientationUnsupported">
                         <td>&gamma;: {{deviceData.devOrientation.gamma.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devOrientation.gamma">
+                        </td>
                     </tr>
                     <tr>
                         <th rowspan="6">Device Motion</th>
                         <td rowspan="6" data-ng-show="devMotionUnsupported"> Not Supported</td>
                         <td rowspan="3" data-ng-show="!devMotionUnsupported">Rotation Rate</td>
-                        <td data-ng-show="devMotion">&alpha;&#775;: {{deviceData.devMotion.rotationRate.alpha.toFixed(2)}}</td>
+                        <td data-ng-show="!devMotionUnsupported">&alpha;&#775;: {{deviceData.devMotion.rotationRate.alpha.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devMotion.rotationRate.alpha">
+                        </td>
                     </tr>
                     <tr data-ng-show="!devMotionUnsupported">
                         <td>&beta;&#775;: {{deviceData.devMotion.rotationRate.beta.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devMotion.rotationRate.beta">
+                        </td>
                     </tr>
                     <tr data-ng-show="!devMotionUnsupported">
                         <td>&gamma;&#775;: {{deviceData.devMotion.rotationRate.gamma.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devMotion.rotationRate.gamma">
+                        </td>
                     </tr>
                     <tr>
                         <td rowspan="3" data-ng-show="!devMotionUnsupported">Acceleration</td>
                         <td data-ng-show="!devMotionUnsupported">X: {{deviceData.devMotion.acceleration.x.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devMotion.acceleration.x">
+                        </td>
                     </tr>
                     <tr>
                         <td data-ng-show="!devMotionUnsupported">Y: {{deviceData.devMotion.acceleration.y.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devMotion.acceleration.y">
+                        </td>
                     </tr>
                     <tr>
                         <td data-ng-show="!devMotionUnsupported">Z: {{deviceData.devMotion.acceleration.z.toFixed(2)}}</td>
+                        <td>
+                            <input type="checkbox" data-ng-model="selectedValues.devMotion.acceleration.z">
+                        </td>
                     </tr>
                 </table>
             </div>

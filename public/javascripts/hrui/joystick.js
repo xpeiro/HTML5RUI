@@ -30,7 +30,7 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
         //draw canvas in initial state
         drawAll();
         //start rendering animation
-        renderLoop();
+        requestAnimationFrame(renderLoop);
 
         scope.$on('getProfile', function() {
             ProfileSrv.profile.lockJoystick = scope.lockJoystick;
@@ -82,13 +82,16 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
                 if (!GeometrySrv.isInsideCircle(scope.point.x, scope.point.y, maxRadius)) {
                     scope.point = GeometrySrv.forceIntoCircle(scope.point.x, scope.point.y, maxRadius);
                 };
-
+                //send coordinates back to server (websocket)
+                updateJoystick(scope.point, scope.lockMode);
             };
         };
-        
+
         function renderLoop() {
-            //call renderLoop every 15ms (60fps)
-            requestAnimationFrame(renderLoop);
+            //call renderLoop every 15ms (60fps), if module active (scope exists)
+            if (!!element.scope()) {
+                requestAnimationFrame(renderLoop);
+            };
             //erases previous joystick position
             resetJoystick();
             // erases previous vector
@@ -103,8 +106,6 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
             DrawSrv.drawCircle(joystickctx, scope.point.x, scope.point.y, radius, maxRadiusBGColor);
             //change back to relative coordinates
             scope.point = GeometrySrv.centerCoord(scope.point, joystick);
-            //send coordinates back to server (websocket)
-            updateJoystick(scope.point, scope.lockMode);
         };
 
         scope.resetAll = function() {
