@@ -145,14 +145,19 @@
                                 <label for="lock2ways">2-Way</label>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input id="lockJoystick" name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()">
+                                <label for="lockJoystick">Lock Joystick in Position</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input id="displayVector" name="Display Vector" type="checkbox" data-ng-model="showVector">
+                                <label for="displayVector">Display Vector</label>
+                            </td>
+                        </tr>
                     </table>
-                    <br>
-                    <input id="lockJoystick" name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()">
-                    <label for="lockJoystick">Lock Joystick in Position</label>
-                    <br>
-                    <input id="displayVector" name="Display Vector" type="checkbox" data-ng-model="showVector">
-                    <label for="displayVector">Display Vector</label>
-                    <br>
                 </form>
             </div>
             <div id="customInputFrame" class="frame" data-ng-controller="CustomInputController" data-ng-if="customInputOn">
@@ -329,7 +334,6 @@
                         <span><b>Experimental</b> alternative:</span>
                         <br>
                         <button id="manualVoiceCommand" class="center" data-ng-click="manualVoiceCommand()" data-ng-disabled="!manualVoiceCommandEnabled">Manual Input 5s Voice Command</button>
-
                         <br>
                         <span class="smalltext">File will be saved as <a href="command.wav">command.wav</a> </span>
                     </div>
@@ -387,14 +391,19 @@
                                 <label for="lock2ways2">2-Way</label>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input id="lockJoystick2" name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()">
+                                <label for="lockJoystick2">Lock Joystick in Position</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input id="displayVector2" name="Display Vector" type="checkbox" data-ng-model="showVector">
+                                <label for="displayVector2">Display Vector</label>
+                            </td>
+                        </tr>
                     </table>
-                    <br>
-                    <input id="lockJoystick2" name="Lock Joystick" type="checkbox" data-ng-model="lockJoystick" data-ng-change="resetAll()">
-                    <label for="lockJoystick2">Lock Joystick in Position</label>
-                    <br>
-                    <input id="displayVector2" name="Display Vector" type="checkbox" data-ng-model="showVector">
-                    <label for="displayVector2">Display Vector</label>
-                    <br>
                 </form>
             </div>
             <div id="dataFrame" class="frame" data-ng-controller="DataController" data-ng-if="dataMonitorOn">
