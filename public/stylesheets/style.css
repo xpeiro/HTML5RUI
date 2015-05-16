@@ -22,6 +22,12 @@ button {
     color: inherit;
 }
 
+button:disabled {
+    color:  grey;
+    box-shadow: inset 1px 1px 1px #3D3242;
+
+}
+
 select,
 input[type="text"],
 input[type="number"] {
@@ -203,6 +209,7 @@ table {
     text-align: left;
 }
 
+
 #toolbar {
     clear: both;
     width: 98%;
@@ -234,7 +241,7 @@ table {
     text-align: center;
     display: inline-block;
     width: 33%;
-    min-width: 15%;    
+    min-width: 15%;
 }
 
 #audioFrame,
@@ -272,9 +279,10 @@ table {
 #devOrientTable,
 #stdout,
 #stderr,
-#transcript {
+#transcript,
+#voiceCommandTable {
     width: 98%;
-    max-width: 98%;    
+    max-width: 98%;
 }
 
 #leftColumn > div {

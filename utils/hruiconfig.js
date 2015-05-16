@@ -127,5 +127,6 @@ db.data.insert({
 db.data.insert({
     "_id": 8,
     "item": "voiceCommand",
+    "command": "",
     "value": "",
 });

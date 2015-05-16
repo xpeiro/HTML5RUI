@@ -24,6 +24,8 @@
     <script data-ng-if="devOrientOn" type="text/javascript" src="javascripts/hrui/deviceorientation.js"></script>
     <!-- annyang by Tal Ater  - twitter.com/TalAter, github.com/TalAter/annyang -->
     <script data-ng-if="voiceCommOn" type="text/javascript" src="javascripts/annyang/annyang.js"></script>
+    <!-- RecordRTC by Muaz Khan  - <@muazkh>. @WebRTCWeb -->
+    <script data-ng-if="voiceCommOn" type="text/javascript" src="javascripts/recordRTC/RecordRTC.js"></script>
     <script data-ng-if="voiceCommOn" type="text/javascript" src="javascripts/hrui/voicecommands.js"></script>
     <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/hrui/datamonitor.js"></script>
     <script data-ng-if="dataMonitorOn" type="text/javascript" src="javascripts/angular/angular-file-upload.min.js">
@@ -262,48 +264,76 @@
                 </table>
             </div>
             <div id="voiceCommandsFrame" class="frame" data-ng-controller="VoiceCommandsController" data-ng-if="voiceCommOn">
-                <label for="languageList">Language: </label>
-                <select data-ng-model="selectedLanguage" data-ng-change="languageSelected()">
-                    <option value="en-US">English - USA</option>
-                    <option value="es-ES">Spanish - ESP</option>
-                    <option value="it-IT">Italian - ITA</option>
-                    <option value="fr-FR">French - FRA</option>
-                    <option value="zh-CN">Mandarin - CHN</option>
-                </select>
-                <br>
-                <table class="table">
-                    <tr>
-                        <th>Command</th>
-                        <th>Value</th>
-                        <th>Last Heard</th>
-                    </tr>
-                    <tr data-ng-repeat="command in commands">
-                        <td>{{command.command}}</td>
-                        <td>{{command.value}}</td>
-                        <td class="tdimg"><img src="images/running.svg" width="12" height="12" alt="If last heard command, green." data-ng-show="command.lastHeard"></td>
-                    </tr>
-                </table>
-                <br>
-                <textarea id="transcript" class="smalltext" data-ng-model="currentResult" readonly></textarea>
-                <br>
-                <button id="addVoiceCommand" data-ng-click="addCommandClicked = true; newCommand.command = ''; newCommand.value = '';" data-ng-show="!addCommandClicked">Add Voice Command</button>
-                <form data-ng-show="addCommandClicked" data-ng-submit="addNewCommand()">
-                    <label for="newCommand">Command:</label>
-                    <input id="newCommand" type="text" data-ng-model="newCommand.command" required>
-                    <br>
-                    <label for="newCommandValue">Value:</label>
-                    <input id="newCommandValue" type="text" data-ng-model="newCommand.value" required>
-                    <br>
-                    <input type="submit" value="Add">
-                    <span data-ng-show="commandExists">Commands must be unique.</span>
-                </form>
-                <h5>Note: Continous voice commands only available on Chromium browsers.
-                <br>
-                Alternatively, record and upload a 5 second command:
-                <br>
-                <button id="voiceCommSend">Input Voice Command</button>
-                </h5>
-                <br>
+                <span class="smalltext" data-ng-show="!getUserMediaSupported">getUserMedia Unsupported. Voice Commands Unavailable.</span>
+                <span class="smalltext" data-ng-show="!annyangSupported">webkit Speech Recognition Unsupported. <br></span>
+                <span class="smalltext">Voice Commands only available on Chromium browsers.<br>Internet Connection Required. Allow page to use mic when prompted.</span>
+                <hr data-ng-show="annyangSupported">
+                <div data-ng-show="getUserMediaSupported">
+                    <div data-ng-show="annyangSupported">
+                        <table id="voiceCommandTable" class="table">
+                            <tr>
+                                <th>Command</th>
+                                <th>Value</th>
+                                <th>Last Heard</th>
+                            </tr>
+                            <tr data-ng-repeat="command in commands">
+                                <td>{{command.command}}</td>
+                                <td>{{command.value}}</td>
+                                <td class="tdimg"><img src="images/running.svg" width="12" height="12" alt="If last heard command, green." data-ng-show="command.lastHeard"></td>
+                            </tr>
+                        </table>
+                        <label for="languageList">Language: </label>
+                        <select data-ng-model="selectedLanguage" data-ng-change="languageSelected()">
+                            <option value="en-US">English - USA</option>
+                            <option value="es-ES">Spanish - ESP</option>
+                            <option value="it-IT">Italian - ITA</option>
+                            <option value="fr-FR">French - FRA</option>
+                            <option value="de-DE">German - DEU</option>
+                            <option value="zh-CN">Mandarin - CHN</option>
+                            <option value="ja">Japanese - JPN</option>
+                            <option value="ar-EG">Arabic - EGY</option>
+                            <option value="hi">Hindi - IND</option>
+                        </select>
+                        <br>
+                        <input id="onlyMatchingCommandsCheckbox" type="checkbox" data-ng-model="onlyMatchingCommands">
+                        <label for="onlyMatchingCommandsCheckbox">Send Matching Commands Only</label>
+                        <textarea id="transcript" class="smalltext" data-ng-model="currentResult" readonly></textarea>
+                        <button id="addVoiceCommand" data-ng-click="addCommandClicked = true; newCommand.command = ''; newCommand.value = '';" data-ng-show="!addCommandClicked">Add Voice Command</button>
+                        <br>
+                        <form data-ng-show="addCommandClicked" data-ng-submit="addNewCommand()">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label for="newCommand">Command:</label>
+                                    </td>
+                                    <td>
+                                        <input id="newCommand" type="text" data-ng-model="newCommand.command" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="newCommandValue">Value:</label>
+                                    </td>
+                                    <td>
+                                        <input id="newCommandValue" type="text" data-ng-model="newCommand.value" required>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br>
+                            <input type="submit" value="Add">
+                            <span data-ng-show="commandExists">Commands must be unique.</span>
+                        </form>
+                    </div>
+                    <div data-ng-show="!annyangSupported">
+                        <hr>
+                        <span><b>Experimental</b> alternative:</span>
+                        <br>
+                        <button id="manualVoiceCommand" class="center" data-ng-click="manualVoiceCommand()" data-ng-disabled="!manualVoiceCommandEnabled">Manual Input 5s Voice Command</button>
+
+                        <br>
+                        <span class="smalltext">File will be saved as <a href="command.wav">command.wav</a> </span>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="centerColumn">
@@ -379,7 +409,7 @@
                     <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="upload" data-ng-change="setMapMode(mapMode)">Upload
                     <input name="Map Mode" type="radio" data-ng-model="mapMode" data-value="draw" data-ng-change="setMapMode(mapMode)">Draw
                     <br>
-                    <button id="uploadMap" data-ng-file-select data-ng-file-change="upload($files)" data-ng-accept="'*.png,*jpg'" data-ng-show="mapMode=='upload'">Upload Map (.PNG)...</button>
+                    <button id="uploadMap" data-ng-file-select data-ng-file-change="upload($files)" data-ng-accept="'*.png,*jpg'" data-ng-show="mapMode=='upload'">Upload Map...</button>
                     <button id="clearMap" data-ng-show="mapOn && mapMode != 'server'" data-ng-click="clearMap()">Clear Map</button>
                     <span data-ng-show="mapMode=='server'">
                 Positioning:
@@ -478,7 +508,7 @@
             <img src="images/HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
             <a href="http://github.com/xpeiro/HTML5RUI"><img src="images/githublogo.svg" width="24" height="24" alt="GitHub Repo" title="GitHub Logo"></a>
             An ASLab Project Developed By Daniel Peiró (using 
-            <a href="https://github.com/audiocogs/aurora.js">Aurora</a>, <a href="https://github.com/fsbdev/aurora-websocket">Aurora-WebSocket</a>, <a href="https://github.com/TalAter/annyang">Annyang</a> and 
+            <a href="https://github.com/audiocogs/aurora.js">Aurora</a>, <a href="https://github.com/fsbdev/aurora-websocket">Aurora-WebSocket</a>, <a href="https://github.com/TalAter/annyang">Annyang</a>, <a href="https://github.com/muaz-khan/RecordRTC">RecordRTC</a> and 
             <a href="https://github.com/phoboslab/jsmpeg">JSmpeg</a> under MIT License)
             </h6>
         </footer>
@@ -487,12 +517,13 @@
 
 </html>
 <!--
-jsmpg.js , aurora.js, aurora-websockets.js, mp3.js, annyang.js all used under MIT License:
+jsmpg.js , aurora.js, aurora-websockets.js, mp3.js, annyang.js, RecordRTC.js all used under MIT License:
 
-jsmpeg.js Copyright (c) 2014 Dominic Szablewski http://www.phoboslab.org/
-aurora.js, mp3.js Copyright (c) 2014 http://audiocogs.org/
-aurora-websockets.js Copyright (c) 2014 fabienbrooke@gmail.com
-annyang.js Copyright (c) 2014 Tal Ater
+jsmpeg.js Copyright © 2014 Dominic Szablewski http://www.phoboslab.org/
+aurora.js, mp3.js Copyright © 2014 http://audiocogs.org/
+aurora-websockets.js Copyright © 2014 fabienbrooke@gmail.com
+annyang.js Copyright © 2014 Tal Ater
+RecordRTC.js Copyright © 2014 Muaz Khan<@muazkh>. @WebRTCWeb
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

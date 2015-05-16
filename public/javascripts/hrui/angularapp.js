@@ -91,7 +91,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             scope.scriptExecOn = scope.selectedProfile.scriptExecOn;
             scope.devOrientOn = scope.selectedProfile.devOrientOn;
             scope.voiceCommOn = scope.selectedProfile.voiceCommOn;
-            //notify backend of new selected controls (only required for video/audio and location)
+            //notify backend of new selected controls (only required for video/audio/location/map)
             if (scope.liveVideoOn != scope.selectedProfile.liveVideoOn) {
                 scope.liveVideoOn = scope.selectedProfile.liveVideoOn;
                 scope.sendControl('liveVideoCheckbox', scope.liveVideoOn);
@@ -101,6 +101,11 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
                 scope.sendControl('liveAudioCheckbox', scope.liveAudioOn);
             };
             scope.sendControl('geolocationCheckbox', scope.geolocationOn);
+            scope.sendControl('dataMonitorCheckbox', scope.dataMonitorOn);
+            //notify backend of new map mode if data monitor on
+            if (scope.dataMonitorOn) {
+                SocketSrv.socket.emit('setMapMode', ProfileSrv.profile.mapMode);
+            };
             //notify all controllers to set selected profile from service (delay to allow script loading)
             requestAnimationFrame(function() {
                 rootScope.$broadcast('setProfile');
@@ -121,43 +126,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
                 changedControl: changedControl,
                 newValue: newValue,
             });
-            //if live video is turned off, close the websocket
-            if (changedControl == "liveVideoCheckbox" && newValue == false) {
-                SocketSrv.videowsocket.close();
-            } else if (changedControl == "liveAudioCheckbox" && newValue == false) {
-                SocketSrv.wsAudioPlayer.stop();
-                SocketSrv.wsAudioPlayer.asset.source.socket.close();
-            };
         };
-        /* 
-           requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-           Used under MIT license
-        */
-        (function() {
-            var lastTime = 0;
-            var vendors = ['ms', 'moz', 'webkit', 'o'];
-            for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-                window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-                window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-            }
-
-            if (!window.requestAnimationFrame)
-                window.requestAnimationFrame = function(callback, element) {
-                    var currTime = new Date().getTime();
-                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-                    var id = window.setTimeout(function() {
-                            callback(currTime + timeToCall);
-                        },
-                        timeToCall);
-                    lastTime = currTime + timeToCall;
-                    return id;
-                };
-
-            if (!window.cancelAnimationFrame)
-                window.cancelAnimationFrame = function(id) {
-                    clearTimeout(id);
-                };
-        }());
     },
 ]);
 
@@ -191,3 +160,33 @@ app.filter('OnOff', function() {
         return bool ? 'On' : 'Off';
     }
 });
+
+/* 
+   requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+   Used under MIT license
+*/
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() {
+                    callback(currTime + timeToCall);
+                },
+                timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());

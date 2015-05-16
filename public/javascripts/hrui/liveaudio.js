@@ -19,11 +19,18 @@
 /***EXPERIMENTAL FEATURE***/
 app.controller('LiveAudioController', ['$scope', 'SocketSrv',
     function(scope, SocketSrv) {
-    	//get url
+        //get url
         var wsurl = 'ws://' + location.hostname + ':' + SocketSrv.AUDIOWSPORT;
         // connect player to websocket
         SocketSrv.wsAudioPlayer = AV.Player.fromWebSocket(wsurl);
         // start playing
-        SocketSrv.wsAudioPlayer.play();        
+        SocketSrv.wsAudioPlayer.play();
+        //stop audio player and close socket when module deactivated
+        scope.$on('$destroy', function() {
+            SocketSrv.wsAudioPlayer.stop();
+            SocketSrv.wsAudioPlayer.asset.source.socket.close();
+        });
+        
+
     }
 ]);

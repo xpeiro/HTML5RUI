@@ -66,18 +66,14 @@ app.controller('DataController', ['$scope', '$element', '$upload', 'SocketSrv', 
             if (files && files.length) {
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
+                    console.log(file)
                     $upload.upload({
                         url: 'mapupload',
                         fields: {},
                         file: file
-                    }).progress(function(evt) {
-                        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-                    }).success(function(data, status, headers, config) {
-                        console.log('file ' + config.file.name + ' uploaded.');
                     });
                 }
-            }
+            };
         };
         //share profile data with ProfileSrv
         scope.$on('getProfile', function() {
@@ -177,7 +173,7 @@ app.controller('DataController', ['$scope', '$element', '$upload', 'SocketSrv', 
             } else {
                 robotX = map.width / 2;
                 robotY = map.height / 2;
-                robotAlpha = Math.PI/2;
+                robotAlpha = Math.PI / 2;
             };
             DrawSrv.drawCircle(mapctx, robotX, robotY, 5, "blue");
             mapctx.beginPath();
@@ -192,7 +188,7 @@ app.controller('DataController', ['$scope', '$element', '$upload', 'SocketSrv', 
             SocketSrv.socket.emit('updateMapDrawing', map.toDataURL());
             if (scope.mapMode == 'draw' && !!element.scope()) {
                 setTimeout(function() {
-                    periodicSendDrawing();                    
+                    periodicSendDrawing();
                 }, 500);
             };
         };

@@ -9,7 +9,7 @@
 const
     app = require('../app'),
     io = require('./websockets/io'),
-    spawn = require("child_process").spawn,
+    spawn = require("child_process").spawn,    
     //get commands
     NODE = app.PARAMS.NODE,
     PYTHON = app.PARAMS.PYTHON,
@@ -129,5 +129,5 @@ module.exports = {
     runScript: runScript,
     killScript: killScript,
     killAllScripts: killAllScripts,
-    changeMediaDevice: changeMediaDevice,
+    changeMediaDevice: changeMediaDevice,    
 };

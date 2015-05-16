@@ -102,5 +102,9 @@ module.exports = function(io) {
         socket.on('voiceCommand', function(data) {
             updaters.updateVoiceCommand(data);
         });
+        //receive manual Voice Command
+        socket.on('manualVoiceCommand', function(data) {
+            updaters.saveAudioFile(data);
+        });
     });
 };

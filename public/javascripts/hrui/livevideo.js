@@ -31,5 +31,9 @@ app.controller('LiveVideoController', ['$scope', '$element', 'SocketSrv',
                 deviceNum: videoDevice,
             });
         };
+        //if live video is turned off, close the websocket
+        scope.$on('$destroy', function() {
+            SocketSrv.videowsocket.close();
+        });
     }
 ]);

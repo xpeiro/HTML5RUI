@@ -6,12 +6,16 @@
 */
 
 /*
-	Annyang Copyright (c) 2014 Tal Ater, used under MIT License.
+    Annyang Copyright (c) 2014 Tal Ater, used under MIT License.
 */
 
-app.controller('VoiceCommandsController', ['$scope', 'SocketSrv', 'ProfileSrv',
-    function(scope, SocketSrv, ProfileSrv) {
-        scope.selectedLanguage = 'en-US'; 
+app.controller('VoiceCommandsController', ['$scope', '$upload', 'SocketSrv', 'ProfileSrv',
+    function(scope, $upload, SocketSrv, ProfileSrv) {
+        scope.getUserMediaSupported = true;
+        scope.annyangSupported = true;
+        scope.manualVoiceCommandEnabled = true;
+        scope.onlyMatchingCommands = true;
+        scope.selectedLanguage = 'en-US';
         scope.currentResult = 'Transcript:';
         scope.newCommand = {
             command: '',
@@ -19,8 +23,8 @@ app.controller('VoiceCommandsController', ['$scope', 'SocketSrv', 'ProfileSrv',
         };
         scope.commands = {
             command1: {
-                command: 'testing',
-                value: 'testing',
+                command: 'Testing',
+                value: 'Testing',
             },
         };
         scope.commandExists = false;
@@ -42,28 +46,63 @@ app.controller('VoiceCommandsController', ['$scope', 'SocketSrv', 'ProfileSrv',
                 scope.addCommandClicked = false;
             };
         };
-        scope.languageSelected = function () {
-        	annyang.setLanguage(scope.selectedLanguage);
-        	console.log(scope.selectedLanguage);        	
-        }
+        scope.languageSelected = function() {
+            annyang.abort();
+            annyang.setLanguage(scope.selectedLanguage);
+            annyang.start();
+        };
+
+        scope.manualVoiceCommand = function() {
+            scope.manualVoiceCommandEnabled = false;
+            navigator.getUserMedia({
+                audio: true
+            }, function(stream) {
+                recordAudio = RecordRTC(stream, {
+                    bufferSize: 16384
+                });
+
+                recordAudio.startRecording();
+                setTimeout(function() {
+                    recordAudio.stopRecording(function() {
+                        recordAudio.getDataURL(function(audioDataURL) {
+                            SocketSrv.socket.emit('manualVoiceCommand', audioDataURL);
+                        });
+                        scope.manualVoiceCommandEnabled = true;
+                        scope.$apply();
+                    });
+                }, 5000);
+            }, function(error) {
+                console.log(error);
+            });
+
+        };
 
         //share profile data with ProfileSrv
         scope.$on('getProfile', function() {
             ProfileSrv.profile.commands = scope.commands;
+            ProfileSrv.profile.onlyMatchingCommands = scope.onlyMatchingCommands;
         });
         //load profile from ProfileSrv
         scope.$on('setProfile', function() {
             scope.commands = ProfileSrv.profile.commands;
+            scope.onlyMatchingCommands = ProfileSrv.profile.onlyMatchingCommands;
             for (var command in scope.commands) {
                 scope.commands[command].lastHeard = false;
             };
         });
+        //stop annyang on module exit
+        scope.$on('$destroy', function() {
+            if (annyang) {
+                annyang.abort();
+            };
+        });
 
-        //catches any command, compares to registered commands, on match, sends value to back-end.
+        //gets command from annyang, compares to registered commands, on match, sends value to back-end.
         function newVoiceCommand(command) {
+            var value = '';
             for (var registeredComm in scope.commands) {
-                if (command == scope.commands[registeredComm].command) {
-                    SocketSrv.socket.emit('voiceCommand', scope.commands[registeredComm].value);
+                if (command.toLowerCase() == scope.commands[registeredComm].command.toLowerCase()) {
+                    value = scope.commands[registeredComm].value;
                     //mark as last heard command
                     scope.commands[registeredComm].lastHeard = true;
                 } else {
@@ -71,20 +110,33 @@ app.controller('VoiceCommandsController', ['$scope', 'SocketSrv', 'ProfileSrv',
                     scope.commands[registeredComm].lastHeard = false;
                 };
             };
-            scope.currentResult = scope.currentResult.concat('; ' + command);
-
+            //send to backend (if user selected to send all commands or if there was a match)
+            if (!scope.onlyMatchingCommands || value.length > 0) {
+                SocketSrv.socket.emit('voiceCommand', {
+                    command: command,
+                    value: value,
+                });
+            };
+            //append the transcript to textarea regardless of match.
+            scope.currentResult = scope.currentResult.concat(' ' + command + ';');
             scope.$apply();
+        };
+
+        if (!!!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia)) {
+            scope.getUserMediaSupported = false;
         };
 
         if (annyang) {
             //create a command with a 'splat', that catches any words and forwards result to newVoiceCommand
             var command = {
-                    '*command': newVoiceCommand,
-                }
-                //add command
+                '*command': newVoiceCommand,
+            };
+            //add command
             annyang.addCommands(command);
             // Start listening.            
             annyang.start();
-        };
+        } else {
+            scope.annyangSupported = false;
+        }
     },
 ]);

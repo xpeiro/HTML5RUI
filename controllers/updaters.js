@@ -18,6 +18,7 @@ const
     busboy = require('connect-busboy'),
     io = require('./websockets/io'),
     scriptCtrl = require('./scriptController'),
+    AVCONV = app.PARAMS.AVCONV,
     PNG = require('pngjs').PNG,
     hruiDataDB = app.PARAMS.HRUIDATADB,
     INTERVALINCREMENT = 100,
@@ -48,22 +49,6 @@ app.app.get('/images/map.png', function(req, res) {
 //Setup map upload http response
 app.app.use(busboy());
 app.app.post('/mapupload', function(req, res) {
-    var fstream;
-    req.pipe(req.busboy);
-    req.busboy.on('file', function(fieldname, file, filename) {
-        console.log("HRUI: Uploading " + filename + ' to public/images/uploadmap');
-        fstream = fs.createWriteStream(__dirname + '/../public/images/uploadmap');
-        file.pipe(fstream);
-        fstream.on('close', function() {
-            res.send('Uploaded');
-            console.log("HRUI: Uploaded " + filename + ' succesfully');
-            io.sendData('mapUploaded');
-        });
-    });
-});
-//Setup audio upload http response
-app.app.use(busboy());
-app.app.post('/audioupload', function(req, res) {
     var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function(fieldname, file, filename) {
@@ -354,18 +339,25 @@ function setMapMode(newMapMode) {
 
 };
 
-function updateVoiceCommand(newValue) {
+function updateVoiceCommand(command) {
     hruiDataDB.update({
         item: "voiceCommand"
     }, {
         $set: {
-            value: newValue,
+            command: command.command,
+            value: command.value,
         }
     }, {
         upsert: true
     });
-}
+};
 
+function saveAudioFile(audio) {
+    var audioFile = audio.replace(/^data:audio\/wav;base64,/, "");
+    fs.writeFile("public/command.wav", audioFile, 'base64', function(err) {
+        if (err) throw err;
+    });
+};
 //export methods to be accessed from other modules
 module.exports = {
     updateJoystick: updateJoystick,
@@ -381,4 +373,5 @@ module.exports = {
     setMapMode: setMapMode,
     updateMapDrawing: updateMapDrawing,
     updateVoiceCommand: updateVoiceCommand,
+    saveAudioFile: saveAudioFile,
 };
