@@ -106,5 +106,9 @@ module.exports = function(io) {
         socket.on('manualVoiceCommand', function(data) {
             updaters.saveAudioFile(data);
         });
+        //receive manual Voice Command
+        socket.on('gamepadUpdate', function(data) {
+            updaters.updateGamepad(data);
+        });
     });
 };

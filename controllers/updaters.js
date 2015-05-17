@@ -351,11 +351,24 @@ function updateVoiceCommand(command) {
         upsert: true
     });
 };
-
+//save audio as command.wav for use by other programs
 function saveAudioFile(audio) {
     var audioFile = audio.replace(/^data:audio\/wav;base64,/, "");
     fs.writeFile("public/command.wav", audioFile, 'base64', function(err) {
         if (err) throw err;
+    });
+};
+
+function updateGamepad(gamepad) {    
+    hruiDataDB.update({
+        item: "gamepad"
+    }, {
+        $set: {
+            axes: gamepad.axes,
+            buttons: gamepad.buttons,
+        }
+    }, {
+        upsert: true
     });
 };
 //export methods to be accessed from other modules
@@ -374,4 +387,5 @@ module.exports = {
     updateMapDrawing: updateMapDrawing,
     updateVoiceCommand: updateVoiceCommand,
     saveAudioFile: saveAudioFile,
+    updateGamepad: updateGamepad,
 };

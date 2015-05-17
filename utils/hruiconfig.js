@@ -130,3 +130,10 @@ db.data.insert({
     "command": "",
     "value": "",
 });
+//gamepad input. (can be removed, front-end automatically generates entry. Kept for reference)
+db.data.insert({
+    "_id": 9,
+    "item": "gamepad",
+    "axes": "",
+    "buttons": "",
+});

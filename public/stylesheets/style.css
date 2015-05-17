@@ -23,9 +23,8 @@ button {
 }
 
 button:disabled {
-    color:  grey;
+    color: grey;
     box-shadow: inset 1px 1px 1px #3D3242;
-
 }
 
 select,
@@ -209,7 +208,6 @@ table {
     text-align: left;
 }
 
-
 #toolbar {
     clear: both;
     width: 98%;
@@ -240,7 +238,7 @@ table {
     float: none;
     text-align: center;
     display: inline-block;
-    width: 33%;
+    width: 40%;
     min-width: 15%;
 }
 
@@ -280,7 +278,8 @@ table {
 #stdout,
 #stderr,
 #transcript,
-#voiceCommandTable {
+#voiceCommandTable,
+#gamepadTable {
     width: 98%;
     max-width: 98%;
 }

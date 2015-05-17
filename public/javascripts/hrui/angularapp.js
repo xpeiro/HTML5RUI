@@ -24,6 +24,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         scope.customDataOn = false;
         scope.customInputOn = false;
         scope.scriptExecOn = false;
+        scope.gamepadOn = false;
         scope.selectedProfile = {};
         scope.profileName = "";
         scope.profiles = {};
@@ -61,6 +62,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             ProfileSrv.profile.liveAudioOn = scope.liveAudioOn;
             ProfileSrv.profile.devOrientOn = scope.devOrientOn;
             ProfileSrv.profile.voiceCommOn = scope.voiceCommOn;
+            ProfileSrv.profile.gamepadOn = scope.gamepadOn;
         });
         //save current profile and send it to backend
         scope.saveProfile = function() {
@@ -91,6 +93,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             scope.scriptExecOn = scope.selectedProfile.scriptExecOn;
             scope.devOrientOn = scope.selectedProfile.devOrientOn;
             scope.voiceCommOn = scope.selectedProfile.voiceCommOn;
+            scope.gamepadOn = scope.selectedProfile.gamepadOn;
             //notify backend of new selected controls (only required for video/audio/location/map)
             if (scope.liveVideoOn != scope.selectedProfile.liveVideoOn) {
                 scope.liveVideoOn = scope.selectedProfile.liveVideoOn;

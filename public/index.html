@@ -21,6 +21,7 @@
     <script type="text/javascript" src="javascripts/hrui/angularapp.js"></script>
     <script type="text/javascript" src="javascripts/hrui/angularservices.js"></script>
     <script data-ng-if="joystickOn" type="text/javascript" src="javascripts/hrui/joystick.js"></script>
+    <script data-ng-if="gamepadOn" type="text/javascript" src="javascripts/hrui/gamepadinput.js"></script>
     <script data-ng-if="devOrientOn" type="text/javascript" src="javascripts/hrui/deviceorientation.js"></script>
     <!-- annyang by Tal Ater  - twitter.com/TalAter, github.com/TalAter/annyang -->
     <script data-ng-if="voiceCommOn" type="text/javascript" src="javascripts/annyang/annyang.js"></script>
@@ -100,16 +101,22 @@
                     <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
                     <label for="scriptExecCheckbox">Turn Run Scripts {{ !scriptExecOn | OnOff}}</label>
                 </li>
+                <li>
+                    <input id="gamepadCheckbox" type="checkbox" data-ng-model="gamepadOn" data-ng-click="updateControls($event, gamepadOn)">
+                    <label for="gamepadCheckbox">Turn Gamepad {{ !gamepadOn | OnOff}}</label>
+                </li>
+                <li>
+                    <select id="profilesList" class="profileSection center" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
+                        <option value="" disabled selected>Load Profile...</option>
+                    </select>
+                    <button id="saveProfile" class="profileSection" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
+                    <form data-ng-submit="saveProfile()" class="profileSection">
+                        <input id="profileNameText" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
+                        <button id="saveProfileNow" type="submit" data-ng-show="saveProfileClicked">Save</button>
+                    </form>
+                </li>
             </ul>
             <br>
-            <select id="profilesList" class="profileSection right" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
-                <option value="" disabled selected>Load Profile...</option>
-            </select>
-            <button id="saveProfile" class="profileSection" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
-            <form data-ng-submit="saveProfile()" class="profileSection">
-                <input id="profileNameText" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
-                <button id="saveProfileNow" type="submit" data-ng-show="saveProfileClicked">Save</button>
-            </form>
         </div>
         <br>
         <div id="leftColumn">
@@ -359,6 +366,11 @@
             </div>
         </div>
         <div id="rightColumn">
+            <div id="gamepadFrame" class="frame" data-ng-controller="GamepadController" data-ng-if="gamepadOn">
+                <h5>Note: Experimental Feature, support at time of writing limited to Chrome, Firefox, Edge. Chrome uses <a href="https://w3c.github.io/gamepad/#remapping" target="_blank">standard</a> mapping. Firefox does not.</h5>
+                <span data-ng-show="connected">Gamepad Detected</span>
+                <span data-ng-show="!connected">Gamepad Not Detected</span>
+            </div>
             <div id="joystickFrame2" class="frame" data-ng-controller="JoystickController" data-ng-if="dualJoystickOn && joystickOn">
                 <canvas id="joystick2" class="canvas joystick" data-touch>
                     Canvas not supported

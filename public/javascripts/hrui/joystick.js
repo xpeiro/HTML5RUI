@@ -27,6 +27,7 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
         var backgroundColor = BACKGROUND_COLOR;
         var maxRadiusBGColor = FOREGROUND_COLOR;
         var leftClick = 0;
+        var renderReq;
         //draw canvas in initial state
         drawAll();
         //start rendering animation
@@ -41,6 +42,9 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
             scope.lockJoystick = ProfileSrv.profile.lockJoystick;
             scope.lockMode = ProfileSrv.profile.lockMode;
             scope.showVector = ProfileSrv.profile.showVector;
+        });
+        scope.$on('$destroy', function() {
+            cancelAnimationFrame(renderReq);
         });
         //sets left click flag UP and calls mouseMove handler
         scope.mouseDown = function($event) {
@@ -88,10 +92,8 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
         };
 
         function renderLoop() {
-            //call renderLoop every 15ms (60fps), if module active (scope exists)
-            if (!!element.scope()) {
-                requestAnimationFrame(renderLoop);
-            };
+            //call renderLoop every 15ms (60fps)
+            renderReq = requestAnimationFrame(renderLoop);
             //erases previous joystick position
             resetJoystick();
             // erases previous vector
