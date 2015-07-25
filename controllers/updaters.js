@@ -21,7 +21,7 @@ const
     AVCONV = app.PARAMS.AVCONV,
     PNG = require('pngjs').PNG,
     hruiDataDB = app.PARAMS.HRUIDATADB,
-    INTERVALINCREMENT = 100,
+    INTERVALINCREMENT = 50,
     GEOMULTIPLIER = 20,
     MAPDATAMULTIPLIER = 5,
     MAPWIDTH = 300,

@@ -6,7 +6,7 @@
 ##Quick Instructions 
 ######(Detailed instructions follow):
 
-#####1. Install nodejs, npm.
+#####1. Install nodejs, npm, python.
 #####2. Install avconv (Optional, see below).
 #####3. Install MongoDB and start service.
 #####4. CD to HTML5RUI dir and enter:
@@ -17,8 +17,8 @@ $ npm start
 ```
 ###Detailed Installation Instructions (Debian/Ubuntu/Mint):
 
-#####1. Install nodejs, npm:
-	$ sudo apt-get install nodejs npm
+#####1. Install nodejs, npm, python:
+	$ sudo apt-get install nodejs npm python2
 
 On some systems (i.e. 32-Bit, Debian), ```nodejs-legacy``` package may also be required.
 
@@ -105,7 +105,7 @@ There are [several other ways](http://stackoverflow.com/questions/413807/is-ther
 
 **_It can be installed on Windows, but it's not recommended as installation is cumbersome (not of the app itself, dependencies) and some features aren't available (namely: Live Media and Script Execution)._**
 
-#####1. Install NodeJS from http://nodejs.org/ . Make sure NPM package manager is installed (it is by default).
+#####1. Install NodeJS from http://nodejs.org/ . Make sure NPM package manager is installed (it is by default). Install Python https://www.python.org/downloads/.
 #####2. Install MongoDB from http://www.mongodb.org/downloads
 #####3. Configure MongoDB: See linux.
 #####4. Install HTML5RUI:

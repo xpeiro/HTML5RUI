@@ -5,7 +5,7 @@
     ETSII, UPM 2014-2015    
 */
 
-h3 {
+header, h3 {
     color: #363a3a;
     font: 20px Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -338,17 +338,7 @@ table {
     #body {
         width: 100%;
     }
-    #rightColumn {
-        float: left;
-        clear: both;
-        width: 98%;
-    }
-    #centerColumn {
-        float: left;
-        clear: both;
-        width: 98%;
-    }
-    #leftColumn {
+    #rightColumn, #centerColumn, #leftColumn {
         float: left;
         clear: both;
         width: 98%;

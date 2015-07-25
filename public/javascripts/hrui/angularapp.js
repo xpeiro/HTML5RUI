@@ -153,6 +153,17 @@ app.directive('touch', function() {
                 scope.mouseUp(event);
                 scope.$apply();
             });
+            var mouseout = false;
+            element.on('mouseout', function(event) {
+                mouseout = true;
+            });
+            document.onmouseup = function(event) {
+                if (mouseout) {
+                    mouseout = false;
+                    scope.mouseUp(event);
+                    scope.$apply();
+                }
+            };
         }
     }
 });
