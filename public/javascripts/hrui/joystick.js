@@ -14,20 +14,21 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
             x: 0,
             y: 0,
         };
-        var joystick = element[0].children[0];
-        var joystickctx = joystick.getContext('2d');
-        var vector = element[0].children[1];
-        var vectorctx = vector.getContext('2d');
+        var joystick = element[0].children[0],
+            joystickctx = joystick.getContext('2d'),
+            vector = element[0].children[1],
+            vectorctx = vector.getContext('2d');
         joystick.width = 300;
         joystick.height = joystick.width;
         vector.width = 100;
         vector.height = vector.width;
-        var radius = joystick.width * 0.2;
-        var maxRadius = joystick.width / 3;
-        var backgroundColor = BACKGROUND_COLOR;
-        var maxRadiusBGColor = FOREGROUND_COLOR;
-        var leftClick = 0;
-        var renderReq;
+        var radius = joystick.width * 0.2,
+            maxRadius = joystick.width / 3,
+            backgroundColor = BACKGROUND_COLOR,
+            maxRadiusBGColor = FOREGROUND_COLOR,
+            leftClick = 0,
+            n = 14,
+            renderReq;
         //draw canvas in initial state
         drawAll();
         //start rendering animation
@@ -92,8 +93,6 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
         };
 
         function renderLoop() {
-            //call renderLoop every 15ms (60fps)
-            renderReq = requestAnimationFrame(renderLoop);
             //erases previous joystick position
             resetJoystick();
             // erases previous vector
@@ -108,7 +107,16 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
             DrawSrv.drawCircle(joystickctx, scope.point.x, scope.point.y, radius, maxRadiusBGColor);
             //change back to relative coordinates
             scope.point = GeometrySrv.centerCoord(scope.point, joystick);
+            if (n == 0) {
+                scope.$digest();
+                n = 14;
+            } else {
+                n--;
+            }
+            //call renderLoop every 15ms (60fps)
+            renderReq = requestAnimationFrame(renderLoop);
         };
+
 
         scope.resetAll = function() {
             leftClick = 0;

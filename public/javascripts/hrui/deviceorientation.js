@@ -11,7 +11,8 @@
 */
 app.controller('DeviceOrientationController', ['$scope', '$element', '$window', 'SocketSrv', 'ProfileSrv',
     function(scope, element, $window, SocketSrv, ProfileSrv) {
-        var updateReq;
+        var updateReq,
+            n = 20;
         scope.devOrientationUnsupported = false;
         scope.devMotionUnsupported = false;
         scope.deviceData = {
@@ -53,7 +54,7 @@ app.controller('DeviceOrientationController', ['$scope', '$element', '$window', 
                     z: true,
                 },
             },
-        };        
+        };
         //share profile data with ProfileSrv
         scope.$on('getProfile', function() {
             ProfileSrv.profile.selectedValues = scope.selectedValues;
@@ -69,10 +70,15 @@ app.controller('DeviceOrientationController', ['$scope', '$element', '$window', 
         configureEvents();
 
         function updateLoop() {
-            updateReq = requestAnimationFrame(updateLoop);            
+            updateReq = requestAnimationFrame(updateLoop);
             removeUnchecked();
             SocketSrv.socket.emit('updateDeviceOrientation', scope.deviceData);
-            scope.$apply();
+            if (n == 0) {
+                scope.$digest();
+                n = 20;
+            } else {
+                n--;
+            }
         };
 
         function removeUnchecked() {

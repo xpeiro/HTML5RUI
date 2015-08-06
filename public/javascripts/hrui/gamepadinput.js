@@ -24,7 +24,7 @@ app.controller('GamepadController', ['$scope', 'SocketSrv',
         window.addEventListener("gamepadconnected", listener);
         window.addEventListener("gamepaddisconnected", function() {
             scope.connected = false;
-            scope.$apply();
+            scope.$digest();
         });
         scope.$on('$destroy', function() {
             window.removeEventListener("gamepadconnected", listener);
@@ -33,7 +33,7 @@ app.controller('GamepadController', ['$scope', 'SocketSrv',
 
         function listener() {
             scope.connected = true;
-            scope.$apply();
+            scope.$digest();
             updateReq = requestAnimationFrame(updateLoop);
         };
 

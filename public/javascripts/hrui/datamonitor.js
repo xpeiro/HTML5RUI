@@ -102,7 +102,7 @@ app.controller('DataController', ['$scope', '$element', '$upload', 'SocketSrv', 
             if (scope.mapMode != 'server') {
                 drawRobot();
             };
-            scope.$apply();
+            scope.$digest();
         });
         SocketSrv.socket.on('updateMap', function() {
             var img = new Image();

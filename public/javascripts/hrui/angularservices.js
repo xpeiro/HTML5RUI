@@ -26,6 +26,7 @@ app.service('DrawSrv', function() {
     return {
         drawCircle: function(ctx, x, y, radius, fillColor) {
             ctx.beginPath();
+            ctx.lineWidth = 1.1;
             ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
             if (!!fillColor) { //if fillColor arg given, fill in circle.
                 ctx.fillStyle = fillColor;
@@ -35,6 +36,7 @@ app.service('DrawSrv', function() {
         },
         drawLineFromCenter: function(ctx, x, y) {
             ctx.beginPath();
+            ctx.lineWidth = 1.1;
             ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);
             ctx.lineTo(x, y);
             ctx.stroke();

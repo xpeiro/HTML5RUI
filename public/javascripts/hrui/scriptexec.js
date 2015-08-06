@@ -32,18 +32,18 @@ app.controller('ScriptExecController', ['$scope', 'SocketSrv', 'ProfileSrv',
                     showRun: true,
                 };
             };
-            scope.$apply();
+            scope.$digest();
         });
 
         SocketSrv.socket.on('scriptRunning', function(scriptName) {
             scope.scripts[scriptName].status = 'running';
             scope.scripts[scriptName].showRun = false;
-            scope.$apply();
+            scope.$digest();
         });
         SocketSrv.socket.on('scriptError', function(scriptName) {
             scope.scripts[scriptName].status = 'killed';
             scope.scripts[scriptName].showRun = true;
-            scope.$apply();
+            scope.$digest();
         });
         SocketSrv.socket.on('scriptStdout', function(stdout) {
             scope.stdout = "stdout: " + stdout;

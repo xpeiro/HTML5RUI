@@ -47,7 +47,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
                 delete profiles.item;
                 scope.profiles = profiles;
             };
-            scope.$apply();
+            scope.$digest();
         });
         //share profile data to profile service (to send it to backend)
         scope.$on('getProfile', function() {
@@ -113,7 +113,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             requestAnimationFrame(function() {
                 rootScope.$broadcast('setProfile');
                 //trigger visual refresh (digest new scope values)
-                rootScope.$apply();
+                rootScope.$digest();
             });
 
 
@@ -139,19 +139,15 @@ app.directive('touch', function() {
         link: function(scope, element, attrs) {
             element.on('touchmove', function(event) {
                 scope.touchMove(event);
-                scope.$apply();
             });
             element.on('touchdown mousedown', function(event) {
                 scope.mouseDown(event);
-                scope.$apply();
             });
             element.on('mousemove', function(event) {
                 scope.mouseMove(event);
-                scope.$apply();
             });
             element.on('mouseup touchend', function(event) {
                 scope.mouseUp(event);
-                scope.$apply();
             });
             var mouseout = false;
             element.on('mouseout', function(event) {
@@ -161,7 +157,6 @@ app.directive('touch', function() {
                 if (mouseout) {
                     mouseout = false;
                     scope.mouseUp(event);
-                    scope.$apply();
                 }
             };
         }

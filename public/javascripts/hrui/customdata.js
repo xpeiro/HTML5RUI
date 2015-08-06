@@ -41,7 +41,7 @@ app.controller('CustomDataController', ['$scope', 'SocketSrv', 'ProfileSrv',
             var customDataTable = "";
             customDataTable = generateTable(data, customDataTable);
             scope.customDataTable = customDataTable;
-            scope.$apply();
+            scope.$digest();
         });
 
         function generateTable(data, customDataTable) {

@@ -68,7 +68,7 @@ app.controller('VoiceCommandsController', ['$scope', '$upload', 'SocketSrv', 'Pr
                             SocketSrv.socket.emit('manualVoiceCommand', audioDataURL);
                         });
                         scope.manualVoiceCommandEnabled = true;
-                        scope.$apply();
+                        scope.$digest();
                     });
                 }, 5000);
             }, function(error) {
@@ -119,7 +119,7 @@ app.controller('VoiceCommandsController', ['$scope', '$upload', 'SocketSrv', 'Pr
             };
             //append the transcript to textarea regardless of match.
             scope.currentResult = scope.currentResult.concat(' ' + command + ';');
-            scope.$apply();
+            scope.$digest();
         };
 
         if (!!!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia)) {

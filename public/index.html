@@ -481,8 +481,8 @@
                     <input type="submit" value="Submit">
                 </form>
                 <span data-ng-if="customDataFormSubmitted">
-                Requested item: {{customDataRequest.item}}
-                <br> Requested interval: {{customDataRequest.updateInterval}}ms (rounded to 100ms)
+                Requested item: {{::customDataRequest.item}}
+                <br> Requested interval: {{::customDataRequest.updateInterval}}ms (rounded to 100ms)
                 <br>
                 </span>
                 <table id="customDataTable" class="table" data-ng-bind-html="customDataTable" data-ng-if="customDataFormSubmitted"></table>
@@ -495,7 +495,7 @@
                         <th></th>
                     </tr>
                     <tr data-ng-repeat="script in scripts">
-                        <td>{{script.name}}</td>
+                        <td>{{::script.name}}</td>
                         <td class="tdimg"><img data-ng-src="images/{{script.status}}.svg" src="images/standby.svg" width="12" height="12" alt="status">
                         </td>
                         <td>
