@@ -72,18 +72,15 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
         function generateInputTable(inputList, customInputTable) {
             var inputTableHeader;
             var inputTableCell;
-            //begin row
-            customInputTable = "<tr>";
-            //insert header for each input, with its name
+            customInputTable = "";
             for (var key in inputList) {
+                //begin row
+                customInputTable = customInputTable.concat("<tr>");
+                //insert header for each input, with its name
                 inputTableHeader = "<th>" + inputList[key].name + "</th>";
                 customInputTable = customInputTable.concat(inputTableHeader);
-            };
-            //end row, start new row
-            customInputTable = customInputTable.concat("</tr><tr>");
-            //for each input, insert the type of input neccesary plus
-            //the directive data-ng-model to bind the input with the model (customInputData on scope)
-            for (var key in inputList) {
+                //for each input, insert the type of input neccesary plus
+                //the directive data-ng-model to bind the input with the model (customInputData on scope)
                 inputTableCell = "<td><input type=\"" + inputList[key].type + "\" data-ng-model=\"customInputData." + inputList[key]["name"] + "\" ";
                 //if a minimum value exists, append the attribute to the input element
                 if (!!inputList[key].min) {
@@ -111,11 +108,12 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
                 }
                 //end input insertion
                 customInputTable = customInputTable.concat(inputTableCell);
+                //end row
+                customInputTable = customInputTable.concat("</tr>");
             };
-            //end row
-            customInputTable = customInputTable.concat("</tr>");
             return customInputTable;
         };
+
         function dataIsValid() {
             for (var keyI in scope.customInputList) {
                 //check for symbols (name will not exist

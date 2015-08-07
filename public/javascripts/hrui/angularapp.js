@@ -13,7 +13,6 @@ var FOREGROUND_COLOR = "#A8AAAA";
 //main app controller. manages active modules, profiles and notifies back-end of change in controls when necessary.
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
-        scope.classes = "";
         scope.menuOn = !window.matchMedia("(max-width: 480px)").matches;
         scope.joystickOn = false;
         scope.dualJoystickOn = false;

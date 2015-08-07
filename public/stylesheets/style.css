@@ -278,6 +278,7 @@ footer {
     clear: left;
     width: 25%;
     min-width: 300px;
+    max-width: 100%;
 }
 
 #centerColumn {
@@ -342,6 +343,11 @@ footer {
     float: left;
     width: 100%;
     text-align: left;
+}
+
+#customInputTable {
+    display: flex;
+    flex-direction: column;
 }
 
 @media only screen and (max-width: 480px) {
@@ -433,5 +439,9 @@ footer {
         float: left;
         clear: both;
         width: 98%;
+    }
+    #stdout,
+    #stderr {
+        min-height: 20px;
     }
 }
