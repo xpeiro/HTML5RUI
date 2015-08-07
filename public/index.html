@@ -50,8 +50,21 @@
 
 <body>
     <div id="body">
-        <header><h3>HTML5 Robot User Interface</h3></header>
-        <div id="toolbar" class="frame">
+        <header>
+            <button id="menuButton" data-ng-click="menuOn = !menuOn"><img src="images/menu.svg" alt=""></button>
+            <h3>HTML5 Robot User Interface</h3>
+            <span>
+                <select id="profilesList" class="profileSection" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
+                    <option value="" disabled selected>Load Profile...</option>
+                </select>
+                <button id="saveProfile" class="profileSection" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
+                <form data-ng-submit="saveProfile()" class="profileSection">
+                    <input id="profileNameText" class="profileSection" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
+                    <button id="saveProfileNow" class="profileSection" type="submit" data-ng-show="saveProfileClicked">Save</button>
+                </form>
+            </span>
+        </header>
+        <div id="toolbar" class="frame" data-ng-show="menuOn">
             <ul class="toolbarList left">
                 <li>
                     <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
@@ -104,16 +117,6 @@
                 <li>
                     <input id="gamepadCheckbox" type="checkbox" data-ng-model="gamepadOn" data-ng-click="updateControls($event, gamepadOn)">
                     <label for="gamepadCheckbox">Turn Gamepad {{ !gamepadOn | OnOff}}</label>
-                </li>
-                <li>
-                    <select id="profilesList" class="profileSection center" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
-                        <option value="" disabled selected>Load Profile...</option>
-                    </select>
-                    <button id="saveProfile" class="profileSection" data-ng-click="saveProfileClicked=true" data-ng-show="!saveProfileClicked">Save Current Profile</button>
-                    <form data-ng-submit="saveProfile()" class="profileSection">
-                        <input id="profileNameText" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
-                        <button id="saveProfileNow" type="submit" data-ng-show="saveProfileClicked">Save</button>
-                    </form>
                 </li>
             </ul>
             <br>
@@ -523,8 +526,9 @@
                 </p>
             </div>
         </div>
-        <footer class="footer frame">
-            <h6>
+    </div>
+    <footer>
+        <h6>
             <a href="http://www.aslab.upm.es"> <img src="images/aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
             <img src="images/HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
             <a href="http://github.com/xpeiro/HTML5RUI"><img src="images/githublogo.svg" width="24" height="24" alt="GitHub Repo" title="GitHub Logo"></a>
@@ -532,8 +536,7 @@
             <a href="https://github.com/audiocogs/aurora.js">Aurora</a>, <a href="https://github.com/fsbdev/aurora-websocket">Aurora-WebSocket</a>, <a href="https://github.com/TalAter/annyang">Annyang</a>, <a href="https://github.com/muaz-khan/RecordRTC">RecordRTC</a> and 
             <a href="https://github.com/phoboslab/jsmpeg">JSmpeg</a> under MIT License)
             </h6>
-        </footer>
-    </div>
+    </footer>
 </body>
 
 </html>

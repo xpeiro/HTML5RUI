@@ -5,7 +5,8 @@
     ETSII, UPM 2014-2015    
 */
 
-header, h3 {
+header,
+h3 {
     color: #363a3a;
     font: 20px Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -41,6 +42,9 @@ footer > h6 > img {
     margin: 5px;
 }
 
+html {
+    height: 100%;
+}
 body {
     background-image: -webkit-gradient( linear, left top, right bottom, color-stop(0, #FFFFFF), color-stop(1, #A8AAAA));
     background-image: -o-linear-gradient(right bottom, #FFFFFF 0%, #A8AAAA 100%);
@@ -157,8 +161,9 @@ table {
 }
 
 .profileSection {
-    float: right;
+    float: left;
     display: inline-block;
+    box-shadow: 1px 1px 1px #3D3242;
 }
 
 .tdimg {
@@ -206,6 +211,14 @@ table {
 .toolbarList > li {
     margin: 5px;
     text-align: left;
+}
+
+#menuButton {
+    float: left;
+    border: none;
+    box-shadow: none;
+    border-style: hidden;
+    outline: none;
 }
 
 #toolbar {
@@ -312,6 +325,10 @@ table {
     .frame {
         width: 100%;
     }
+    .profileSection {
+        float: none;
+        display: inline-block;        
+    }
     .toolbarList {
         text-align: left;
         float: left;
@@ -338,7 +355,9 @@ table {
     #body {
         width: 100%;
     }
-    #rightColumn, #centerColumn, #leftColumn {
+    #rightColumn,
+    #centerColumn,
+    #leftColumn {
         float: left;
         clear: both;
         width: 98%;

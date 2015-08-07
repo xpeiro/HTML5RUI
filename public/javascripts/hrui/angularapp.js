@@ -13,6 +13,7 @@ var FOREGROUND_COLOR = "#A8AAAA";
 //main app controller. manages active modules, profiles and notifies back-end of change in controls when necessary.
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
+        scope.menuOn =true;
         scope.joystickOn = false;
         scope.dualJoystickOn = false;
         scope.devOrientOn = false;
@@ -51,6 +52,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
         });
         //share profile data to profile service (to send it to backend)
         scope.$on('getProfile', function() {
+            ProfileSrv.profile.menuOn = scope.menuOn;
             ProfileSrv.profile.joystickOn = scope.joystickOn;
             ProfileSrv.profile.dualJoystickOn = scope.dualJoystickOn;
             ProfileSrv.profile.dataMonitorOn = scope.dataMonitorOn;
@@ -84,6 +86,7 @@ app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileS
             //share selected profile to profile service
             ProfileSrv.profile = scope.selectedProfile;
             //load selected profile 
+            scope.menuOn = scope.selectedProfile.menuOn;
             scope.joystickOn = scope.selectedProfile.joystickOn;
             scope.dualJoystickOn = scope.selectedProfile.dualJoystickOn;
             scope.dataMonitorOn = scope.selectedProfile.dataMonitorOn;
