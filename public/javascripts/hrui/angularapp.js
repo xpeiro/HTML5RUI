@@ -13,7 +13,8 @@ var FOREGROUND_COLOR = "#A8AAAA";
 //main app controller. manages active modules, profiles and notifies back-end of change in controls when necessary.
 app.controller('HRUIController', ['$rootScope', '$scope', 'SocketSrv', 'ProfileSrv',
     function(rootScope, scope, SocketSrv, ProfileSrv) {
-        scope.menuOn =true;
+        scope.classes = "";
+        scope.menuOn = !window.matchMedia("(max-width: 480px)").matches;
         scope.joystickOn = false;
         scope.dualJoystickOn = false;
         scope.devOrientOn = false;
@@ -169,7 +170,7 @@ app.directive('touch', function() {
 //string filter. Returns 'On' if given boolean is true, 'Off' otherwise.
 app.filter('OnOff', function() {
     return function(bool) {
-        return bool ? 'On' : 'Off';
+        return bool ? 'ON' : 'OFF';
     }
 });
 

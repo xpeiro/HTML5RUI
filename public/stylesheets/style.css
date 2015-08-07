@@ -21,11 +21,13 @@ button {
     box-shadow: 1px 1px 1px #3D3242;
     background: inherit;
     color: inherit;
+    cursor: pointer;
 }
 
 button:disabled {
     color: grey;
     box-shadow: inset 1px 1px 1px #3D3242;
+    cursor: default;
 }
 
 select,
@@ -45,6 +47,7 @@ footer > h6 > img {
 html {
     height: 100%;
 }
+
 body {
     background-image: -webkit-gradient( linear, left top, right bottom, color-stop(0, #FFFFFF), color-stop(1, #A8AAAA));
     background-image: -o-linear-gradient(right bottom, #FFFFFF 0%, #A8AAAA 100%);
@@ -130,7 +133,7 @@ table {
     margin-right: 1px;
 }
 
-.footer {
+footer {
     clear: both;
     width: 100%;
     padding: 0px;
@@ -138,6 +141,7 @@ table {
     margin-top: 1%;
     float: left;
     text-align: center;
+    background-color: transparent;
 }
 
 .smalltext {
@@ -161,9 +165,7 @@ table {
 }
 
 .profileSection {
-    float: left;
-    display: inline-block;
-    box-shadow: 1px 1px 1px #3D3242;
+    float: none;
 }
 
 .tdimg {
@@ -210,7 +212,24 @@ table {
 
 .toolbarList > li {
     margin: 5px;
+    margin-left: 0;
     text-align: left;
+}
+
+.toolbarList li label {
+    font-family: helvetica, sans-serif;
+    padding-left: 3px;
+    border-left: 20px solid grey;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.toolbarList li label.labelOn {
+    border-left: 20px solid green;
+}
+
+.hidden {
+    visibility: hidden;
 }
 
 #menuButton {
@@ -227,7 +246,21 @@ table {
     text-align: center;
     float: left;
     margin: 0px;
-    margin-bottom: 1%;
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+    transition: all 0.7s ease-in-out;
+    opacity: 1;
+}
+
+#toolbar.ng-hide {
+    -webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+    transition: all 0.7s ease-in-out;
+    opacity: 0;
 }
 
 #body {
@@ -327,20 +360,59 @@ table {
     }
     .profileSection {
         float: none;
-        display: inline-block;        
+        display: inline-block;
+    }
+    #toolbar {
+        position: absolute;
+        z-index: 10;
+        padding: 0;
+        margin: 0;
+        transition: 0.4s linear all;
+        left: 0%;
+        width: 100%;
+        opacity: 1;
+    }
+    #toolbar.ng-hide {
+        transition: 0.4s linear all;
+        left: -50%;
     }
     .toolbarList {
-        text-align: left;
         float: left;
-        display: inline;
+        text-align: center;
+        display: table;
         list-style-type: none;
-        margin: 0px;
-        width: 80%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        opacity: 1;
+        background-image: -webkit-gradient( linear, left top, right bottom, color-stop(0, #CFD1D1), color-stop(1, #EDEDED));
+        background-image: -o-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+        background-image: -moz-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+        background-image: -webkit-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+        background-image: -ms-linear-gradient(right bottom, #CFD1D1 0%, #EDEDED 100%);
+        background-image: linear-gradient(to right bottom, #CFD1D1 0%, #EDEDED 100%);
     }
-    .toolbarList > li {
-        margin: 0px;
-        display: inline;
+    .toolbarList li {
+        padding: 0;
+        margin: 0;
+        width: 98%;
+        display: table-cell;
         float: left;
+        border: 1px solid black;
+    }
+    .toolbarList li label {
+        padding: 0;
+        margin: 0;
+        font-family: helvetica, sans-serif;
+        border-left: 20px solid grey;
+        border-radius: 0px;
+        font-weight: bold;
+        font-size: 150%;
+        height: 100%;
+        display: inline-block;
+        vertical-align: top;
+        float: left;
+        text-align: center;
     }
     .joystick,
     #mapcanvas {

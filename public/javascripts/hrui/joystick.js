@@ -27,7 +27,7 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
             backgroundColor = BACKGROUND_COLOR,
             maxRadiusBGColor = FOREGROUND_COLOR,
             leftClick = 0,
-            n = 14,
+            n = 30,
             renderReq;
         //draw canvas in initial state
         drawAll();
@@ -109,7 +109,7 @@ app.controller('JoystickController', ['$scope', '$element', 'SocketSrv', 'DrawSr
             scope.point = GeometrySrv.centerCoord(scope.point, joystick);
             if (n == 0) {
                 scope.$digest();
-                n = 14;
+                n = 30;
             } else {
                 n--;
             }

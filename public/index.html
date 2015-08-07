@@ -53,7 +53,7 @@
         <header>
             <button id="menuButton" data-ng-click="menuOn = !menuOn"><img src="images/menu.svg" alt=""></button>
             <h3>HTML5 Robot User Interface</h3>
-            <span>
+            <div>
                 <select id="profilesList" class="profileSection" data-ng-model="selectedProfile" data-ng-options="value.name for (profile, value) in profiles" data-ng-change="profileSelected()">
                     <option value="" disabled selected>Load Profile...</option>
                 </select>
@@ -62,61 +62,61 @@
                     <input id="profileNameText" class="profileSection" type="text" data-ng-show="saveProfileClicked" data-ng-model="profileName" required>
                     <button id="saveProfileNow" class="profileSection" type="submit" data-ng-show="saveProfileClicked">Save</button>
                 </form>
-            </span>
+            </div>
         </header>
-        <div id="toolbar" class="frame" data-ng-show="menuOn">
+        <div id="toolbar" data-ng-show="menuOn">
             <ul class="toolbarList left">
                 <li>
-                    <input id="joystickCheckbox" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
-                    <label for="joystickCheckbox">Turn Joystick {{ !joystickOn | OnOff}}</label>
+                    <input id="joystickCheckbox" class="hidden" type="checkbox" data-ng-model="joystickOn" data-ng-click="updateControls($event, joystickOn)">
+                    <label data-ng-class="{labelOn: joystickOn}" for="joystickCheckbox">JOYSTICK</label>
                     <span data-ng-show="joystickOn">
-                    <input id="dualJoystickCheckbox" type="checkbox" data-ng-model="dualJoystickOn" data-ng-click="updateControls($event, dualJoystickOn)" data-ng-show="joystickOn">
-                    <label for="dualJoystickCheckbox" data-ng-show="joystickOn">Turn Dual Joysticks {{ !dualJoystickOn | OnOff}}</label>
+                    <input id="dualJoystickCheckbox" class="hidden" type="checkbox" data-ng-model="dualJoystickOn" data-ng-click="updateControls($event, dualJoystickOn)" data-ng-show="joystickOn">
+                    <label data-ng-class="{labelOn: dualJoystickOn}" for="dualJoystickCheckbox" data-ng-show="joystickOn">DUAL</label>
                     </span>
                 </li>
                 <li>
-                    <input id="customInputCheckbox" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)">
-                    <label for="customInputCheckbox">Turn Custom Input {{ !customInputOn | OnOff}}</label>
+                    <input id="customInputCheckbox" class="hidden" type="checkbox" data-ng-model="customInputOn" data-ng-click="updateControls($event, customInputOn)">
+                    <label data-ng-class="{labelOn: customInputOn}" for="customInputCheckbox">CUSTOM INPUT</label>
                 </li>
                 <li>
-                    <input id="deviceOrientationCheckbox" type="checkbox" data-ng-model="devOrientOn" data-ng-click="updateControls($event, devOrientOn)">
-                    <label for="deviceOrientationCheckbox">Turn Device Orientation {{ !devOrientOn | OnOff}}</label>
+                    <input id="deviceOrientationCheckbox" class="hidden" type="checkbox" data-ng-model="devOrientOn" data-ng-click="updateControls($event, devOrientOn)">
+                    <label data-ng-class="{labelOn: devOrientOn}" for="deviceOrientationCheckbox">DEVICE ORIENTATION</label>
                 </li>
                 <li>
-                    <input id="voiceCommandsCheckbox" type="checkbox" data-ng-model="voiceCommOn" data-ng-click="updateControls($event, voiceCommOn)">
-                    <label for="voiceCommandsCheckbox">Turn Voice Commands {{ !voiceCommOn | OnOff}}</label>
+                    <input id="voiceCommandsCheckbox" class="hidden" type="checkbox" data-ng-model="voiceCommOn" data-ng-click="updateControls($event, voiceCommOn)">
+                    <label data-ng-class="{labelOn: voiceCommOn}" for="voiceCommandsCheckbox">VOICE COMMANDS</label>
                 </li>
             </ul>
             <ul class="toolbarList center">
                 <li>
-                    <input id="liveVideoCheckbox" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
-                    <label for="liveVideoCheckbox">Turn Live Video {{ !liveVideoOn | OnOff}}</label>
+                    <input id="liveVideoCheckbox" class="hidden" type="checkbox" data-ng-model="liveVideoOn" data-ng-click="updateControls($event, liveVideoOn)">
+                    <label data-ng-class="{labelOn: liveVideoOn}" for="liveVideoCheckbox">LIVE VIDEO</label>
                 </li>
                 <li>
-                    <input id="liveAudioCheckbox" type="checkbox" data-ng-model="liveAudioOn" data-ng-click="updateControls($event, liveAudioOn)">
-                    <label for="liveAudioCheckbox">Turn Live Audio {{ !liveAudioOn | OnOff}}</label>
+                    <input id="liveAudioCheckbox" class="hidden" type="checkbox" data-ng-model="liveAudioOn" data-ng-click="updateControls($event, liveAudioOn)">
+                    <label data-ng-class="{labelOn: liveAudioOn}" for="liveAudioCheckbox">LIVE AUDIO</label>
                 </li>
                 <li>
-                    <input id="geolocationCheckbox" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
-                    <label for="geolocationCheckbox">Turn Geolocation {{ !geolocationOn | OnOff}}</label>
+                    <input id="geolocationCheckbox" class="hidden" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
+                    <label data-ng-class="{labelOn: geolocationOn}" for="geolocationCheckbox">GEOLOCATION</label>
                 </li>
             </ul>
             <ul class="toolbarList right">
                 <li>
-                    <input id="dataMonitorCheckbox" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
-                    <label for="dataMonitorCheckbox">Turn Data Monitor {{ !dataMonitorOn | OnOff}}</label>
+                    <input id="dataMonitorCheckbox" class="hidden" type="checkbox" data-ng-model="dataMonitorOn" data-ng-click="updateControls($event, dataMonitorOn)">
+                    <label data-ng-class="{labelOn: dataMonitorOn}" for="dataMonitorCheckbox">DATA MONITOR</label>
                 </li>
                 <li>
-                    <input id="customDataCheckbox" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
-                    <label for="customDataCheckbox">Turn Custom Data {{ !customDataOn | OnOff}}</label>
+                    <input id="customDataCheckbox" class="hidden" type="checkbox" data-ng-model="customDataOn" data-ng-click="updateControls($event, customDataOn)">
+                    <label data-ng-class="{labelOn: customDataOn}" for="customDataCheckbox">CUSTOM DATA</label>
                 </li>
                 <li>
-                    <input id="scriptExecCheckbox" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
-                    <label for="scriptExecCheckbox">Turn Run Scripts {{ !scriptExecOn | OnOff}}</label>
+                    <input id="scriptExecCheckbox" class="hidden" type="checkbox" data-ng-model="scriptExecOn" data-ng-click="updateControls($event, scriptExecOn)">
+                    <label data-ng-class="{labelOn: scriptExecOn}" for="scriptExecCheckbox">RUN SCRIPTS</label>
                 </li>
                 <li>
-                    <input id="gamepadCheckbox" type="checkbox" data-ng-model="gamepadOn" data-ng-click="updateControls($event, gamepadOn)">
-                    <label for="gamepadCheckbox">Turn Gamepad {{ !gamepadOn | OnOff}}</label>
+                    <input id="gamepadCheckbox" class="hidden" type="checkbox" data-ng-model="gamepadOn" data-ng-click="updateControls($event, gamepadOn)">
+                    <label data-ng-class="{labelOn: gamepadOn}" for="gamepadCheckbox">GAMEPAD</label>
                 </li>
             </ul>
             <br>
@@ -526,9 +526,8 @@
                 </p>
             </div>
         </div>
-    </div>
-    <footer>
-        <h6>
+        <footer>
+            <h6>
             <a href="http://www.aslab.upm.es"> <img src="images/aslablogo.png" width="64" height="64" alt="ASLab" title="ASLab Logo" ></a>
             <img src="images/HTML5Logo.svg" width="64" height="64" alt="HTML5" title="HTML5 Logo"><br>            
             <a href="http://github.com/xpeiro/HTML5RUI"><img src="images/githublogo.svg" width="24" height="24" alt="GitHub Repo" title="GitHub Logo"></a>
@@ -536,7 +535,8 @@
             <a href="https://github.com/audiocogs/aurora.js">Aurora</a>, <a href="https://github.com/fsbdev/aurora-websocket">Aurora-WebSocket</a>, <a href="https://github.com/TalAter/annyang">Annyang</a>, <a href="https://github.com/muaz-khan/RecordRTC">RecordRTC</a> and 
             <a href="https://github.com/phoboslab/jsmpeg">JSmpeg</a> under MIT License)
             </h6>
-    </footer>
+        </footer>
+    </div>
 </body>
 
 </html>
