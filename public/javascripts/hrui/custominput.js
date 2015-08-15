@@ -28,6 +28,7 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
         //share profile data to profile service
         scope.$on('getProfile', function() {
             ProfileSrv.profile.customInputList = scope.customInputList;
+            ProfileSrv.profile.customInputRequest = scope.customInputRequest;
             ProfileSrv.profile.customInputData = scope.customInputData;
             ProfileSrv.profile.customInputSelectionSubmitted = scope.customInputSelectionSubmitted;
             ProfileSrv.profile.customInputFormSubmitted = scope.customInputFormSubmitted;
@@ -35,6 +36,7 @@ app.controller('CustomInputController', ['$scope', 'SocketSrv', 'ProfileSrv',
         //load profile from ProfileSrv
         scope.$on('setProfile', function() {
             scope.customInputData = ProfileSrv.profile.customInputData;
+            scope.customInputRequest = ProfileSrv.profile.customInputRequest;
             scope.customInputSelectionSubmitted = ProfileSrv.profile.customInputSelectionSubmitted;
             scope.customInputList = ProfileSrv.profile.customInputList;
             scope.customInputFormSubmitted = ProfileSrv.profile.customInputFormSubmitted;

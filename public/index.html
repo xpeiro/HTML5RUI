@@ -208,11 +208,12 @@
             </span>
                 <table id="customInputTable" class="table" data-compile="customInputTable" data-ng-if="customInputFormSubmitted"></table>
                 <span data-ng-show="customInputFormSubmitted">
-            <input id="autoUpdate" type="checkbox" data-ng-model="autoUpdateOn" >
-            <label for="autoUpdate">Auto Send All on change {{ autoUpdateOn | OnOff}}</label>
-            <br>
-            <button data-ng-click="inputChanged($event)">Send Input</button>
-            </span>
+                    <br>
+                    <input id="autoUpdate" type="checkbox" data-ng-model="autoUpdateOn" >
+                    <label for="autoUpdate">Auto Send All on change {{ autoUpdateOn | OnOff}}</label>
+                    <br>
+                    <button data-ng-click="inputChanged($event)">Send Input</button>
+                </span>
             </div>
             <div id="devOrientFrame" class="frame floatright" data-ng-controller="DeviceOrientationController" data-ng-if="devOrientOn">
                 <table id="devOrientTable" class="table">
@@ -371,8 +372,7 @@
         <div id="rightColumn">
             <div id="gamepadFrame" class="frame" data-ng-controller="GamepadController" data-ng-if="gamepadOn">
                 <h5>Note: Experimental Feature, support at time of writing limited to Chrome, Firefox, Edge. Chrome uses <a href="https://w3c.github.io/gamepad/#remapping" target="_blank">standard</a> mapping. Firefox does not.</h5>
-                <span data-ng-show="connected">Gamepad Detected</span>
-                <span data-ng-show="!connected">Gamepad Not Detected</span>
+                <span data-ng-class="{labelOn : connected}">Gamepad {{connected | Not}} Detected</span>
             </div>
             <div id="joystickFrame2" class="frame" data-ng-controller="JoystickController" data-ng-if="dualJoystickOn && joystickOn">
                 <canvas id="joystick2" class="canvas joystick" data-touch>

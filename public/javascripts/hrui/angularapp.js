@@ -173,6 +173,11 @@ app.filter('OnOff', function() {
     }
 });
 
+app.filter('Not', function() {
+    return function(bool) {
+        return bool ? '' : 'Not';
+    }
+});
 /* 
    requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
    Used under MIT license

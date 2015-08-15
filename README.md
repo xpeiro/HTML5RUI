@@ -78,7 +78,7 @@ $ pm2 logs/monit/stop 0/start 0/...(see PM2 documentation)
 ######The app is setup to use port 80 by default (makes for a 'prettier' URL).
 ######Using standard HTTP Port 80 (or any other port < 1024) requires root privileges.
 ######If user is not root, an EACCES error will be thrown on app start (using sudo will work, but is a security risk, as it grants full rights and capabilities to node).
-######To use a different port (greater than 1024), Open app.js and modify the PORT Parameter (should not be the same as other XXXPORT Parameters), save changes and restart app if necessary.
+######To use a different port (greater than 1024), Open config.json and modify the PORT Parameter (should not be the same as other XXXPORT Parameters), save changes and restart app if necessary.
 ######The server can then be reached at:
 ```
 http://localhost:XXXX/
