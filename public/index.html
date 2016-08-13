@@ -34,7 +34,7 @@
     <!-- jsmpeg by Dominic Szablewski - phoboslab.org, github.com/phoboslab -->
     <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/jsmpeg/jsmpg.min.js"></script>
     <script data-ng-if="liveVideoOn" type="text/javascript" src="javascripts/hrui/livevideo.js"></script>
-    <script data-ng-if="geolocationOn" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?">
+    <script data-ng-if="geolocationOn" type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCx97brJ0qfLHvjFnnosyc6ZROXo1b83f0">
     </script>
     <script data-ng-if="geolocationOn" type="text/javascript" src="javascripts/hrui/geolocation.js"></script>
     <script data-ng-if="customDataOn" type="text/javascript" src="javascripts/hrui/customdata.js"></script>
@@ -46,6 +46,10 @@
     <!--Aurora.js Websocket Plugin by fsbdev: https://github.com/fsbdev/aurora-websocket -->
     <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/aurora/aurora-websocket.js"></script>
     <script data-ng-if="liveAudioOn" type="text/javascript" src="javascripts/hrui/liveaudio.js"></script>
+    <!--LeapJS by Leap Motion Inc.: https://github.com/leapmotion/leapjs -->
+    <script data-ng-if="leapMotionOn" type="text/javascript" src="javascripts/leap/leap-0.6.4.min.js"></script>
+    <script data-ng-if="leapMotionOn" type="text/javascript" src="javascripts/leap/leap-plugins-0.1.11.js"></script>
+    <script data-ng-if="leapMotionOn" type="text/javascript" src="javascripts/hrui/leapmotion.js"></script>
 </head>
 
 <body>
@@ -99,6 +103,10 @@
                 <li>
                     <input id="geolocationCheckbox" class="hidden" type="checkbox" data-ng-model="geolocationOn" data-ng-click="updateControls($event, geolocationOn)">
                     <label data-ng-class="{labelOn: geolocationOn}" for="geolocationCheckbox">GEOLOCATION</label>
+                </li>
+                <li>
+                    <input id="leapMotionCheckbox" class="hidden" type="checkbox" data-ng-model="leapMotionOn" data-ng-click="updateControls($event, leapMotionOn)">
+                    <label data-ng-class="{labelOn: leapMotionOn}" for="leapMotionCheckbox">LEAP MOTION</label>
                 </li>
             </ul>
             <ul class="toolbarList right">
@@ -370,6 +378,9 @@
             </div>
         </div>
         <div id="rightColumn">
+            <div id="leapMotionFrame" class="frame" data-ng-controller="LeapMotionController" data-ng-if="leapMotionOn">
+                <span data-ng-class="{labelOn : connected}">Leap Motion {{connected | Not}} Streaming Data</span>
+            </div>
             <div id="gamepadFrame" class="frame" data-ng-controller="GamepadController" data-ng-if="gamepadOn">
                 <h5>Note: Experimental Feature, support at time of writing limited to Chrome, Firefox, Edge. Chrome uses <a href="https://w3c.github.io/gamepad/#remapping" target="_blank">standard</a> mapping. Firefox does not.</h5>
                 <span data-ng-class="{labelOn : connected}">Gamepad {{connected | Not}} Detected</span>

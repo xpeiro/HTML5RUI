@@ -137,3 +137,26 @@ db.data.insert({
     "axes": "",
     "buttons": "",
 });
+
+//current state of the GUI controls. (can be removed, front-end automatically generates entry. Kept for reference)
+db.data.insert({
+  "_id": 10,
+  "item": 'currentState',
+  "customData": false,
+  "customInput": false,
+  "dataMonitor": false,
+  "deviceOrientation": false,
+  "dualJoystick": false,
+  "gamepad": false,
+  "geolocation": false,  
+  "joystick": false,
+  "liveAudio": false,
+  "liveVideo": false,
+  "scriptExec": false,
+  "voiceCommands": false,
+});
+//leap motion hand data
+db.data.insert({
+  "_id": 11,
+  "item": 'leapMotion',
+});

@@ -110,5 +110,9 @@ module.exports = function(io) {
         socket.on('gamepadUpdate', function(data) {
             updaters.updateGamepad(data);
         });
+        //receive leap motion hand/s data
+        socket.on('leapMotionUpdate', function(data) {
+            updaters.updateLeapMotion(data);
+        });
     });
 };

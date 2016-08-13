@@ -234,6 +234,18 @@ function updateJoystick(joystickData) {
 };
 //perform actions based on selected controls in front end.
 function updateControls(changedControlData) {
+    //store change to active controls in currentState, for use in external controllers.
+    setObj = {
+        $set: {
+
+        }
+    };
+    setObj.$set[changedControlData.changedControl.replace("Checkbox","")] = changedControlData.newValue;
+    hruiDataDB.update({
+        item: "currentState"
+    }, setObj, {
+        upsert: true
+    });
     switch (changedControlData.changedControl) {
         //Deactivate custom data update (by resetting the multiplier to -1) when custom data is toggle off.
         case "customDataCheckbox":
@@ -298,7 +310,6 @@ function saveProfile(profile) {
         }
     };
     setObj.$set[profile.name] = profile;
-    setObj.$set._id = 4;
     hruiDataDB.update({
         item: "profiles"
     }, setObj, {
@@ -359,13 +370,26 @@ function saveAudioFile(audio) {
     });
 };
 
-function updateGamepad(gamepad) {    
+function updateGamepad(gamepad) {
     hruiDataDB.update({
         item: "gamepad"
     }, {
         $set: {
             axes: gamepad.axes,
             buttons: gamepad.buttons,
+        }
+    }, {
+        upsert: true
+    });
+};
+
+function updateLeapMotion(hands) {
+    hruiDataDB.update({
+        item: "leapMotion"
+    }, {
+        $set: {
+            firstHand: hands.firstHand,
+            secondHand: hands.secondHand,
         }
     }, {
         upsert: true
@@ -388,4 +412,5 @@ module.exports = {
     updateVoiceCommand: updateVoiceCommand,
     saveAudioFile: saveAudioFile,
     updateGamepad: updateGamepad,
+    updateLeapMotion: updateLeapMotion,
 };

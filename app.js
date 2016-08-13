@@ -133,9 +133,9 @@ app.use(favicon(__dirname + '/public/images/favicon.svg'));
 // Setup HTTP Request Logger (morgan).
 app.use(logger('dev', {
     //do not log succesfull requests, only errors.
-    skip: function(req, res) {
-        return res.statusCode < 400
-    }
+    // skip: function(req, res) {
+    //     return res.statusCode < 400
+    // }
 }));
 // Set static route directory to ./public
 app.use(express.static(path.join(__dirname, 'public')));
