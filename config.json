@@ -1,5 +1,5 @@
 {
-    "PORT": 80,
+    "PORT": 8080,
     "NODE": "node",
     "PYTHON": "python",
     "AVCONV": "avconv",
