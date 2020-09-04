@@ -13,7 +13,7 @@
     "connect-busboy": "0.0.2",
     "debug": "*",
     "express": "^5.0.0-alpha.1",
-    "mongodb": "2.2.19",
+    "mongodb": "3.6.1",
     "monk": "7.1.2",
     "morgan": "*",
     "pngjs": "~0.4.0",
